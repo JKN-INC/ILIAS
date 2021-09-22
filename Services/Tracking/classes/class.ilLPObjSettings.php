@@ -2,15 +2,15 @@
 /* Copyright (c) 1998-2009 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 /**
-* Class ilLPObjSettings
-*
-* @author Stefan Meyer <meyer@leifos.com>
-*
-* @version $Id$
-*
-* @package ilias-tracking
-*
-*/
+ * Class ilLPObjSettings
+ *
+ * @author Stefan Meyer <meyer@leifos.com>
+ *
+ * @version $Id$
+ *
+ * @package ilias-tracking
+ *
+ */
 class ilLPObjSettings
 {
     public $db = null;
@@ -21,7 +21,7 @@ class ilLPObjSettings
     public $visits = null;
 
     public $is_stored = false;
-            
+
     const LP_MODE_DEACTIVATED = 0;
     const LP_MODE_TLT = 1;
     const LP_MODE_VISITS = 2;
@@ -54,106 +54,112 @@ class ilLPObjSettings
     const LP_MODE_CMIX_COMPL_OR_PASSED_WITH_FAILED = 29;
 
     const LP_DEFAULT_VISITS = 30; // ???
+    const LP_MODE_RUBRIC = 92;
 
     const LP_MODE_LTI_OUTCOME = 31;
-    
+
     const LP_MODE_COURSE_REFERENCE = 32;
 
     protected static $map = array(
-        
-        self::LP_MODE_DEACTIVATED => array('ilLPStatus',
-            'trac_mode_deactivated', 'trac_mode_deactivated_info_new')
-        
-        ,self::LP_MODE_TLT => array('ilLPStatusTypicalLearningTime',
-            'trac_mode_tlt', 'trac_mode_tlt_info') // info has dynamic part!
-        
-        ,self::LP_MODE_VISITS => array('ilLPStatusVisits',
-            'trac_mode_visits', 'trac_mode_visits_info')
-        
-        ,self::LP_MODE_MANUAL => array('ilLPStatusManual',
-            'trac_mode_manual', 'trac_mode_manual_info')
-        
-        ,self::LP_MODE_OBJECTIVES => array('ilLPStatusObjectives',
-            'trac_mode_objectives', 'trac_mode_objectives_info')
-        
-        ,self::LP_MODE_COLLECTION => array('ilLPStatusCollection',
-            'trac_mode_collection', 'trac_mode_collection_info')
-        
-        ,self::LP_MODE_SCORM => array('ilLPStatusSCORM',
-            'trac_mode_scorm', 'trac_mode_scorm_info')
-        
-        ,self::LP_MODE_TEST_FINISHED => array('ilLPStatusTestFinished',
-            'trac_mode_test_finished', 'trac_mode_test_finished_info')
-        
-        ,self::LP_MODE_TEST_PASSED => array('ilLPStatusTestPassed',
-            'trac_mode_test_passed', 'trac_mode_test_passed_info')
-        
-        ,self::LP_MODE_EXERCISE_RETURNED => array('ilLPStatusExerciseReturned',
-            'trac_mode_exercise_returned', 'trac_mode_exercise_returned_info')
-        
-        ,self::LP_MODE_EVENT => array('ilLPStatusEvent',
-            'trac_mode_event', 'trac_mode_event_info')
-        
-        ,self::LP_MODE_MANUAL_BY_TUTOR => array('ilLPStatusManualByTutor',
-            'trac_mode_manual_by_tutor', 'trac_mode_manual_by_tutor_info')
-        
-        ,self::LP_MODE_SCORM_PACKAGE => array('ilLPStatusSCORMPackage',
-            'trac_mode_scorm_package', 'trac_mode_scorm_package_info')
-        
-        ,self::LP_MODE_UNDEFINED => null
-            
-        ,self::LP_MODE_PLUGIN => array('ilLPStatusPlugin',
-            'trac_mode_plugin', '') // no settings screen, so no info needed
-        
-        ,self::LP_MODE_COLLECTION_TLT => array('ilLPStatusCollectionTLT',
-            'trac_mode_collection_tlt', 'trac_mode_collection_tlt_info')
-        
-        ,self::LP_MODE_COLLECTION_MANUAL => array('ilLPStatusCollectionManual',
-            'trac_mode_collection_manual', 'trac_mode_collection_manual_info')
-        
-        ,self::LP_MODE_QUESTIONS => array('ilLPStatusQuestions',
-            'trac_mode_questions', 'trac_mode_questions_info')
-        
-        ,self::LP_MODE_SURVEY_FINISHED => array('ilLPStatusSurveyFinished',
-            'trac_mode_survey_finished', 'trac_mode_survey_finished_info')
-        
-        ,self::LP_MODE_VISITED_PAGES => array('ilLPStatusVisitedPages',
-            'trac_mode_visited_pages', 'trac_mode_visited_pages_info')
-        
-        ,self::LP_MODE_CONTENT_VISITED => array('ilLPStatusContentVisited',
-            'trac_mode_content_visited', 'trac_mode_content_visited_info')
-        
-        ,self::LP_MODE_COLLECTION_MOBS => array('ilLPStatusCollectionMobs',
-            'trac_mode_collection_mobs', 'trac_mode_collection_mobs_info')
-        
-        ,self::LP_MODE_STUDY_PROGRAMME => array('ilLPStatusStudyProgramme',
-            'trac_mode_study_programme', '')
 
-        ,self::LP_MODE_INDIVIDUAL_ASSESSMENT => array('ilLPStatusIndividualAssessment',
-            'trac_mode_individual_assessment', 'trac_mode_individual_assessment_info')
+        self::LP_MODE_DEACTIVATED => array(
+            'ilLPStatus',
+            'trac_mode_deactivated', 'trac_mode_deactivated_info_new'
+        ), self::LP_MODE_TLT => array(
+            'ilLPStatusTypicalLearningTime',
+            'trac_mode_tlt', 'trac_mode_tlt_info'
+        ) // info has dynamic part!
 
-        ,self::LP_MODE_CMIX_COMPLETED => array(ilLPStatusCmiXapiCompleted::class,
-            'trac_mode_cmix_completed', 'trac_mode_cmix_completed_info')
+        , self::LP_MODE_VISITS => array(
+            'ilLPStatusVisits',
+            'trac_mode_visits', 'trac_mode_visits_info'
+        ), self::LP_MODE_MANUAL => array(
+            'ilLPStatusManual',
+            'trac_mode_manual', 'trac_mode_manual_info'
+        ), self::LP_MODE_OBJECTIVES => array(
+            'ilLPStatusObjectives',
+            'trac_mode_objectives', 'trac_mode_objectives_info'
+        ), self::LP_MODE_COLLECTION => array(
+            'ilLPStatusCollection',
+            'trac_mode_collection', 'trac_mode_collection_info'
+        ), self::LP_MODE_SCORM => array(
+            'ilLPStatusSCORM',
+            'trac_mode_scorm', 'trac_mode_scorm_info'
+        ), self::LP_MODE_TEST_FINISHED => array(
+            'ilLPStatusTestFinished',
+            'trac_mode_test_finished', 'trac_mode_test_finished_info'
+        ), self::LP_MODE_TEST_PASSED => array(
+            'ilLPStatusTestPassed',
+            'trac_mode_test_passed', 'trac_mode_test_passed_info'
+        ), self::LP_MODE_EXERCISE_RETURNED => array(
+            'ilLPStatusExerciseReturned',
+            'trac_mode_exercise_returned', 'trac_mode_exercise_returned_info'
+        ), self::LP_MODE_EVENT => array(
+            'ilLPStatusEvent',
+            'trac_mode_event', 'trac_mode_event_info'
+        ), self::LP_MODE_MANUAL_BY_TUTOR => array(
+            'ilLPStatusManualByTutor',
+            'trac_mode_manual_by_tutor', 'trac_mode_manual_by_tutor_info'
+        ), self::LP_MODE_SCORM_PACKAGE => array(
+            'ilLPStatusSCORMPackage',
+            'trac_mode_scorm_package', 'trac_mode_scorm_package_info'
+        ), self::LP_MODE_UNDEFINED => null, self::LP_MODE_PLUGIN => array(
+            'ilLPStatusPlugin',
+            'trac_mode_plugin', ''
+        ) // no settings screen, so no info needed
 
-        ,self::LP_MODE_CMIX_COMPL_WITH_FAILED => array(ilLPStatusCmiXapiCompletedWithFailed::class,
-            'trac_mode_cmix_compl_with_failed', 'trac_mode_cmix_compl_with_failed_info')
-
-        ,self::LP_MODE_CMIX_PASSED => array(ilLPStatusCmiXapiPassed::class,
-            'trac_mode_cmix_passed', 'trac_mode_cmix_passed_info')
-
-        ,self::LP_MODE_CMIX_PASSED_WITH_FAILED => array(ilLPStatusCmiXapiPassedWithFailed::class,
-            'trac_mode_cmix_passed_with_failed', 'trac_mode_cmix_passed_with_failed_info')
-
-        ,self::LP_MODE_CMIX_COMPLETED_OR_PASSED => array(ilLPStatusCmiXapiCompletedOrPassed::class,
-            'trac_mode_cmix_completed_or_passed', 'trac_mode_cmix_completed_or_passed_info')
-
-        ,self::LP_MODE_CMIX_COMPL_OR_PASSED_WITH_FAILED => array(ilLPStatusCmiXapiCompletedOrPassedWithFailed::class,
-            'trac_mode_cmix_compl_or_passed_with_failed', 'trac_mode_cmix_compl_or_passed_with_failed_info')
-
-        ,self::LP_MODE_LTI_OUTCOME => array(ilLPStatusLtiOutcome::class,
-        'trac_mode_lti_outcome', 'trac_mode_lti_outcome_info')
-
-        ,self::LP_MODE_COURSE_REFERENCE => [
+        , self::LP_MODE_COLLECTION_TLT => array(
+            'ilLPStatusCollectionTLT',
+            'trac_mode_collection_tlt', 'trac_mode_collection_tlt_info'
+        ), self::LP_MODE_COLLECTION_MANUAL => array(
+            'ilLPStatusCollectionManual',
+            'trac_mode_collection_manual', 'trac_mode_collection_manual_info'
+        ), self::LP_MODE_QUESTIONS => array(
+            'ilLPStatusQuestions',
+            'trac_mode_questions', 'trac_mode_questions_info'
+        ), self::LP_MODE_SURVEY_FINISHED => array(
+            'ilLPStatusSurveyFinished',
+            'trac_mode_survey_finished', 'trac_mode_survey_finished_info'
+        ), self::LP_MODE_VISITED_PAGES => array(
+            'ilLPStatusVisitedPages',
+            'trac_mode_visited_pages', 'trac_mode_visited_pages_info'
+        ), self::LP_MODE_CONTENT_VISITED => array(
+            'ilLPStatusContentVisited',
+            'trac_mode_content_visited', 'trac_mode_content_visited_info'
+        ), self::LP_MODE_COLLECTION_MOBS => array(
+            'ilLPStatusCollectionMobs',
+            'trac_mode_collection_mobs', 'trac_mode_collection_mobs_info'
+        ), self::LP_MODE_STUDY_PROGRAMME => array(
+            'ilLPStatusStudyProgramme',
+            'trac_mode_study_programme', ''
+        ), self::LP_MODE_INDIVIDUAL_ASSESSMENT => array(
+            'ilLPStatusIndividualAssessment',
+            'trac_mode_individual_assessment', 'trac_mode_individual_assessment_info'
+        ), self::LP_MODE_RUBRIC => array(
+            'ilLPStatusRubric',
+            'trac_mode_rubric', 'trac_mode_rubric_info'
+        ), self::LP_MODE_CMIX_COMPLETED => array(
+            ilLPStatusCmiXapiCompleted::class,
+            'trac_mode_cmix_completed', 'trac_mode_cmix_completed_info'
+        ), self::LP_MODE_CMIX_COMPL_WITH_FAILED => array(
+            ilLPStatusCmiXapiCompletedWithFailed::class,
+            'trac_mode_cmix_compl_with_failed', 'trac_mode_cmix_compl_with_failed_info'
+        ), self::LP_MODE_CMIX_PASSED => array(
+            ilLPStatusCmiXapiPassed::class,
+            'trac_mode_cmix_passed', 'trac_mode_cmix_passed_info'
+        ), self::LP_MODE_CMIX_PASSED_WITH_FAILED => array(
+            ilLPStatusCmiXapiPassedWithFailed::class,
+            'trac_mode_cmix_passed_with_failed', 'trac_mode_cmix_passed_with_failed_info'
+        ), self::LP_MODE_CMIX_COMPLETED_OR_PASSED => array(
+            ilLPStatusCmiXapiCompletedOrPassed::class,
+            'trac_mode_cmix_completed_or_passed', 'trac_mode_cmix_completed_or_passed_info'
+        ), self::LP_MODE_CMIX_COMPL_OR_PASSED_WITH_FAILED => array(
+            ilLPStatusCmiXapiCompletedOrPassedWithFailed::class,
+            'trac_mode_cmix_compl_or_passed_with_failed', 'trac_mode_cmix_compl_or_passed_with_failed_info'
+        ), self::LP_MODE_LTI_OUTCOME => array(
+            ilLPStatusLtiOutcome::class,
+            'trac_mode_lti_outcome', 'trac_mode_lti_outcome_info'
+        ), self::LP_MODE_COURSE_REFERENCE => [
             'ilLPStatusCourseReference',
             'trac_mode_course_reference',
             'trac_mode_course_reference_info'
@@ -176,13 +182,13 @@ class ilLPObjSettings
 
         if (!$this->__read()) {
             $this->obj_type = $ilObjDataCache->lookupType($this->obj_id);
-            
+
             include_once "Services/Object/classes/class.ilObjectLP.php";
             $olp = ilObjectLP::getInstance($this->obj_id);
             $this->obj_mode = $olp->getDefaultMode();
         }
     }
-    
+
     /**
      * Clone settings
      *
@@ -221,7 +227,7 @@ class ilLPObjSettings
     {
         $this->obj_mode = $a_mode;
     }
-    
+
     public function getMode()
     {
         return $this->obj_mode;
@@ -231,12 +237,12 @@ class ilLPObjSettings
     {
         return (int) $this->obj_id;
     }
-    
+
     public function getObjType()
     {
         return $this->obj_type;
     }
-    
+
     public function __read()
     {
         $res = $this->db->query("SELECT * FROM ut_lp_settings WHERE obj_id = " .
@@ -258,7 +264,7 @@ class ilLPObjSettings
         global $DIC;
 
         $ilDB = $DIC['ilDB'];
-        
+
         if (!$this->is_stored) {
             return $this->insert();
         }
@@ -267,14 +273,14 @@ class ilLPObjSettings
             "WHERE obj_id = " . $ilDB->quote($this->getObjId(), 'integer');
         $res = $ilDB->manipulate($query);
         $this->__read();
-        
+
         if ($a_refresh_lp) {
             $this->doLPRefresh();
         }
-        
+
         return true;
     }
-    
+
     public function insert()
     {
         global $DIC;
@@ -290,7 +296,7 @@ class ilLPObjSettings
             ")";
         $res = $ilDB->manipulate($query);
         $this->__read();
-    
+
         $this->doLPRefresh();
 
         return true;
@@ -317,7 +323,7 @@ class ilLPObjSettings
 
 
     // Static
-    
+
     public static function _lookupVisits($a_obj_id)
     {
         global $DIC;
@@ -333,24 +339,24 @@ class ilLPObjSettings
         }
         return self::LP_DEFAULT_VISITS;
     }
-    
+
     public static function _lookupDBModeForObjects(array $a_obj_ids)
     {
         global $DIC;
 
         $ilDB = $DIC['ilDB'];
-        
+
         // this does NOT handle default mode!
-        
+
         $res = array();
-        
+
         $query = "SELECT obj_id, u_mode FROM ut_lp_settings" .
             " WHERE " . $ilDB->in("obj_id", $a_obj_ids, "", "integer");
         $set = $ilDB->query($query);
         while ($row = $set->fetchRow(ilDBConstants::FETCHMODE_OBJECT)) {
             $res[$row->obj_id] = $row->u_mode;
         }
-        
+
         return $res;
     }
 
@@ -359,7 +365,7 @@ class ilLPObjSettings
         global $DIC;
 
         $ilDB = $DIC['ilDB'];
-        
+
         // this does NOT handle default mode!
 
         $query = "SELECT u_mode FROM ut_lp_settings" .
@@ -370,39 +376,43 @@ class ilLPObjSettings
             return $row['u_mode'];
         }
     }
-        
+
     public static function _mode2Text($a_mode)
     {
         global $DIC;
 
         $lng = $DIC['lng'];
 
-        if (array_key_exists($a_mode, self::$map) &&
-            is_array(self::$map[$a_mode])) {
+        if (
+            array_key_exists($a_mode, self::$map) &&
+            is_array(self::$map[$a_mode])
+        ) {
             return $lng->txt(self::$map[$a_mode][1]);
         }
     }
-    
+
     public static function _mode2InfoText($a_mode)
     {
         global $DIC;
 
         $lng = $DIC['lng'];
-        
-        if (array_key_exists($a_mode, self::$map) &&
-            is_array(self::$map[$a_mode])) {
+
+        if (
+            array_key_exists($a_mode, self::$map) &&
+            is_array(self::$map[$a_mode])
+        ) {
             $info = $lng->txt(self::$map[$a_mode][2]);
-                        
+
             if ($a_mode == self::LP_MODE_TLT) {
                 // dynamic content
                 include_once 'Services/Tracking/classes/class.ilObjUserTracking.php';
                 $info = sprintf($info, ilObjUserTracking::_getValidTimeSpan());
             }
-            
+
             return $info;
         }
     }
-    
+
     public static function getClassMap()
     {
         $res = array();
@@ -411,17 +421,17 @@ class ilLPObjSettings
         }
         return $res;
     }
-    
+
     public static function _deleteByObjId($a_obj_id)
     {
         global $DIC;
 
         $ilDB = $DIC['ilDB'];
-        
+
         // we are only removing settings for now
         // invalid ut_lp_collections-entries are filtered
         // ut_lp_marks is deemed private user data
-        
+
         $ilDB->manipulate("DELETE FROM ut_lp_settings" .
             " WHERE obj_id = " . $ilDB->quote($a_obj_id, "integer"));
     }

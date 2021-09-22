@@ -25,9 +25,9 @@ class ilLearningProgressBaseGUI
     public $lng = null;
     public $ref_id = 0;
     public $mode = 0;
-    
+
     protected $anonymized;
-    
+
     /**
      * @var ilLogger
      */
@@ -37,14 +37,14 @@ class ilLearningProgressBaseGUI
      * @var ilTabsGUI
      */
     protected $tabs_gui;
-    
-    
+
+
     const LP_CONTEXT_PERSONAL_DESKTOP = 1;
     const LP_CONTEXT_ADMINISTRATION = 2;
     const LP_CONTEXT_REPOSITORY = 3;
     const LP_CONTEXT_USER_FOLDER = 4;
     const LP_CONTEXT_ORG_UNIT = 5;
-    
+
     const LP_ACTIVE_SETTINGS = 1;
     const LP_ACTIVE_OBJECTS = 2;
     const LP_ACTIVE_PROGRESS = 3;
@@ -56,6 +56,7 @@ class ilLearningProgressBaseGUI
     const LP_ACTIVE_OBJSTATDAILY = 9;
     const LP_ACTIVE_OBJSTATADMIN = 10;
     const LP_ACTIVE_MATRIX = 11;
+    const LP_ACTIVE_RUBRIC = 92;
 
     public function __construct($a_mode, $a_ref_id = 0, $a_usr_id = 0)
     {
@@ -85,7 +86,7 @@ class ilLearningProgressBaseGUI
             $olp = ilObjectLP::getInstance($this->obj_id);
             $this->anonymized = $olp->isAnonymized();
         }
-        
+
         $this->logger = $GLOBALS['DIC']->logger()->trac();
     }
 
@@ -119,7 +120,7 @@ class ilLearningProgressBaseGUI
         }
         return 0;
     }
-    
+
     // Protected
     public function __getDefaultCommand()
     {
@@ -137,13 +138,15 @@ class ilLearningProgressBaseGUI
         $ilObjDataCache = $DIC['ilObjDataCache'];
 
 
-        
+
         switch ($this->getMode()) {
             case self::LP_CONTEXT_PERSONAL_DESKTOP:
 
                 include_once("Services/Tracking/classes/class.ilObjUserTracking.php");
-                if (ilObjUserTracking::_hasLearningProgressLearner() &&
-                    ilObjUserTracking::_enabledUserRelatedData()) {
+                if (
+                    ilObjUserTracking::_hasLearningProgressLearner() &&
+                    ilObjUserTracking::_enabledUserRelatedData()
+                ) {
                     $this->tabs_gui->addTarget(
                         'trac_progress',
                         $this->ctrl->getLinkTargetByClass('illplistofprogressgui', ''),
@@ -174,7 +177,19 @@ class ilLearningProgressBaseGUI
                 if ($olp->isActive()) {
                     include_once './Services/Tracking/classes/class.ilLearningProgressAccess.php';
                     $has_read = ilLearningProgressAccess::checkPermission('read_learning_progress', $this->getRefId());
-                                
+
+                    $has_write = ilLearningProgressAccess::checkPermission('write_learning_progress', $this->getRefId());
+                    if ($olp->getCurrentMode() == 92 && $has_write) {
+                        $this->tabs_gui->addSubTabTarget(
+                            "trac_rubric",
+                            $this->ctrl->getLinkTargetByClass("illplistofobjectsgui", 'showRubricCardForm'),
+                            "",
+                            "",
+                            "",
+                            $a_active == self::LP_ACTIVE_RUBRIC
+                        );
+                    }
+
                     if ($this->isAnonymized() || !$has_read) {
                         $this->ctrl->setParameterByClass('illplistofprogressgui', 'user_id', $this->getUserId());
                         $this->tabs_gui->addSubTabTarget(
@@ -202,9 +217,11 @@ class ilLearningProgressBaseGUI
                     }
 
                     if ($has_read) {
-                        if (!$this->isAnonymized() &&
+                        if (
+                            !$this->isAnonymized() &&
                             !($olp instanceof ilPluginLP) &&
-                            ilObjectLP::supportsMatrixView($this->obj_type)) {
+                            ilObjectLP::supportsMatrixView($this->obj_type)
+                        ) {
                             $this->tabs_gui->addSubTabTarget(
                                 "trac_matrix",
                                 $this->ctrl->getLinkTargetByClass("illplistofobjectsgui", 'showUserObjectMatrix'),
@@ -226,8 +243,10 @@ class ilLearningProgressBaseGUI
                     }
                 }
                 include_once './Services/Tracking/classes/class.ilLearningProgressAccess.php';
-                if (!($olp instanceof ilPluginLP) &&
-                    ilLearningProgressAccess::checkPermission('edit_learning_progress', $this->getRefId())) {
+                if (
+                    !($olp instanceof ilPluginLP) &&
+                    ilLearningProgressAccess::checkPermission('edit_learning_progress', $this->getRefId())
+                ) {
                     $this->tabs_gui->addSubTabTarget(
                         'trac_settings',
                         $this->ctrl->getLinkTargetByClass('illplistofsettingsgui', ''),
@@ -285,8 +304,8 @@ class ilLearningProgressBaseGUI
     }
 
     /**
-    * insert path
-    */
+     * insert path
+     */
     public function __insertPath(&$a_tpl, $a_ref_id)
     {
         global $DIC;
@@ -315,23 +334,23 @@ class ilLearningProgressBaseGUI
     {
         return ilLearningProgressBaseGUI::_showImageByStatus($tpl, $a_status, $tpl_prefix);
     }
-    
+
     // we need this public in table classes
     public static function _showImageByStatus(&$tpl, $a_status, $tpl_prefix = "")
     {
         global $DIC;
 
         $lng = $DIC['lng'];
-        
+
         $tpl->setVariable(
             $tpl_prefix . "STATUS_IMG",
             ilLearningProgressBaseGUI::_getImagePathForStatus($a_status)
         );
         $tpl->setVariable($tpl_prefix . "STATUS_ALT", $lng->txt($a_status));
-        
+
         return true;
     }
-    
+
     /**
      * Get image path for status
      */
@@ -352,7 +371,7 @@ class ilLearningProgressBaseGUI
             case ilLPStatus::LP_STATUS_PARTICIPATED:
                 return ilUtil::getImagePath('scorm/complete.svg');
                 break;
-            
+
             case ilLPStatus::LP_STATUS_NOT_ATTEMPTED:
             case ilLPStatus::LP_STATUS_NOT_PARTICIPATED:
             case ilLPStatus::LP_STATUS_NOT_REGISTERED:
@@ -363,7 +382,7 @@ class ilLearningProgressBaseGUI
             case ilLPStatus::LP_STATUS_FAILED:
                 return ilUtil::getImagePath('scorm/failed.svg');
                 break;
-            
+
             default:
                 return ilUtil::getImagePath('scorm/not_attempted.svg');
                 break;
@@ -378,17 +397,17 @@ class ilLearningProgressBaseGUI
         global $DIC;
 
         $lng = $DIC['lng'];
-        
+
         if (!$a_lng) {
             $a_lng = $lng;
         }
-        
+
         include_once("./Services/Tracking/classes/class.ilLPStatus.php");
         //echo "#".$a_status."#";
         switch ($a_status) {
             case ilLPStatus::LP_STATUS_IN_PROGRESS_NUM:
                 return $a_lng->txt(ilLPStatus::LP_STATUS_IN_PROGRESS);
-                
+
             case ilLPStatus::LP_STATUS_COMPLETED_NUM:
                 return $a_lng->txt(ilLPStatus::LP_STATUS_COMPLETED);
 
@@ -414,8 +433,8 @@ class ilLearningProgressBaseGUI
 
 
     /**
-    * show details about current object. Uses an existing info_gui object.
-    */
+     * show details about current object. Uses an existing info_gui object.
+     */
     public function __showObjectDetails(&$info, $item_id = 0, $add_section = true)
     {
         global $DIC;
@@ -423,14 +442,16 @@ class ilLearningProgressBaseGUI
         $ilObjDataCache = $DIC['ilObjDataCache'];
 
         $details_id = $item_id ? $item_id : $this->details_id;
-        
+
         include_once 'Services/Object/classes/class.ilObjectLP.php';
         $olp = ilObjectLP::getInstance($details_id);
         $mode = $olp->getCurrentMode();
 
         include_once './Services/MetaData/classes/class.ilMDEducational.php';
-        if ($mode == ilLPObjSettings::LP_MODE_VISITS ||
-           ilMDEducational::_getTypicalLearningTimeSeconds($details_id)) {
+        if (
+            $mode == ilLPObjSettings::LP_MODE_VISITS ||
+            ilMDEducational::_getTypicalLearningTimeSeconds($details_id)
+        ) {
             // Section object details
             if ($add_section) {
                 $info->addSection($this->lng->txt('details'));
@@ -454,7 +475,7 @@ class ilLearningProgressBaseGUI
         global $DIC;
 
         $ilUser = $DIC['ilUser'];
-        
+
         // #13525 - irrelevant personal data is not to be presented
         return;
 
@@ -485,24 +506,24 @@ class ilLearningProgressBaseGUI
         $ilObjDataCache = $DIC['ilObjDataCache'];
 
         $type = $ilObjDataCache->lookupType($item_id);
-        
+
         // Section learning_progress
         // $info->addSection($this->lng->txt('trac_learning_progress'));
         // see ilLPTableBaseGUI::parseTitle();
         $info->addSection($this->lng->txt("trac_progress") . ": " . ilObject::_lookupTitle($item_id));
-        
+
         $olp = ilObjectLP::getInstance($item_id);
         $info->addProperty(
             $this->lng->txt('trac_mode'),
             $olp->getModeText($olp->getCurrentMode())
         );
-        
+
         switch ($type) {
             case 'lm':
             case 'htlm':
                 include_once 'Services/Tracking/classes/class.ilLearningProgress.php';
                 $progress = ilLearningProgress::_getProgress($user_id, $item_id);
-            
+
                 if ($progress['access_time']) {
                     $info->addProperty(
                         $this->lng->txt('last_access'),
@@ -516,7 +537,7 @@ class ilLearningProgressBaseGUI
                     $info->addProperty($this->lng->txt('trac_spent_time'), ilDatePresentation::secondsToString($progress['spent_seconds']));
                 }
                 // fallthrough
-                
+
                 // no break
             case 'exc':
             case 'tst':
@@ -541,10 +562,11 @@ class ilLearningProgressBaseGUI
                     $this->lng->txt('trac_status'),
                     ilUtil::img($status_path, $status_text) . " " . $status_text
                 );
-                
+
                 // #15334 - see ilLPTableBaseGUI::isPercentageAvailable()
                 $mode = $olp->getCurrentMode();
-                if (in_array($mode, array(ilLPObjSettings::LP_MODE_TLT,
+                if (in_array($mode, array(
+                    ilLPObjSettings::LP_MODE_TLT,
                     ilLPObjSettings::LP_MODE_VISITS,
                     // ilLPObjSettings::LP_MODE_OBJECTIVES,
                     ilLPObjSettings::LP_MODE_LTI_OUTCOME,
@@ -555,15 +577,15 @@ class ilLearningProgressBaseGUI
                     ilLPObjSettings::LP_MODE_CMIX_COMPLETED_OR_PASSED,
                     ilLPObjSettings::LP_MODE_CMIX_COMPL_OR_PASSED_WITH_FAILED,
                     ilLPObjSettings::LP_MODE_SCORM,
-                    ilLPObjSettings::LP_MODE_TEST_PASSED))) {
+                    ilLPObjSettings::LP_MODE_TEST_PASSED
+                ))) {
                     include_once 'Services/Tracking/classes/class.ilLPStatus.php';
                     $perc = ilLPStatus::_lookupPercentage($item_id, $user_id);
                     $info->addProperty($this->lng->txt('trac_percentage'), (int) $perc . "%");
                 }
                 break;
-
         }
-        
+
         include_once 'Services/Tracking/classes/class.ilLPMarks.php';
 
         if (ilObjectLP::supportsMark($type)) {
@@ -571,11 +593,68 @@ class ilLearningProgressBaseGUI
                 $info->addProperty($this->lng->txt('trac_mark'), $mark);
             }
         }
-        
-        if (strlen($comment = ilLPMarks::_lookupComment($user_id, $item_id))) {
+
+        if (strlen($comment = ilLPMarks::_lookupComment($user_id, $item_id) && $olp->getCurrentMode() !== 92)) {
             $info->addProperty($this->lng->txt('trac_comment'), $comment);
         }
     }
+
+    /**
+     * Update a User's Rubric. (JKN Patch.)
+     * @param $user_id
+     * @param $obj_id
+     * @param $passing_grade_minimum
+     */
+    function __updateUserRubric($user_id, $obj_id, $passing_grade_minimum)
+    {
+        $form = $this->initEditUserForm($user_id, $obj_id);
+        if ($form->checkInput()) {
+            include_once 'Services/Tracking/classes/class.ilLPMarks.php';
+            $marks = new ilLPMarks($obj_id, $user_id);
+            $marks->setMark($form->getInput("mark"));
+            $marks->setComment($form->getInput("comment"));
+            $marks->setCompleted(1);
+            $do_lp = true;
+            $marks->update();
+            // if assignment, updated exc_mem_ass_status
+            $obj_type = ilObject::_lookupType($obj_id);
+            if ($obj_type == 'exc') {
+                include_once("./Modules/Exercise/classes/class.ilExAssignment.php");
+                include_once("./Modules/Exercise/classes/class.ilExAssignmentMemberStatus.php");
+                // do we have an ass id?
+                $ass_id = 0;
+                if (isset($_GET['ass_id'])) {
+                    // yes, came from submission and grades
+                    $ass_id = $_GET['ass_id'];
+                    $assignmentMember = new ilExAssignmentMemberStatus($ass_id, $user_id);
+                } else {
+                    // no, we need to get it
+                    $ass_ids = ilExAssignment::getAssignmentDataOfExercise($obj_id);
+                    $ass_id = $ass_ids[0];
+                    $assignmentMember = new ilExAssignmentMemberStatus($ass_id['id'], $user_id);
+                }
+
+                if ($marks->getMark() >= $passing_grade_minimum) {
+                    $assignmentMember->setStatus('passed');
+                } else {
+                    $assignmentMember->setStatus('failed');
+                }
+                $assignmentMember->setMark($marks->getMark());
+                $assignmentMember->update();
+            } else {
+                include_once("./Services/Tracking/classes/class.ilLPStatusWrapper.php");
+                ilLPStatusWrapper::_updateStatus($obj_id, $user_id);
+            }
+            include_once("./Services/Tracking/classes/class.ilLPStatus.php");
+            if ($marks->getMark() >= $passing_grade_minimum) {
+                ilLPStatus::writeStatus($obj_id, $user_id, ilLPStatus::LP_STATUS_COMPLETED_NUM, false, true);
+            } else {
+                ilLPStatus::writeStatus($obj_id, $user_id, ilLPStatus::LP_STATUS_FAILED_NUM, false, true);
+            }
+        }
+    }
+
+
 
     public static function __readStatus($a_obj_id, $user_id)
     {
@@ -602,17 +681,17 @@ class ilLearningProgressBaseGUI
     }
 
     /**
-    * Function that sorts ids by a given table field using WHERE IN
-    * E.g: __sort(array(6,7),'usr_data','lastname','usr_id') => sorts by lastname
-    *
-    * @param array Array of ids
-    * @param string table name
-    * @param string table field
-    * @param string id name
-    * @return array sorted ids
-    *
-    * @access protected
-    */
+     * Function that sorts ids by a given table field using WHERE IN
+     * E.g: __sort(array(6,7),'usr_data','lastname','usr_id') => sorts by lastname
+     *
+     * @param array Array of ids
+     * @param string table name
+     * @param string table field
+     * @param string id name
+     * @return array sorted ids
+     *
+     * @access protected
+     */
     public function __sort($a_ids, $a_table, $a_field, $a_id_name)
     {
         global $DIC;
@@ -655,10 +734,10 @@ class ilLearningProgressBaseGUI
         $ilObjDataCache = $DIC['ilObjDataCache'];
 
         include_once 'Services/Object/classes/class.ilObjectLP.php';
-        
+
         foreach ($a_items as $item_id) {
             $olp = ilObjectLP::getInstance($item_id);
-            
+
             $this->obj_data[$item_id]['type'] = $ilObjDataCache->lookupType($item_id);
             $this->obj_data[$item_id]['mode'] = $olp->getCurrentMode();
             if ($this->obj_data[$item_id]['mode'] == ilLPObjSettings::LP_MODE_TLT) {
@@ -682,7 +761,7 @@ class ilLearningProgressBaseGUI
         global $DIC;
 
         $lng = $DIC['lng'];
-        
+
         $tpl = new ilTemplate("tpl.lp_legend.html", true, true, "Services/Tracking");
         $tpl->setVariable(
             "IMG_NOT_ATTEMPTED",
@@ -716,69 +795,71 @@ class ilLearningProgressBaseGUI
             "TXT_FAILED",
             $lng->txt("trac_failed")
         );
-        
+
         include_once "Services/UIComponent/Panel/classes/class.ilPanelGUI.php";
         $panel = ilPanelGUI::getInstance();
         $panel->setPanelStyle(ilPanelGUI::PANEL_STYLE_SECONDARY);
         $panel->setBody($tpl->get());
-        
+
         return $panel->getHTML();
     }
-    
+
     protected function initEditUserForm($a_user_id, $a_obj_id, $a_cancel = null)
     {
         global $DIC;
 
         $lng = $DIC['lng'];
         $ilCtrl = $DIC['ilCtrl'];
-        
+
         include_once 'Services/Object/classes/class.ilObjectLP.php';
         $olp = ilObjectLP::getInstance($a_obj_id);
         $lp_mode = $olp->getCurrentMode();
-        
+
         include_once './Services/Form/classes/class.ilPropertyFormGUI.php';
         $form = new ilPropertyFormGUI();
-        
+
         $form->setFormAction($ilCtrl->getFormAction($this, "updateUser"));
-        
+
         $form->setTitle($lng->txt("edit") . ": " . ilObject::_lookupTitle($a_obj_id));
         $form->setDescription($lng->txt('trac_mode') . ": " . $olp->getModeText($lp_mode));
-        
+
         include_once "Services/User/classes/class.ilUserUtil.php";
         $user = new ilNonEditableValueGUI($lng->txt("user"), null, true);
         $user->setValue(ilUserUtil::getNamePresentation($a_user_id, true));
         $form->addItem($user);
-                
+
         include_once 'Services/Tracking/classes/class.ilLPMarks.php';
         $marks = new ilLPMarks($a_obj_id, $a_user_id);
-        
+
         if (ilObjectLP::supportsMark(ilObject::_lookupType($a_obj_id))) {
             $mark = new ilTextInputGUI($lng->txt("trac_mark"), "mark");
             $mark->setValue($marks->getMark());
             $mark->setMaxLength(32);
             $form->addItem($mark);
         }
-        
+
         $comm = new ilTextInputGUI($lng->txt("trac_comment"), "comment");
         $comm->setValue($marks->getComment());
         $form->addItem($comm);
-            
-        if ($lp_mode == ilLPObjSettings::LP_MODE_MANUAL ||
-            $lp_mode == ilLPObjSettings::LP_MODE_MANUAL_BY_TUTOR) {
+
+        if (
+            $lp_mode == ilLPObjSettings::LP_MODE_MANUAL ||
+            $lp_mode == ilLPObjSettings::LP_MODE_MANUAL_BY_TUTOR
+        ) {
             include_once("./Services/Tracking/classes/class.ilLPStatus.php");
             $completed = ilLPStatus::_lookupStatus($a_obj_id, $a_user_id);
-            
+
             $status = new ilCheckboxInputGUI($lng->txt('trac_completed'), "completed");
             $status->setChecked(($completed == ilLPStatus::LP_STATUS_COMPLETED_NUM));
             $form->addItem($status);
         }
-            
+
         $form->addCommandButton("updateUser", $lng->txt('save'));
-        
+
         if ($a_cancel) {
             $form->addCommandButton($a_cancel, $lng->txt('cancel'));
         }
-        
+
         return $form;
     }
 
@@ -787,19 +868,19 @@ class ilLearningProgressBaseGUI
         global $DIC;
 
         $ilCtrl = $DIC['ilCtrl'];
-        
+
         if (!$a_sub_id) {
             $obj_id = ilObject::_lookupObjId($a_ref_id);
         } else {
             $ilCtrl->setParameter($this, 'userdetails_id', $a_sub_id);
             $obj_id = ilObject::_lookupObjId($a_sub_id);
         }
-                
+
         $ilCtrl->setParameter($this, 'user_id', $a_user_id);
         $ilCtrl->setParameter($this, 'details_id', $a_ref_id);
-        
+
         $form = $this->initEditUserForm($a_user_id, $obj_id, $a_cancel);
-        
+
         return $form->getHTML();
     }
 
@@ -812,9 +893,9 @@ class ilLearningProgressBaseGUI
             $marks = new ilLPMarks($obj_id, $user_id);
             $marks->setMark($form->getInput("mark"));
             $marks->setComment($form->getInput("comment"));
-            
+
             $do_lp = false;
-            
+
             // status/completed is optional
             $status = $form->getItemByPostVar("completed");
             if (is_object($status)) {
@@ -833,7 +914,7 @@ class ilLearningProgressBaseGUI
             }
         }
     }
-    
+
     public static function isObjectOffline($a_obj_id, $a_type = null)
     {
         global $DIC;
@@ -844,14 +925,14 @@ class ilLearningProgressBaseGUI
         if (!$a_type) {
             $a_type = $ilObjDataCache->lookupType($a_obj_id);
         }
-        
+
         if ($objDefinition->isPluginTypeName($a_type)) {
             return false;
         }
-        
+
         $class = "ilObj" . $objDefinition->getClassName($a_type) . "Access";
         include_once $objDefinition->getLocation($a_type) . "/class." . $class . ".php";
-        return call_user_func(array($class,'_isOffline'), $a_obj_id);
+        return call_user_func(array($class, '_isOffline'), $a_obj_id);
 
         // PHP 5.3 only ?
         //return $class::_isOffline($obj_id);

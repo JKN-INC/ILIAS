@@ -2,17 +2,17 @@
 /* Copyright (c) 1998-2010 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 /**
-* Class ilLPListOfProgress
-*
-* @author Stefan Meyer <smeyer.ilias@gmx.de>
-*
-* @version $Id$
-*
-* @ilCtrl_Calls ilLPListOfProgressGUI: ilLPProgressTableGUI
-*
-* @package ilias-tracking
-*
-*/
+ * Class ilLPListOfProgress
+ *
+ * @author Stefan Meyer <smeyer.ilias@gmx.de>
+ *
+ * @version $Id$
+ *
+ * @ilCtrl_Calls ilLPListOfProgressGUI: ilLPProgressTableGUI
+ *
+ * @package ilias-tracking
+ *
+ */
 class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
 {
     public $tracked_user = null;
@@ -24,12 +24,12 @@ class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
     {
         parent::__construct($a_mode, $a_ref_id, $a_user_id);
         $this->__initUser($a_user_id);
-        
+
         // Set item id for details
         $this->__initDetails((int) $_GET['details_id']);
         $this->ctrl->saveParameter($this, 'details_id', $_REQUEST['details_id']);
     }
-        
+
 
     /**
      * execute command
@@ -39,7 +39,7 @@ class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
         global $DIC;
 
         $ilUser = $DIC['ilUser'];
-        
+
         $this->ctrl->setReturn($this, "show");
         $this->ctrl->saveParameter($this, 'user_id', $this->getUserId());
         switch ($this->ctrl->getNextClass()) {
@@ -53,7 +53,6 @@ class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
             default:
                 $cmd = $this->__getDefaultCommand();
                 $this->$cmd();
-
         }
         return true;
     }
@@ -65,7 +64,7 @@ class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
         $ilObjDataCache = $DIC['ilObjDataCache'];
 
         switch ($this->getMode()) {
-            // Show only detail of current repository item if called from repository
+                // Show only detail of current repository item if called from repository
             case self::LP_CONTEXT_REPOSITORY:
                 $this->__initDetails($this->getRefId());
                 return $this->details();
@@ -111,14 +110,16 @@ class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
         // show back to list
         if ((int) $_GET['crs_id']) {
             $this->ctrl->setParameter($this, 'details_id', (int) $_GET['crs_id']);
-            
+
             $ilToolbar->addButton(
                 $this->lng->txt('trac_view_crs'),
                 $this->ctrl->getLinkTarget($this, 'details')
             );
-        } elseif ($this->getMode() == self::LP_CONTEXT_PERSONAL_DESKTOP or
-               $this->getMode() == self::LP_CONTEXT_ADMINISTRATION or
-               $this->getMode() == self::LP_CONTEXT_USER_FOLDER) {
+        } elseif (
+            $this->getMode() == self::LP_CONTEXT_PERSONAL_DESKTOP or
+            $this->getMode() == self::LP_CONTEXT_ADMINISTRATION or
+            $this->getMode() == self::LP_CONTEXT_USER_FOLDER
+        ) {
             $ilToolbar->addButton(
                 $this->lng->txt('trac_view_list'),
                 $this->ctrl->getLinkTarget($this, 'show')
@@ -135,12 +136,32 @@ class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
         $info->enableLearningProgress(true);
         $info->setFormAction($ilCtrl->getFormAction($this));
         $this->__appendUserInfo($info, $this->tracked_user);
-        $this->__appendLPDetails($info, $this->details_obj_id, $this->tracked_user->getId());
-        $this->__showObjectDetails($info, $this->details_obj_id, false);
-        
+
+        // START PATCH JKN RUBRIC
+        include_once('./Services/Tracking/classes/rubric/class.ilLPRubricGrade.php');
+        include_once('./Services/Tracking/classes/rubric/class.ilLPRubricGradeGUI.php');
+        //if the user is viewing history show the old status/mark/etc.
+        if (
+            $this->details_mode === 92 && $_REQUEST['grader_history'] !== 'current'
+            && !is_null($_REQUEST['grader_history'])
+        ) {
+            $marks = ilLPRubricGrade::_lookupRubricHistoryLP($_REQUEST['grader_history']);
+            include_once("./Services/Tracking/classes/class.ilLearningProgressBaseGUI.php");
+            $status_path = ilLearningProgressBaseGUI::_getImagePathForStatus($marks['status']);
+            $status_text = ilLearningProgressBaseGUI::_getStatusText($marks['status']);
+            $info->addSection($this->lng->txt("trac_progress") . ": " . ilObject::_lookupTitle($this->details_obj_id));
+            $info->addProperty($this->lng->txt('trac_mode'), $this->lng->txt('trac_mode_rubric'));
+            $info->addProperty($this->lng->txt('trac_status'), ilUtil::img($status_path, $status_text) . " " . $status_text);
+            $info->addProperty($this->lng->txt('trac_mark'), $marks['mark']);
+            $info->addProperty($this->lng->txt('trac_comment'), $marks['comments']);
+        } else {
+            $this->__appendLPDetails($info, $this->details_obj_id, $this->tracked_user->getId());
+            $this->__showObjectDetails($info, $this->details_obj_id, false);
+        }
+
         // Finally set template variable
         $this->tpl->setVariable("LM_INFO", $info->getHTML());
-        
+
         include_once './Services/Object/classes/class.ilObjectLP.php';
         $olp = ilObjectLP::getInstance($this->details_obj_id);
         $collection = $olp->getCollectionInstance();
@@ -150,14 +171,14 @@ class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
                 if ($collection instanceof ilLPCollectionOfRepositoryObjects) {
                     $obj_id = ilObject::_lookupObjectId($item_id);
                     if ($ilAccess->checkAccessOfUser($this->tracked_user->getId(), 'visible', '', $item_id)) {
-                        $obj_ids[$obj_id] = array( $item_id );
+                        $obj_ids[$obj_id] = array($item_id);
                     }
                 } else {
                     $obj_ids[] = $item_id;
                 }
             }
         }
-        
+
         // #15247
         if (count($obj_ids) > 0) {
             // seems obsolete
@@ -168,8 +189,49 @@ class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
             $lp_table = new ilLPProgressTableGUI($this, "details", $this->tracked_user, $obj_ids, true, $this->details_mode, $personal_only, $this->details_obj_id, $this->details_id);
             $this->tpl->setVariable("LP_OBJECTS", $lp_table->getHTML());
         }
-        
+
         $this->tpl->setVariable("LEGEND", $this->__getLegendHTML());
+
+        if ($this->details_mode == ilLPObjSettings::LP_MODE_RUBRIC) {
+            $rubricObj = new ilLPRubricGrade($this->getObjId());
+            $rubricGui = new ilLPRubricGradeGUI();
+            $a_user = ilObjectFactory::getInstanceByObjId($_SESSION['_authsession_user_id']);
+            if ($rubricObj->objHasRubric() && $rubricObj->isRubricComplete()) {
+                $rubricGui->setUserHistoryId($_REQUEST['grader_history']);
+                $rubricGui->setUserHistory($rubricObj->getUserHistory($_SESSION['_authsession_user_id']));
+                $rubricGui->setRubricData($rubricObj->load());
+                $rubricGui->setUserData($rubricObj->getRubricUserGradeData($_SESSION['_authsession_user_id'], $_REQUEST['grader_history']));
+                $rubricGui->setRubricComment($rubricObj->getRubricComment($_SESSION['_authsession_user_id'], $_REQUEST['grader_history']));
+                $this->tpl->setVariable(
+                    "LP_OBJECTS",
+                    $rubricGui->getStudentViewHTML(
+                        $this->ctrl->getFormAction($this),
+                        $a_user->getFullname(),
+                        $_SESSION['_authsession_user_id']
+                    )
+                );
+            }
+        }
+    }
+
+    function viewHistory()
+    {
+        $this->ctrl->setParameter($this, 'grader_history', $_POST['grader_history']);
+        $this->ctrl->redirect($this, 'details');
+    }
+
+    public function exportGradedPdf()
+    {
+        include_once("./Services/Tracking/classes/rubric/class.ilRubricPDF.php");
+        $rubricPDF = new ilRubricPDF($this->getObjId());
+        $rubricPDF->exportGradedPDF();
+    }
+
+    public function exportPDF()
+    {
+        include_once("./Services/Tracking/classes/rubric/class.ilRubricPDF.php");
+        $rubricPDF = new ilRubricPDF($this->getObjId());
+        $rubricPDF->exportPDF();
     }
 
     public function __showProgressList()
@@ -181,12 +243,12 @@ class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
         $ilCtrl = $DIC['ilCtrl'];
 
         $this->tpl->addBlockFile('ADM_CONTENT', 'adm_content', 'tpl.lp_list_progress.html', 'Services/Tracking');
-        
+
         // User info
         include_once("./Services/InfoScreen/classes/class.ilInfoScreenGUI.php");
         $info = new ilInfoScreenGUI($this);
         $info->setFormAction($ilCtrl->getFormAction($this));
-        
+
         if ($this->__appendUserInfo($info, $this->tracked_user)) {
             $this->tpl->setCurrentBlock("info_user");
             $this->tpl->setVariable("USER_INFO", $info->getHTML());
@@ -218,7 +280,7 @@ class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
         } else {
             $this->tracked_user = $ilUser;
         }
-        
+
         // #8762: see ilObjUserGUI->getTabs()
         if ($this->mode == self::LP_CONTEXT_USER_FOLDER && $rbacsystem->checkAccess('read', $this->ref_id)) {
             return true;
@@ -232,7 +294,7 @@ class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
         if (!$rbacreview->isAssigned($ilUser->getId(), SYSTEM_ROLE_ID)) {
             $this->tracked_user = $ilUser;
         }
-        
+
         return true;
     }
 
@@ -247,11 +309,11 @@ class ilLPListOfProgressGUI extends ilLearningProgressBaseGUI
         }
         if ($a_details_id) {
             $ref_ids = ilObject::_getAllReferences($a_details_id);
-            
+
             $this->details_id = $a_details_id;
             $this->details_obj_id = $ilObjDataCache->lookupObjId($this->details_id);
             $this->details_type = $ilObjDataCache->lookupType($this->details_obj_id);
-                        
+
             include_once 'Services/Object/classes/class.ilObjectLP.php';
             $olp = ilObjectLP::getInstance($this->details_obj_id);
             $this->details_mode = $olp->getCurrentMode();
