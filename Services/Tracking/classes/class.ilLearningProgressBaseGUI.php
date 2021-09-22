@@ -178,8 +178,10 @@ class ilLearningProgressBaseGUI
                     include_once './Services/Tracking/classes/class.ilLearningProgressAccess.php';
                     $has_read = ilLearningProgressAccess::checkPermission('read_learning_progress', $this->getRefId());
 
-                    $has_write = ilLearningProgressAccess::checkPermission('write_learning_progress', $this->getRefId());
-                    if ($olp->getCurrentMode() == 92 && $has_write) {
+                    if (
+                        $olp->getCurrentMode() == 92
+                        && ilLearningProgressAccess::checkPermission('edit_learning_progress', $this->getRefId())
+                    ) {
                         $this->tabs_gui->addSubTabTarget(
                             "trac_rubric",
                             $this->ctrl->getLinkTargetByClass("illplistofobjectsgui", 'showRubricCardForm'),
