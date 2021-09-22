@@ -1,17 +1,20 @@
 <?php
+
+require_once "./Services/Tracking/classes/rubric/class.ilLPRubricCard.php";
+
 /* Copyright (c) 1998-2009 ILIAS open source, Extended GPL, see docs/LICENSE */
 
 /** @defgroup ModulesExercise Modules/Exercise
  */
 
 /**
-* Class ilObjExercise
-*
-* @author Stefan Meyer <meyer@leifos.com>
-* @author Michael Jansen <mjansen@databay.de>
-*
-* @ingroup ModulesExercise
-*/
+ * Class ilObjExercise
+ *
+ * @author Stefan Meyer <meyer@leifos.com>
+ * @author Michael Jansen <mjansen@databay.de>
+ *
+ * @ingroup ModulesExercise
+ */
 class ilObjExercise extends ilObject
 {
     /**
@@ -31,14 +34,14 @@ class ilObjExercise extends ilObject
     public $year;
     public $instruction;
     public $certificate_visibility;
-    
+
     public $tutor_feedback = 7; // [int]
 
     /**
      * @var int number of mandatory assignments in random pass mode
      */
     protected $nr_random_mand;
-    
+
     const TUTOR_FEEDBACK_MAIL = 1;
     const TUTOR_FEEDBACK_TEXT = 2;
     const TUTOR_FEEDBACK_FILE = 4;
@@ -68,11 +71,11 @@ class ilObjExercise extends ilObject
     protected $mandatory_manager;
 
     /**
-    * Constructor
-    * @access	public
-    * @param	integer	reference_id or object_id
-    * @param	boolean	treat the id as reference_id (true) or object_id (false)
-    */
+     * Constructor
+     * @access	public
+     * @param	integer	reference_id or object_id
+     * @param	boolean	treat the id as reference_id (true) or object_id (false)
+     */
     public function __construct($a_id = 0, $a_call_by_reference = true)
     {
         global $DIC;
@@ -128,7 +131,7 @@ class ilObjExercise extends ilObject
     {
         return $this->instruction;
     }
-    
+
     /**
      * Set pass mode (all | nr)
      *
@@ -138,7 +141,7 @@ class ilObjExercise extends ilObject
     {
         $this->pass_mode = $a_val;
     }
-    
+
     /**
      * Get pass mode (all | nr)
      *
@@ -148,7 +151,7 @@ class ilObjExercise extends ilObject
     {
         return $this->pass_mode;
     }
-    
+
     /**
      * Set number of assignments that must be passed to pass the exercise
      *
@@ -158,7 +161,7 @@ class ilObjExercise extends ilObject
     {
         $this->pass_nr = $a_val;
     }
-    
+
     /**
      * Get number of assignments that must be passed to pass the exercise
      *
@@ -168,7 +171,7 @@ class ilObjExercise extends ilObject
     {
         return $this->pass_nr;
     }
-    
+
     /**
      * Set whether submissions of learners should be shown to other learners after deadline
      *
@@ -178,7 +181,7 @@ class ilObjExercise extends ilObject
     {
         $this->show_submissions = $a_val;
     }
-    
+
     /**
      * Get whether submissions of learners should be shown to other learners after deadline
      *
@@ -188,7 +191,7 @@ class ilObjExercise extends ilObject
     {
         return $this->show_submissions;
     }
-    
+
     /**
      * Set number of mandatory assignments in random pass mode
      *
@@ -198,7 +201,7 @@ class ilObjExercise extends ilObject
     {
         $this->nr_random_mand = $a_val;
     }
-    
+
     /**
      * Get number of mandatory assignments in random pass mode
      *
@@ -208,7 +211,7 @@ class ilObjExercise extends ilObject
     {
         return $this->nr_random_mand;
     }
-    
+
 
     /*	function getFiles()
         {
@@ -217,7 +220,7 @@ class ilObjExercise extends ilObject
 
     public function checkDate()
     {
-        return	$this->hour == (int) date("H", $this->timestamp) and
+        return    $this->hour == (int) date("H", $this->timestamp) and
             $this->minutes == (int) date("i", $this->timestamp) and
             $this->day == (int) date("d", $this->timestamp) and
             $this->month == (int) date("m", $this->timestamp) and
@@ -228,31 +231,31 @@ class ilObjExercise extends ilObject
     {
         return $this->tutor_feedback & self::TUTOR_FEEDBACK_TEXT;
     }
-    
+
     public function hasTutorFeedbackMail()
     {
         return $this->tutor_feedback & self::TUTOR_FEEDBACK_MAIL;
     }
-    
+
     public function hasTutorFeedbackFile()
     {
         return $this->tutor_feedback & self::TUTOR_FEEDBACK_FILE;
     }
-    
+
     protected function getTutorFeedback()
     {
         return $this->tutor_feedback;
     }
-    
+
     public function setTutorFeedback($a_value)
     {
         $this->tutor_feedback = $a_value;
     }
-    
+
     public function saveData()
     {
         $ilDB = $this->db;
-        
+
         $ilDB->insert("exc_data", array(
             "obj_id" => array("integer", $this->getId()),
             "instruction" => array("clob", $this->getInstruction()),
@@ -264,10 +267,10 @@ class ilObjExercise extends ilObject
             'compl_by_submission' => array('integer', (int) $this->isCompletionBySubmissionEnabled()),
             "certificate_visibility" => array("integer", (int) $this->getCertificateVisibility()),
             "tfeedback" => array("integer", (int) $this->getTutorFeedback())
-            ));
+        ));
         return true;
     }
-    
+
     /**
      * Clone exercise (no member data)
      *
@@ -278,7 +281,7 @@ class ilObjExercise extends ilObject
     public function cloneObject($a_target_id, $a_copy_id = 0, $a_omit_tree = false)
     {
         $ilDB = $this->db;
-        
+
         // Copy settings
         $new_obj = parent::cloneObject($a_target_id, $a_copy_id, $a_omit_tree);
         $new_obj->setInstruction($this->getInstruction());
@@ -294,17 +297,23 @@ class ilObjExercise extends ilObject
         $new_obj->update();
 
         $new_obj->saveCertificateVisibility($this->getCertificateVisibility());
-        
+
+        //if exercise has rubric then copy that as well
+        $rubric = new ilLPRubricCard($this->getId());
+        if ($rubric->objHasRubric()) {
+            $rubric->copy($new_obj->getId());
+        }
+
         // Copy criteria catalogues
         $crit_cat_map = array();
         foreach (ilExcCriteriaCatalogue::getInstancesByParentId($this->getId()) as $crit_cat) {
             $new_id = $crit_cat->cloneObject($new_obj->getId());
             $crit_cat_map[$crit_cat->getId()] = $new_id;
         }
-            
+
         // Copy assignments
         ilExAssignment::cloneAssignmentsOfExercise($this->getId(), $new_obj->getId(), $crit_cat_map);
-        
+
         // Copy learning progress settings
         $obj_settings = new ilLPObjSettings($this->getId());
         $obj_settings->cloneSettings($new_obj->getId());
@@ -338,13 +347,13 @@ class ilObjExercise extends ilObject
 
         return $new_obj;
     }
-    
+
     /**
-    * delete course and all related data
-    *
-    * @access	public
-    * @return	boolean	true if all object data were removed; false if only a references were removed
-    */
+     * delete course and all related data
+     *
+     * @access	public
+     * @return	boolean	true if all object data were removed; false if only a references were removed
+     */
     public function delete()
     {
         $ilDB = $this->db;
@@ -362,7 +371,7 @@ class ilObjExercise extends ilObject
 
         // remove all notifications
         ilNotification::removeForObject(ilNotification::TYPE_EXERCISE_SUBMISSION, $this->getId());
-            
+
         $ilAppEventHandler->raise(
             'Modules/Exercise',
             'delete',
@@ -398,7 +407,7 @@ class ilObjExercise extends ilObject
             $this->setCertificateVisibility($row->certificate_visibility);
             $this->setTutorFeedback($row->tfeedback);
         }
-        
+
         $this->members_obj = new ilExerciseMembers($this);
 
         return true;
@@ -425,12 +434,12 @@ class ilObjExercise extends ilObject
             "show_submissions" => array("integer", (int) $this->getShowSubmissions()),
             'compl_by_submission' => array('integer', (int) $this->isCompletionBySubmissionEnabled()),
             'tfeedback' => array('integer', (int) $this->getTutorFeedback()),
-            ), array(
+        ), array(
             "obj_id" => array("integer", $this->getId())
-            ));
+        ));
 
         $this->updateAllUsersStatus();
-        
+
         return true;
     }
 
@@ -441,28 +450,28 @@ class ilObjExercise extends ilObject
     {
         $lng = $this->lng;
         $ilUser = $this->user;
-        
+
         $lng->loadLanguageModule("exc");
-        
+
         // subject
         $subject = $a_ass->getTitle()
             ? $this->getTitle() . ": " . $a_ass->getTitle()
             : $this->getTitle();
-        
-        
+
+
         // body
-        
+
         $body = $a_ass->getInstruction();
         $body .= "\n\n";
-        
+
         $body .= $lng->txt("exc_edit_until") . ": ";
         $body .= (!$a_ass->getDeadline())
-          ? $lng->txt("exc_no_deadline_specified")
-          : ilDatePresentation::formatDate(new ilDateTime($a_ass->getDeadline(), IL_CAL_UNIX));
+            ? $lng->txt("exc_no_deadline_specified")
+            : ilDatePresentation::formatDate(new ilDateTime($a_ass->getDeadline(), IL_CAL_UNIX));
         $body .= "\n\n";
-        
+
         $body .= ilLink::_getLink($this->getRefId(), "exc");
-        
+
 
         // files
         $file_names = array();
@@ -475,7 +484,7 @@ class ilObjExercise extends ilObject
                 $file_names[] = $file["name"];
             }
         }
-        
+
         // recipients
         $recipients = array();
         foreach ($a_members as $member_id) {
@@ -484,7 +493,7 @@ class ilObjExercise extends ilObject
             unset($tmp_obj);
         }
         $recipients = implode(",", $recipients);
-    
+
         // send mail
         $tmp_mail_obj = new ilMail($ilUser->getId());
         $errors = $tmp_mail_obj->enqueue(
@@ -525,9 +534,9 @@ class ilObjExercise extends ilObject
         if ($a_user_id == 0) {
             $a_user_id = $ilUser->getId();
         }
-        
+
         $ass = ilExAssignment::getInstancesByExercise($this->getId());
-        
+
         $passed_all_mandatory = true;
         $failed_a_mandatory = false;
         $cnt_passed = 0;
@@ -550,11 +559,11 @@ class ilObjExercise extends ilObject
                 $cnt_notgraded++;
             }
         }
-        
+
         if (count($ass) == 0) {
             $passed_all_mandatory = false;
         }
-        
+
         if ($this->getPassMode() == self::PASS_MODE_ALL) {
             $overall_stat = "notgraded";
             if ($failed_a_mandatory) {
@@ -581,19 +590,20 @@ class ilObjExercise extends ilObject
 
         $ret = array(
             "overall_status" => $overall_stat,
-            "failed_a_mandatory" => $failed_a_mandatory);
+            "failed_a_mandatory" => $failed_a_mandatory
+        );
         //echo "<br>p:".$cnt_passed.":ng:".$cnt_notgraded;
         //var_dump($ret); exit;
         return $ret;
     }
-    
+
     /**
      * Update exercise status of user
      */
     public function updateUserStatus($a_user_id = 0)
     {
         $ilUser = $this->user;
-        
+
         if ($a_user_id == 0) {
             $a_user_id = $ilUser->getId();
         }
@@ -606,7 +616,7 @@ class ilObjExercise extends ilObject
             $st["overall_status"]
         );
     }
-    
+
     /**
      * Update status of all users
      */
@@ -615,55 +625,55 @@ class ilObjExercise extends ilObject
         if (!is_object($this->members_obj)) {
             $this->members_obj = new ilExerciseMembers($this);
         }
-        
+
         $mems = $this->members_obj->getMembers();
         foreach ($mems as $mem) {
             $this->updateUserStatus($mem);
         }
     }
-    
+
     /**
      * Exports grades as excel
      */
     public function exportGradesExcel()
     {
         $ass_data = ilExAssignment::getInstancesByExercise($this->getId());
-        
+
         $excel = new ilExcel();
         $excel->addSheet($this->lng->txt("exc_status"));
-        
-        
+
+
         //
         // status
         //
-        
+
         // header row
         $row = $cnt = 1;
         $excel->setCell($row, 0, $this->lng->txt("name"));
         foreach ($ass_data as $ass) {
-            $excel->setCell($row, $cnt++, ($cnt / 2) . " - ". $this->lng->txt("exc_tbl_status"));
-            $excel->setCell($row, $cnt++, (($cnt - 1) / 2) . " - ". $this->lng->txt("exc_tbl_mark"));
+            $excel->setCell($row, $cnt++, ($cnt / 2) . " - " . $this->lng->txt("exc_tbl_status"));
+            $excel->setCell($row, $cnt++, (($cnt - 1) / 2) . " - " . $this->lng->txt("exc_tbl_mark"));
         }
         $excel->setCell($row, $cnt++, $this->lng->txt("exc_total_exc"));
         $excel->setCell($row, $cnt++, $this->lng->txt("exc_mark"));
         $excel->setCell($row++, $cnt, $this->lng->txt("exc_comment_for_learner"));
         $excel->setBold("A1:" . $excel->getColumnCoord($cnt) . "1");
-        
+
         // data rows
         $mem_obj = new ilExerciseMembers($this);
-        
+
         $filtered_members = $GLOBALS['DIC']->access()->filterUserIdsByRbacOrPositionOfCurrentUser(
             'edit_submissions_grades',
             'edit_submissions_grades',
             $this->getRefId(),
             (array) $mem_obj->getMembers()
         );
-        
+
         foreach ((array) $filtered_members as $user_id) {
             $mems[$user_id] = ilObjUser::_lookupName($user_id);
         }
         $mems = ilUtil::sortArray($mems, "lastname", "asc", false, true);
-        
+
         foreach ($mems as $user_id => $d) {
             $col = 0;
 
@@ -677,24 +687,24 @@ class ilObjExercise extends ilObject
                 $excel->setCell($row, $col++, $this->lng->txt("exc_" . $status));
                 $excel->setCell($row, $col++, $mark);
             }
-            
+
             // total status
             $status = ilExerciseMembers::_lookupStatus($this->getId(), $user_id);
             $excel->setCell($row, $col++, $this->lng->txt("exc_" . $status));
-            
+
             // #18096
             $marks_obj = new ilLPMarks($this->getId(), $user_id);
             $excel->setCell($row, $col++, $marks_obj->getMark());
             $excel->setCell($row++, $col, $marks_obj->getComment());
         }
-        
-        
+
+
         //
         // mark
         //
-        
+
         $excel->addSheet($this->lng->txt("exc_mark"));
-        
+
         // header row
         $row = $cnt = 1;
         $excel->setCell($row, 0, $this->lng->txt("name"));
@@ -703,12 +713,12 @@ class ilObjExercise extends ilObject
         }
         $excel->setCell($row++, $cnt++, $this->lng->txt("exc_total_exc"));
         $excel->setBold("A1:" . $excel->getColumnCoord($cnt) . "1");
-        
+
         // data rows
         reset($mems);
         foreach ($mems as $user_id => $d) {
             $col = 0;
-            
+
             // name
             $d = ilObjUser::_lookupName($user_id);
             $excel->setCell($row, $col++, $d["lastname"] . ", " . $d["firstname"] . " [" . $d["login"] . "]");
@@ -717,15 +727,15 @@ class ilObjExercise extends ilObject
             foreach ($ass_data as $ass) {
                 $excel->setCell($row, $col++, $ass->getMemberStatus($user_id)->getMark());
             }
-            
+
             // total mark
             $excel->setCell($row++, $col, ilLPMarks::_lookupMark($user_id, $this->getId()));
         }
-        
+
         $exc_name = ilUtil::getASCIIFilename(preg_replace("/\s/", "_", $this->getTitle()));
         $excel->sendToClient($exc_name);
     }
-    
+
     /**
      * Send feedback file notification to user
      */
@@ -735,11 +745,11 @@ class ilObjExercise extends ilObject
         if (!is_array($user_ids)) {
             $user_ids = array($user_ids);
         }
-        
+
         $type = (bool) $a_is_text_feedback
             ? ilExerciseMailNotification::TYPE_FEEDBACK_TEXT_ADDED
             : ilExerciseMailNotification::TYPE_FEEDBACK_FILE_ADDED;
-                
+
         $not = new ilExerciseMailNotification();
         $not->setType($type);
         $not->setAssignmentId($a_ass_id);
@@ -750,7 +760,7 @@ class ilObjExercise extends ilObject
         $not->setRecipients($user_ids);
         $not->send();
     }
-    
+
     /**
      *
      * Checks whether completion by submission is enabled or not
@@ -763,7 +773,7 @@ class ilObjExercise extends ilObject
     {
         return $this->completion_by_submission;
     }
-    
+
     /**
      *
      * Enabled/Disable completion by submission
@@ -776,40 +786,42 @@ class ilObjExercise extends ilObject
     public function setCompletionBySubmission($bool)
     {
         $this->completion_by_submission = (bool) $bool;
-        
+
         return $this;
     }
-    
+
     public function processExerciseStatus(ilExAssignment $a_ass, array $a_user_ids, $a_has_submitted, array $a_valid_submissions = null)
     {
         $a_has_submitted = (bool) $a_has_submitted;
-        
+
         foreach ($a_user_ids as $user_id) {
             $member_status = $a_ass->getMemberStatus($user_id);
             $member_status->setReturned($a_has_submitted);
             $member_status->update();
-            
+
             ilExerciseMembers::_writeReturned($this->getId(), $user_id, $a_has_submitted);
         }
-                
+
         // re-evaluate exercise status
         if ($this->isCompletionBySubmissionEnabled()) {
             foreach ($a_user_ids as $user_id) {
                 $status = 'notgraded';
                 if ($a_has_submitted) {
-                    if (!is_array($a_valid_submissions) ||
-                        $a_valid_submissions[$user_id]) {
+                    if (
+                        !is_array($a_valid_submissions) ||
+                        $a_valid_submissions[$user_id]
+                    ) {
                         $status = 'passed';
                     }
                 }
-                                    
+
                 $member_status = $a_ass->getMemberStatus($user_id);
                 $member_status->setStatus($status);
                 $member_status->update();
             }
         }
     }
-    
+
     /**
      * Get all exercises for user
      *
@@ -833,36 +845,36 @@ class ilObjExercise extends ilObject
         }
         return $all;
     }
-    
+
 
     /**
-    * Returns the visibility settings of the certificate
-    *
-    * @return integer The value for the visibility settings (0 = always, 1 = only passed,  2 = never)
-    * @access public
-    */
+     * Returns the visibility settings of the certificate
+     *
+     * @return integer The value for the visibility settings (0 = always, 1 = only passed,  2 = never)
+     * @access public
+     */
     public function getCertificateVisibility()
     {
         return (strlen($this->certificate_visibility)) ? $this->certificate_visibility : 0;
     }
 
     /**
-    * Sets the visibility settings of the certificate
-    *
-    * @param integer $a_value The value for the visibility settings (0 = always, 1 = only passed,  2 = never)
-    * @access public
-    */
+     * Sets the visibility settings of the certificate
+     *
+     * @param integer $a_value The value for the visibility settings (0 = always, 1 = only passed,  2 = never)
+     * @access public
+     */
     public function setCertificateVisibility($a_value)
     {
         $this->certificate_visibility = $a_value;
     }
-    
+
     /**
-    * Saves the visibility settings of the certificate
-    *
-    * @param integer $a_value The value for the visibility settings (0 = always, 1 = only passed,  2 = never)
-    * @access private
-    */
+     * Saves the visibility settings of the certificate
+     *
+     * @param integer $a_value The value for the visibility settings (0 = always, 1 = only passed,  2 = never)
+     * @access private
+     */
     public function saveCertificateVisibility($a_value)
     {
         $ilDB = $this->db;

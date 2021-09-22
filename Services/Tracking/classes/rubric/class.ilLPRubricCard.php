@@ -780,5 +780,3 @@ class ilLPRubricCard
 
 
 }
-
-?>
