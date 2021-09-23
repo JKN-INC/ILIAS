@@ -16,7 +16,7 @@ class ilCourseLP extends ilObjectLP
     public static function getDefaultModes($a_lp_active)
     {
         // objectives cannot be supported
-        
+
         if (!$a_lp_active) {
             return array(
                 ilLPObjSettings::LP_MODE_DEACTIVATED
@@ -28,7 +28,7 @@ class ilCourseLP extends ilObjectLP
             );
         }
     }
-    
+
     public function getDefaultMode()
     {
         if ($this->checkObjectives()) {
@@ -36,7 +36,7 @@ class ilCourseLP extends ilObjectLP
         }
         return ilLPObjSettings::LP_MODE_MANUAL_BY_TUTOR;
     }
-    
+
     public function getValidModes()
     {
         if ($this->checkObjectives()) {
@@ -45,10 +45,11 @@ class ilCourseLP extends ilObjectLP
         return array(
             ilLPObjSettings::LP_MODE_DEACTIVATED,
             ilLPObjSettings::LP_MODE_MANUAL_BY_TUTOR,
-            ilLPObjSettings::LP_MODE_COLLECTION
+            ilLPObjSettings::LP_MODE_COLLECTION,
+            ilLPObjSettings::LP_MODE_RUBRIC
         );
     }
-    
+
     public function getCurrentMode()
     {
         if ($this->checkObjectives()) {
@@ -56,7 +57,7 @@ class ilCourseLP extends ilObjectLP
         }
         return parent::getCurrentMode();
     }
-    
+
     protected function checkObjectives()
     {
         include_once "Modules/Course/classes/class.ilObjCourse.php";
@@ -65,13 +66,13 @@ class ilCourseLP extends ilObjectLP
         }
         return false;
     }
-    
+
     public function getSettingsInfo()
     {
         global $DIC;
 
         $lng = $DIC['lng'];
-    
+
         // #9004
         include_once("./Modules/Course/classes/class.ilObjCourse.php");
         $crs = new ilObjCourse($this->obj_id, false);
@@ -79,20 +80,20 @@ class ilCourseLP extends ilObjectLP
             return $lng->txt("crs_status_determination_lp_info");
         }
     }
-    
+
     public function getMembers($a_search = true)
     {
         include_once "Modules/Course/classes/class.ilCourseParticipants.php";
         $member_obj = ilCourseParticipants::_getInstanceByObjId($this->obj_id);
         return $member_obj->getMembers();
     }
-    
+
     protected static function isLPMember(array &$a_res, $a_usr_id, $a_obj_ids)
     {
         global $DIC;
 
         $ilDB = $DIC['ilDB'];
-            
+
         // will only find objects with roles for user!
         // see ilParticipants::_getMembershipByType()
         $query = " SELECT DISTINCT obd.obj_id, obd.type, obd2.title" .
@@ -108,15 +109,17 @@ class ilCourseLP extends ilObjectLP
         $set = $ilDB->query($query);
         while ($row = $ilDB->fetchAssoc($set)) {
             $role = $row["title"];
-            if (!stristr($role, "il_" . $row["type"] . "_admin_") &&
-                !stristr($role, "il_" . $row["type"] . "_tutor_")) {
+            if (
+                !stristr($role, "il_" . $row["type"] . "_admin_") &&
+                !stristr($role, "il_" . $row["type"] . "_tutor_")
+            ) {
                 $a_res[$row["obj_id"]] = true;
             }
         }
-        
+
         return true;
     }
-    
+
     public function getMailTemplateId()
     {
         include_once './Modules/Course/classes/class.ilCourseMailTemplateTutorContext.php';
