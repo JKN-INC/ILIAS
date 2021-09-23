@@ -1,9 +1,6 @@
 <?php
 /* Copyright (c) 1998-2009 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-include_once './Services/Mail/classes/class.ilMailNotification.php';
-
-
 class ilRubricGradeNotification extends ilMailNotification
 {
 
@@ -23,39 +20,39 @@ class ilRubricGradeNotification extends ilMailNotification
 
     public function send()
     {
+        global $DIC;
+        $lng = $DIC["lng"];
 
-        include_once './Services/Link/classes/class.ilLink.php';
         $obj = new ilObjectFactory();
         $instance = $obj->getInstanceByRefId($_GET['ref_id']);
 
-        $link = ilLink::_getLink($_GET['ref_id'],$instance->getType(),array(),'');
+        $link = ilLink::_getLink($_GET['ref_id'], $instance->getType(), array(), '');
 
 
-        global $lng;
-        foreach($this->getRecipients() as $rcp)
-        {
+        foreach ($this->getRecipients() as $rcp) {
             $this->initLanguage($rcp);
             $this->initMail();
             $this->setSubject(
-                sprintf($lng->txt('rubric_exercise_graded').' '.ilObject::_lookupTitle($this->getObjId()).' '.$lng->txt('rubric_is_now_available'),
-                    $this->getObjectTitle(true))
+                sprintf(
+                    $lng->txt('rubric_exercise_graded') . ' ' . ilObject::_lookupTitle($this->getObjId()) . ' ' . $lng->txt('rubric_is_now_available'),
+                    $this->getObjectTitle(true)
+                )
             );
-            $this->setBody(ilMail::getSalutation($rcp,$this->getLanguage()));
+            $this->setBody(ilMail::getSalutation($rcp, $this->getLanguage()));
             $this->appendBody("\n\n");
             $this->appendBody(
-                $lng->txt('rubric_exercise_graded').' '.ilObject::_lookupTitle($this->getObjId()).' '.$lng->txt('rubric_is_now_available'));
+                $lng->txt('rubric_exercise_graded') . ' ' . ilObject::_lookupTitle($this->getObjId()) . ' ' . $lng->txt('rubric_is_now_available')
+            );
             $this->appendBody("\n");
             $this->appendBody(
-                $this->getLanguageText('obj_exc').": ".$this->getObjectTitle(true));
+                $this->getLanguageText('obj_exc') . ": " . $this->getObjectTitle(true)
+            );
             $this->appendBody("\n");
             $this->appendBody("\n\n");
             $this->appendBody($link);
             $this->getMail()->appendInstallationSignature(true);
 
-            $this->sendMail(array($rcp),array('system'));
+            $this->sendMail(array($rcp), array('system'));
         }
-
-
     }
-
 }

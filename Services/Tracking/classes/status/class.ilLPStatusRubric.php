@@ -9,8 +9,6 @@
  * @ingroup ServicesTracking
  */
 
-include_once 'Services/Tracking/classes/class.ilLPStatus.php';
-
 class ilLPStatusRubric extends ilLPStatus
 {
     /**
@@ -22,9 +20,10 @@ class ilLPStatusRubric extends ilLPStatus
      */
     function __construct($a_obj_id)
     {
-        global $ilDB;
+        global $DIC;
         parent::__construct($a_obj_id);
-        $this->db = $ilDB;
+        $this->db = $DIC["ilDB"];
+        $this->obj_cache = $DIC["ilObjDataCache"];
     }
 
     /**
@@ -58,7 +57,6 @@ class ilLPStatusRubric extends ilLPStatus
      */
     public static function _getInProgress($a_obj_id)
     {
-        include_once './Services/Tracking/classes/class.ilChangeEvent.php';
         $users = ilChangeEvent::lookupUsersInProgress($a_obj_id);
 
         // Exclude all users with status completed.
@@ -74,16 +72,16 @@ class ilLPStatusRubric extends ilLPStatus
 
     public static function _getCompleted($a_obj_id)
     {
-        global $ilDB;
+        global $DIC;
 
         $usr_ids = array();
 
         $query = "SELECT DISTINCT(usr_id) user_id FROM ut_lp_marks " .
-            "WHERE obj_id = " . $ilDB->quote($a_obj_id, 'integer') . " " .
+            "WHERE obj_id = " . $DIC["ilDB"]->quote($a_obj_id, 'integer') . " " .
             "AND completed = '1' ";
 
-        $res = $ilDB->query($query);
-        while ($row = $res->fetchRow(DB_FETCHMODE_OBJECT)) {
+        $res = $DIC["ilDB"]->query($query);
+        while ($row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT)) {
             $usr_ids[] = $row->user_id;
         }
 
@@ -106,29 +104,26 @@ class ilLPStatusRubric extends ilLPStatus
      */
     function determineStatus($a_obj_id, $a_user_id, $a_obj = null)
     {
-        global $ilObjDataCache, $ilDB;
-
         $status = self::LP_STATUS_NOT_ATTEMPTED_NUM;
-        switch ($ilObjDataCache->lookupType($a_obj_id)) {
+        switch ($this->obj_cache->lookupType($a_obj_id)) {
             case "crs":
             case "grp":
             case "exc":
                 // completed?
-                $set = $ilDB->query($q = "SELECT usr_id,mark FROM ut_lp_marks " .
-                    "WHERE obj_id = " . $ilDB->quote($a_obj_id, 'integer') . " " .
-                    "AND usr_id = " . $ilDB->quote($a_user_id, 'integer') . " " .
+                $set = $this->db->query($q = "SELECT usr_id,mark FROM ut_lp_marks " .
+                    "WHERE obj_id = " . $this->db->quote($a_obj_id, 'integer') . " " .
+                    "AND usr_id = " . $this->db->quote($a_user_id, 'integer') . " " .
                     "AND completed = '1' ");
 
-                $grade = $ilDB->fetchAssoc($ilDB->query("SELECT passing_grade FROM rubric WHERE obj_id = " . $ilDB->quote($a_obj_id, 'integer')));
+                $grade = $this->db->fetchAssoc($this->db->query("SELECT passing_grade FROM rubric WHERE obj_id = " . $this->db->quote($a_obj_id, 'integer')));
 
-                if ($rec = $ilDB->fetchAssoc($set)) {
+                if ($rec = $this->db->fetchAssoc($set)) {
                     if ($rec['mark'] < $grade['passing_grade']) {
                         $status = self::LP_STATUS_FAILED_NUM;
                     } else {
                         $status = self::LP_STATUS_COMPLETED_NUM;
                     }
                 } else {
-                    include_once './Services/Tracking/classes/class.ilChangeEvent.php';
                     if (ilChangeEvent::hasAccessed($a_obj_id, $a_user_id)) {
                         $status = self::LP_STATUS_IN_PROGRESS_NUM;
                     }
@@ -145,18 +140,15 @@ class ilLPStatusRubric extends ilLPStatus
      */
     protected static function getMembers($a_obj_id)
     {
-        global $ilObjDataCache;
+        global $DIC;
 
-        switch ($ilObjDataCache->lookupType($a_obj_id)) {
+        switch ($DIC["ilObjDataCache"]->lookupType($a_obj_id)) {
             case 'crs':
-                include_once 'Modules/Course/classes/class.ilCourseParticipants.php';
                 $member_obj = ilCourseParticipants::_getInstanceByObjId($a_obj_id);
                 return $member_obj->getMembers();
             case 'exc':
-                include_once './Modules/Exercise/classes/class.ilExerciseMembers.php';
                 return ilExerciseMembers::_getMembers($a_obj_id);
             case 'grp':
-                include_once './Modules/Group/classes/class.ilObjGroup.php';
                 return ilObjGroup::_getMembers($a_obj_id);
         }
 

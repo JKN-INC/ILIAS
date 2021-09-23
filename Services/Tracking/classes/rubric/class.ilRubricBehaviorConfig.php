@@ -11,7 +11,7 @@ class rubricBehaviorConfig extends ActiveRecord {
         const EXCEPTIONS        = true;
         const TRACE             = false;
         
-        /**
+        /*
          * @var int
          *
          * @db_has_field    true
@@ -112,5 +112,3 @@ class rubricBehaviorConfig extends ActiveRecord {
 
        
 }
-?>
-

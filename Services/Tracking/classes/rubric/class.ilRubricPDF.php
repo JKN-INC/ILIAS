@@ -2,7 +2,7 @@
 
 /**
  * PDF Gen for Rubric
-*/
+ */
 
 class ilRubricPDF
 {
@@ -11,7 +11,6 @@ class ilRubricPDF
 
     public function __construct($obj_id)
     {
-        global $ilDB;
         $this->obj_id = $obj_id;
     }
 
@@ -28,9 +27,9 @@ class ilRubricPDF
         $history_id = $_REQUEST['grader_history'];
         include_once("./Services/Tracking/classes/rubric/class.ilLPRubricGradeGUI.php");
         include_once("./Services/Tracking/classes/rubric/class.ilLPRubricGrade.php");
-        $rubricObj=new ilLPRubricGrade($this->getObjId());
-        $rubricGui=new ilLPRubricGradeGUI();
-        if($rubricObj->objHasRubric()) {
+        $rubricObj = new ilLPRubricGrade($this->getObjId());
+        $rubricGui = new ilLPRubricGradeGUI();
+        if ($rubricObj->objHasRubric()) {
             $rubricGui->setRubricData($rubricObj->load());
             $rubricGui->setUserHistoryId($history_id);
             $rubricGui->setRubricData($rubricObj->load());
@@ -40,10 +39,10 @@ class ilRubricPDF
             $html = $rubricGui->getPDFViewHTML($this->getObjId());
             $html = self::removeScriptElements($html);
             $history = $rubricGui->getUserHistory();
-            $date = is_null($history[$history_id]['create_date'])?date("Ymd"):$history[$history_id]['create_date'];
+            $date = is_null($history[$history_id]['create_date']) ? date("Ymd") : $history[$history_id]['create_date'];
             $css = '<style>.ilHeaderDesc{display:block;text-align:center;}table{table-layout: fixed;}td{padding: 10px;border: 1px solid grey;}
 					tr{padding: 10px;border: 1px solid grey;}th{padding: 10px;border: 1px solid grey;}</style>';
-            self::generatePDF($css.$html, 'D', 'graded_rubric_'.$date);
+            self::generatePDF($css . $html, 'D', 'graded_rubric_' . $date);
         }
     }
 
@@ -51,26 +50,30 @@ class ilRubricPDF
     {
         include_once("./Services/Tracking/classes/rubric/class.ilLPRubricGradeGUI.php");
         include_once("./Services/Tracking/classes/rubric/class.ilLPRubricGrade.php");
-        $rubricObj=new ilLPRubricGrade($this->getObjId());
-        $rubricGui=new ilLPRubricGradeGUI();
-        if($rubricObj->objHasRubric()){
+        $rubricObj = new ilLPRubricGrade($this->getObjId());
+        $rubricGui = new ilLPRubricGradeGUI();
+        if ($rubricObj->objHasRubric()) {
             $rubricGui->setRubricData($rubricObj->load());
             $html = $rubricGui->getPDFViewHTML($this->getObjId());
             $html = self::removeScriptElements($html);
             $css = '<style>.ilHeaderDesc{display:block;text-align:center;}table{table-layout: fixed;}td{padding: 10px;border: 1px solid grey;}
 					tr{padding: 10px;border: 1px solid grey;}th{padding: 10px;border: 1px solid grey;}</style>';
-            self::generatePDF($css.$html, 'D', 'rubric');
+            self::generatePDF($css . $html, 'D', 'rubric');
         }
     }
 
-    public static function generatePDF($pdf_output, $output_mode, $filename=null)
+    public static function generatePDF($pdf_output, $output_mode, $filename = null)
     {
         $pdf_output = preg_replace("/src=\"\\.\\//ims", "src=\"" . ILIAS_HTTP_PATH . "/", $pdf_output);
         $pdf_output = preg_replace("/href=\"\\.\\//ims", "href=\"" . ILIAS_HTTP_PATH . "/", $pdf_output);
 
         $pdf_factory = new ilHtmlToPdfTransformerFactory();
-        $pdf_factory->deliverPDFFromHTMLString($pdf_output,'test.pdf',
-            ilHtmlToPdfTransformerFactory::PDF_OUTPUT_DOWNLOAD, "Test", "ContentExport"
+        $pdf_factory->deliverPDFFromHTMLString(
+            $pdf_output,
+            'test.pdf',
+            ilHtmlToPdfTransformerFactory::PDF_OUTPUT_DOWNLOAD,
+            "Test",
+            "ContentExport"
         );
     }
 
@@ -80,36 +83,26 @@ class ilRubricPDF
      */
     private static function removeScriptElements($html)
     {
-        if(!is_string($html) || !strlen(trim($html)))
-        {
+        if (!is_string($html) || !strlen(trim($html))) {
             return $html;
         }
         $dom = new DOMDocument("1.0", "utf-8");
-        if(!@$dom->loadHTML('<?xml encoding="UTF-8">' . $html))
-        {
+        if (!@$dom->loadHTML('<?xml encoding="UTF-8">' . $html)) {
             return $html;
         }
         $invalid_elements = array();
         $script_elements     = $dom->getElementsByTagName('script');
-        foreach($script_elements as $elm)
-        {
+        foreach ($script_elements as $elm) {
             $invalid_elements[] = $elm;
         }
-        foreach($invalid_elements as $elm)
-        {
+        foreach ($invalid_elements as $elm) {
             $elm->parentNode->removeChild($elm);
         }
         $dom->encoding = 'UTF-8';
         $cleaned_html = $dom->saveHTML();
-        if(!$cleaned_html)
-        {
+        if (!$cleaned_html) {
             return $html;
         }
         return $cleaned_html;
     }
 }
-
-
-
-
-

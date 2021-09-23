@@ -1,8 +1,6 @@
 <?php
 /* Copyright (c) 1998-2010 ILIAS open source, Extended GPL, see docs/LICENSE */
 
-include_once("./Services/Tracking/classes/class.ilLPTableBaseGUI.php");
-
 /**
  * name table
  *
@@ -28,9 +26,10 @@ class ilLPRubricCardGUI extends ilLPTableBaseGUI
      */
     public function __construct()
     {
-        global $tpl, $lng;
-        $this->lng = $lng;
-        $this->tpl = $tpl;
+        global $DIC;
+        $this->lng = $DIC["lng"];
+        $this->tpl = $DIC["tpl"];
+        $this->user = $DIC->user();
     }
 
     public function setPassingGrade($passing_grade)
@@ -79,9 +78,6 @@ class ilLPRubricCardGUI extends ilLPTableBaseGUI
 
     private function getDeveloperRubricCardFormCommandRow($form_action)
     {
-
-        global $ilUser;
-        include_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
         //configure the command row
         $rubric_commandrow_tpl = new ilTemplate('tpl.lp_rubricform_commandrow.html', true, true, 'Services/Tracking');
         $select_prop = new ilSelectInputGUI('Title', 'selected_cmdrubric');
@@ -107,7 +103,7 @@ class ilLPRubricCardGUI extends ilLPTableBaseGUI
             $rubric_commandrow_tpl->setVariable('RUBRIC_DISABLED', 'disabled');
             $rubric_commandrow_tpl->setVariable('RUBRIC_LOCK', $this->lng->txt('rubric_card_unlock'));
             $tmp_user = ilObjectFactory::getInstanceByObjId($this->rubric_owner, false);
-            if ($this->rubric_owner !== $ilUser->getId()) {
+            if ($this->rubric_owner !== $this->user->getId()) {
                 $rubric_commandrow_tpl->setVariable('USER_LOCK', 'disabled');
             }
             ilUtil::sendInfo($this->lng->txt('rubric_locked_info') . ' ' . $tmp_user->getFullName() . ' ' . $this->rubric_locked);
@@ -120,7 +116,6 @@ class ilLPRubricCardGUI extends ilLPTableBaseGUI
 
     private function getGraderRubricCardFormCommandRow($form_action)
     {
-        include_once("./Services/Form/classes/class.ilPropertyFormGUI.php");
         //configure the command row
         $rubric_commandrow_tpl = new ilTemplate('tpl.lp_rubricform_grader_commandrow.html', true, true, 'Services/Tracking');
         $rubric_commandrow_tpl->setVariable('FORM_ACTION', $form_action);

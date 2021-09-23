@@ -5,8 +5,6 @@
  * @author  CPKN <itstaff@cpkn.ca>
  */
 
-require_once('./Services/ActiveRecord/class.ActiveRecord.php');
-
 class rubricGradeHistoryConfig extends ActiveRecord {
 
     const TABLE_NAME        = 'rubric_grade_hist';
@@ -135,5 +133,3 @@ class rubricGradeHistoryConfig extends ActiveRecord {
 
 
 }
-?>
-
