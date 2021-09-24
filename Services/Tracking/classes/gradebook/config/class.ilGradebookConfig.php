@@ -5,8 +5,6 @@
  * @author  CPKN <itstaff@cpkn.ca>
  */
 
-include_once('./Services/ActiveRecord/class.ActiveRecord.php');
-
 class ilGradebookConfig extends ActiveRecord {
 
     const TABLE_NAME        = 'gradebook';
@@ -216,5 +214,3 @@ class ilGradebookConfig extends ActiveRecord {
     }
 
 }
-?>
-

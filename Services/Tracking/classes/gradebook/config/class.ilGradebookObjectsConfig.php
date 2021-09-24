@@ -5,8 +5,6 @@
  * @author  CPKN <itstaff@cpkn.ca>
  */
 
-include_once('./Services/ActiveRecord/class.ActiveRecord.php');
-
 class ilGradebookObjectsConfig extends ActiveRecord {
 
     const TABLE_NAME        = 'gradebook_objects';
@@ -448,5 +446,3 @@ class ilGradebookObjectsConfig extends ActiveRecord {
 
 
 }
-?>
-

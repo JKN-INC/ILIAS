@@ -12,24 +12,25 @@ include_once("./Services/Tracking/classes/class.ilLPTableBaseGUI.php");
 abstract class ilLPGradebookGUI extends ilLPTableBaseGUI
 {
 
-    const GROUP_COLORS = ['#A93226','#E74C3C','#F39C12','#F7DC6F','#82E0AA',
-        '#1E8449','#AED6F1','#2874A6','#154360','#A569BD','#000000'];
+    const GROUP_COLORS = [
+        '#A93226', '#E74C3C', '#F39C12', '#F7DC6F', '#82E0AA',
+        '#1E8449', '#AED6F1', '#2874A6', '#154360', '#A569BD', '#000000'
+    ];
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        global $tpl,$lng;
-        $this->lng=$lng;
-        $this->tpl=$tpl;
+        global $DIC;
+        $this->lng = $DIC["lng"];
+        $this->tpl = $DIC["tpl"];
+        $this->user = $DIC->user();
     }
 
 
     protected function buildGradebookVersionsOptions()
     {
-        global $ilUser;
-
         $revision_txt = '';
         if (empty($this->versions)) {
             return '<option>' . 'No Current Existing Gradebooks' . '</option>';
@@ -42,11 +43,8 @@ abstract class ilLPGradebookGUI extends ilLPTableBaseGUI
                     $selected = '';
                 }
             }
-            $revision_txt .= '<option '.$selected.' value="' . $version->getRevisionId() . '"> Gradebook Revision: ' . $version->getRevisionId() . ' - ' . $ilUser->_lookupFullname($version->getOwner()) . ' - ' . $version->getCreateDate() . '</option>';
+            $revision_txt .= '<option ' . $selected . ' value="' . $version->getRevisionId() . '"> Gradebook Revision: ' . $version->getRevisionId() . ' - ' . $this->user->_lookupFullname($version->getOwner()) . ' - ' . $version->getCreateDate() . '</option>';
         }
         return $revision_txt;
     }
-
-
-
 }

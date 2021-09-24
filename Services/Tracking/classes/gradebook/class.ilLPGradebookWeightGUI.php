@@ -73,7 +73,7 @@ class ilLPGradebookWeightGUI extends ilLPGradebookGUI
     function view()
     {
 
-        $my_tpl= new ilTemplate('tpl.lp_gradebook_weight.html',true,true,"Services/Tracking");
+        $my_tpl = new ilTemplate('tpl.lp_gradebook_weight.html', true, true, "Services/Tracking");
         $this->tpl->addJavascript('https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js', true, 1);
 
         // Custom
@@ -86,7 +86,7 @@ class ilLPGradebookWeightGUI extends ilLPGradebookGUI
         $gradeBookHTML = $this->makeList($this->gradebook_data, $sortableIndex);
         $versions = $this->buildGradebookVersionsOptions();
 
-        $my_tpl->setVariable("LOADED_GRADEBOOKS",$versions);
+        $my_tpl->setVariable("LOADED_GRADEBOOKS", $versions);
         $my_tpl->setVariable("GRADEBOOK", $gradeBookHTML);
 
         $this->tpl->setContent($my_tpl->get());
@@ -98,30 +98,31 @@ class ilLPGradebookWeightGUI extends ilLPGradebookGUI
      * @param $sortableIndex
      * @return string
      */
-    private function makeListItems($a, $sortableIndex) {
+    private function makeListItems($a, $sortableIndex)
+    {
         $out = '';
-        foreach($a as $item) {
-            (is_numeric($item['color']) ? $color = $item['color']:$color = 10);
+        foreach ($a as $item) {
+            (is_numeric($item['color']) ? $color = $item['color'] : $color = 10);
 
-            $out .= '<li '.($item['type']=='grp' ? 'data-grp-color="'.$color.'"' : "").' data-obj-id="'.$item['obj_id'].'" class="'.(array_key_exists('children', $item) ? 'parent-style' : '').'"><div class="row-color">';
+            $out .= '<li ' . ($item['type'] == 'grp' ? 'data-grp-color="' . $color . '"' : "") . ' data-obj-id="' . $item['obj_id'] . '" class="' . (array_key_exists('children', $item) ? 'parent-style' : '') . '"><div class="row-color">';
             $out .= ($item['toggle'] == 1 ? '<input class="toggleButton" type="checkbox" checked data-onstyle="success" data-toggle="toggle">' : '<input class="toggleButton" data-onstyle="success" type="checkbox" data-toggle="toggle">');
-            $out .= ($item['toggle'] == 1 ? '<input type="text" data-parent-id="'.$item['parent_id'].'" class="weight weight-enabled" name="weight" value="'.$item['weight'].'">' : '<input type="text" class="weight" data-parent-id="'.$item['parent_id'].'" name="weight" disabled>');
+            $out .= ($item['toggle'] == 1 ? '<input type="text" data-parent-id="' . $item['parent_id'] . '" class="weight weight-enabled" name="weight" value="' . $item['weight'] . '">' : '<input type="text" class="weight" data-parent-id="' . $item['parent_id'] . '" name="weight" disabled>');
             $out .= ($item['has_lp'] == 1 ? '<span class="obj-learning-progress glyphicon glyphicon-pencil" aria-hidden="true"></span>' : '<span class="obj-learning-progress glyphicon glyphicon-ok" aria-hidden="true"></span>');
-            if($item['type']=='grp'){
-                $out .= '<span class="listObject" style="border-color:'.self::GROUP_COLORS[$color].'" ><a target="_blank" href="'.$item['url'].'">
-                        <img alt="'.$item['type_Alt'].'" title="'.$item['type_Alt'].'" src="./templates/default/images/icon_'.$item['type'].'.svg" class="ilListItemIcon"> 
-                        '.$item['title'].'</a>';
-                $out .= ($item['type'] == 'grp' ? '<span style="color:'.self::GROUP_COLORS[$color].'" class="color-picker glyphicon glyphicon-certificate aria-hidden="true"></span>' : '');
+            if ($item['type'] == 'grp') {
+                $out .= '<span class="listObject" style="border-color:' . self::GROUP_COLORS[$color] . '" ><a target="_blank" href="' . $item['url'] . '">
+                        <img alt="' . $item['type_Alt'] . '" title="' . $item['type_Alt'] . '" src="./templates/default/images/icon_' . $item['type'] . '.svg" class="ilListItemIcon"> 
+                        ' . $item['title'] . '</a>';
+                $out .= ($item['type'] == 'grp' ? '<span style="color:' . self::GROUP_COLORS[$color] . '" class="color-picker glyphicon glyphicon-certificate aria-hidden="true"></span>' : '');
             } else {
-                $out .= '<span class="listObject"><a target="_blank" href="'.$item['url'].'">
-                        <img alt="'.$item['type_Alt'].'" title="'.$item['type_Alt'].'" src="./templates/default/images/icon_'.$item['type'].'.svg" class="ilListItemIcon"> 
-                        '.$item['title'].'</a>';
+                $out .= '<span class="listObject"><a target="_blank" href="' . $item['url'] . '">
+                        <img alt="' . $item['type_Alt'] . '" title="' . $item['type_Alt'] . '" src="./templates/default/images/icon_' . $item['type'] . '.svg" class="ilListItemIcon"> 
+                        ' . $item['title'] . '</a>';
             }
 
 
 
             $out .= '</span></div>';
-            if(array_key_exists('children', $item)) {
+            if (array_key_exists('children', $item)) {
                 $out .= $this->makeList($item['children'], $sortableIndex);
                 $sortableIndex++;
             }
@@ -135,12 +136,12 @@ class ilLPGradebookWeightGUI extends ilLPGradebookGUI
      * @param $sortableIndex
      * @return string
      */
-    private function makeList($a, $sortableIndex) {
-        $out = '<ul id="sortable_'.$sortableIndex.'">';
+    private function makeList($a, $sortableIndex)
+    {
+        $out = '<ul id="sortable_' . $sortableIndex . '">';
         $sortableIndex++;
         $out .= $this->makeListItems($a, $sortableIndex);
         $out .= '</ul>';
         return $out;
     }
-
 }

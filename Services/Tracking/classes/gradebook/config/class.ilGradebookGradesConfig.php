@@ -5,8 +5,6 @@
  * @author  CPKN <itstaff@cpkn.ca>
  */
 
-include_once('./Services/ActiveRecord/class.ActiveRecord.php');
-
 class ilGradebookGradesConfig extends ActiveRecord
 {
 
@@ -381,5 +379,3 @@ class ilGradebookGradesConfig extends ActiveRecord
 
 
 }
-?>
-

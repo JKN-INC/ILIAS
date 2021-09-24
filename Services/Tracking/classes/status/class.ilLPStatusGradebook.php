@@ -1,15 +1,13 @@
 <?php
 
 /** 
-* @author JKN Inc. <itstaff@cpkn.ca>
-* @version $Id$
-* 
-* 
-* @ilCtrl_Calls 
-* @ingroup ServicesTracking 
-*/
-
-include_once 'Services/Tracking/classes/class.ilLPStatus.php';
+ * @author JKN Inc. <itstaff@cpkn.ca>
+ * @version $Id$
+ * 
+ * 
+ * @ilCtrl_Calls 
+ * @ingroup ServicesTracking 
+ */
 
 class ilLPStatusGradebook extends ilLPStatus
 {
@@ -22,9 +20,10 @@ class ilLPStatusGradebook extends ilLPStatus
 	 */
 	function __construct($a_obj_id)
 	{
-        global $ilDB;
-        parent::__construct($a_obj_id);
-        $this->db = $ilDB;
+		global $DIC;
+		parent::__construct($a_obj_id);
+		$this->db = $DIC["ilDB"];
+		$this->objectCache = $DIC["ilObjDataCache"];
 	}
 
 	/**
@@ -35,16 +34,15 @@ class ilLPStatusGradebook extends ilLPStatus
 	 * @return array int Array of user ids
 	 * 
 	 */
-    public static function _getNotAttempted($a_obj_id)
-	{		
+	public static function _getNotAttempted($a_obj_id)
+	{
 		$users = array();
 
 		$members = self::getMembers($a_obj_id);
-		if($members)
-		{
+		if ($members) {
 			// diff in progress and completed (use stored result in LPStatusWrapper)
 			$users = array_diff($members, ilLPStatusWrapper::_getInProgress($a_obj_id));
-			$users = array_diff($users, ilLPStatusWrapper::_getCompleted($a_obj_id));			
+			$users = array_diff($users, ilLPStatusWrapper::_getCompleted($a_obj_id));
 		}
 
 		return $users;
@@ -57,16 +55,14 @@ class ilLPStatusGradebook extends ilLPStatus
 	 * @param int object id
 	 * @return array int Array of user ids
 	 */
-    public static function _getInProgress($a_obj_id)
-	{		
-		include_once './Services/Tracking/classes/class.ilChangeEvent.php';
+	public static function _getInProgress($a_obj_id)
+	{
 		$users = ilChangeEvent::lookupUsersInProgress($a_obj_id);
 
 		// Exclude all users with status completed.
-		$users = array_diff((array) $users,ilLPStatusWrapper::_getCompleted($a_obj_id));
+		$users = array_diff((array) $users, ilLPStatusWrapper::_getCompleted($a_obj_id));
 
-		if($users)
-		{
+		if ($users) {
 			// Exclude all non members
 			$users = array_intersect(self::getMembers($a_obj_id), (array)$users);
 		}
@@ -74,24 +70,22 @@ class ilLPStatusGradebook extends ilLPStatus
 		return $users;
 	}
 
-    public static function _getCompleted($a_obj_id)
+	public static function _getCompleted($a_obj_id)
 	{
-		global $ilDB;
+		global $DIC;
 
 		$usr_ids = array();
 
-		$query = "SELECT DISTINCT(usr_id) user_id FROM ut_lp_marks ".
-			"WHERE obj_id = ".$ilDB->quote($a_obj_id ,'integer')." ".
+		$query = "SELECT DISTINCT(usr_id) user_id FROM ut_lp_marks " .
+			"WHERE obj_id = " . $DIC["ilDB"]->quote($a_obj_id, 'integer') . " " .
 			"AND completed = '1' ";
 
-		$res = $ilDB->query($query);
-		while($row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT))
-		{
+		$res = $DIC["ilDB"]->query($query);
+		while ($row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT)) {
 			$usr_ids[] = $row->user_id;
 		}
 
-		if($usr_ids)
-		{
+		if ($usr_ids) {
 			// Exclude all non members
 			$usr_ids = array_intersect(self::getMembers($a_obj_id), (array)$usr_ids);
 		}
@@ -109,19 +103,16 @@ class ilLPStatusGradebook extends ilLPStatus
 	 * @return	integer		status
 	 */
 	function determineStatus($a_obj_id, $a_user_id, $a_obj = null)
-    {
-        global $ilObjDataCache, $ilDB;
-        $status = self::LP_STATUS_COMPLETED;
-        switch ($ilObjDataCache->lookupType($a_obj_id))
-        {
-        case "crs":
-        case "grp":
-        case "exc":
-        break;
-
-        }
-        return $status;
-    }
+	{
+		$status = self::LP_STATUS_COMPLETED;
+		switch ($this->objectCache->lookupType($a_obj_id)) {
+			case "crs":
+			case "grp":
+			case "exc":
+				break;
+		}
+		return $status;
+	}
 
 	/**
 	 * Get members for object
@@ -130,20 +121,15 @@ class ilLPStatusGradebook extends ilLPStatus
 	 */
 	protected static function getMembers($a_obj_id)
 	{
-		global $ilObjDataCache;
-
-		switch($ilObjDataCache->lookupType($a_obj_id))
-		{
+		global $DIC;
+		switch ($DIC["ilObjDataCache"]->lookupType($a_obj_id)) {
 			case 'crs':
-				include_once 'Modules/Course/classes/class.ilCourseParticipants.php';
 				$member_obj = ilCourseParticipants::_getInstanceByObjId($a_obj_id);
 				return $member_obj->getMembers();
 			case 'exc':
-                include_once './Modules/Exercise/classes/class.ilExerciseMembers.php';
-                return ilExerciseMembers::_getMembers($a_obj_id);
+				return ilExerciseMembers::_getMembers($a_obj_id);
 			case 'grp':
-				include_once './Modules/Group/classes/class.ilObjGroup.php';
-				return ilObjGroup::_getMembers($a_obj_id);			
+				return ilObjGroup::_getMembers($a_obj_id);
 		}
 
 		return array();
@@ -158,11 +144,9 @@ class ilLPStatusGradebook extends ilLPStatus
 	 */
 	public static function _lookupCompletedForObject($a_obj_id, $a_user_ids = null)
 	{
-		if(!$a_user_ids)
-		{
+		if (!$a_user_ids) {
 			$a_user_ids = self::getMembers($a_obj_id);
-			if(!$a_user_ids)
-			{
+			if (!$a_user_ids) {
 				return array();
 			}
 		}
@@ -190,15 +174,12 @@ class ilLPStatusGradebook extends ilLPStatus
 	 */
 	public static function _lookupInProgressForObject($a_obj_id, $a_user_ids = null)
 	{
-		if(!$a_user_ids)
-		{
+		if (!$a_user_ids) {
 			$a_user_ids = self::getMembers($a_obj_id);
-			if(!$a_user_ids)
-			{
+			if (!$a_user_ids) {
 				return array();
 			}
 		}
 		return self::_lookupStatusForObject($a_obj_id, self::LP_STATUS_IN_PROGRESS_NUM, $a_user_ids);
-	}	
+	}
 }
-?> 

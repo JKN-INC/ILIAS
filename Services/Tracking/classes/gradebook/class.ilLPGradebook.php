@@ -31,46 +31,49 @@ abstract class ilLPGradebook
 
     public function __construct($obj_id)
     {
+        global $DIC;
 
-        global $tpl, $ilCtrl, $ilTabs, $ilAccess, $lng,
-               $ilUser, $ilLocator, $ilDB, $tree;
-        $this->lng = $lng;
-        $this->tpl = $tpl;
-        $this->locator = $ilLocator;
-        $this->db = $ilDB;
-        $this->ctrl = $ilCtrl;
-        $this->tabs = $ilTabs;
-        $this->user = $ilUser;
-        $this->access = $ilAccess;
+        $this->lng = $DIC["lng"];
+        $this->tpl = $DIC["tpl"];
+        $this->locator = $DIC["ilLocator"];
+        $this->db = $DIC["ilDB"];
+        $this->ctrl = $DIC->ctrl();
+        $this->tabs = $DIC->tabs();
+        $this->user = $DIC->user();
+        $this->access = $DIC["ilAccess"];
         $this->obj_id = $obj_id;
-        $this->tree = $tree;
+        $this->tree = $DIC["tree"];
     }
 
 
     public static function lookupRefId($a_id)
     {
-        global $ilDB;
-        $set = $ilDB->query("SELECT ref_id FROM object_reference WHERE " .
-            "obj_id = " . $ilDB->quote($a_id, "integer")
+        global $DIC;
+        $set = $DIC["ilDB"]->query(
+            "SELECT ref_id FROM object_reference WHERE " .
+                "obj_id = " . $DIC["ilDB"]->quote($a_id, "integer")
         );
-        $rec = $ilDB->fetchAssoc($set);
+        $rec = $DIC["ilDB"]->fetchAssoc($set);
         return (int)$rec["ref_id"];
     }
 
     public function getGradebookVersions()
     {
         require_once('./Services/Tracking/classes/gradebook/config/class.ilGradebookRevisionConfig.php');
-        return ilGradebookRevisionConfig::where(['deleted'=>NULL,
-            'gradebook_id'=>$this->getGradebookId()]
-        )->orderBy('create_date','DESC')->get();
+        return ilGradebookRevisionConfig::where(
+            [
+                'deleted' => NULL,
+                'gradebook_id' => $this->getGradebookId()
+            ]
+        )->orderBy('create_date', 'DESC')->get();
     }
 
     public function getLatestGradebookRevision()
     {
         require_once('./Services/Tracking/classes/gradebook/config/class.ilGradebookRevisionConfig.php');
-        $revision = ilGradebookRevisionConfig::where(['gradebook_id'=>$this->getGradebookId()])
-            ->where(['deleted'=>null])->orderBy('id','desc')->first();
-        return is_object($revision)?$revision:new ilGradebookRevisionConfig();
+        $revision = ilGradebookRevisionConfig::where(['gradebook_id' => $this->getGradebookId()])
+            ->where(['deleted' => null])->orderBy('id', 'desc')->first();
+        return is_object($revision) ? $revision : new ilGradebookRevisionConfig();
     }
 
     /**
@@ -84,18 +87,15 @@ abstract class ilLPGradebook
         $gradebookId = $this->getGradebookId();
         $revision = ilGradebookGradeTotalConfig::where(
             [
-                'deleted'=>NULL,
-                'usr_id'=>$usr_id,
-                'gradebook_id'=>$gradebookId
+                'deleted' => NULL,
+                'usr_id' => $usr_id,
+                'gradebook_id' => $gradebookId
             ]
-        )->orderBy('last_update','desc')->first();
+        )->orderBy('last_update', 'desc')->first();
 
 
-        return is_object($revision)?ilGradebookRevisionConfig::
-        where(['revision_id'=>$revision->getRevisionId(), 'gradebook_id'=>$gradebookId])->first()
-            :$this->getLatestGradebookRevision();
-
-
+        return is_object($revision) ? ilGradebookRevisionConfig::where(['revision_id' => $revision->getRevisionId(), 'gradebook_id' => $gradebookId])->first()
+            : $this->getLatestGradebookRevision();
     }
 
     public function getGradebook()
@@ -108,10 +108,10 @@ abstract class ilLPGradebook
     {
         require_once('./Services/Tracking/classes/gradebook/config/class.ilGradebookConfig.php');
         $gradebook = ilGradebookConfig::firstOrCreate($this->obj_id);
-        return is_object($gradebook)?$gradebook->getId():-1;
+        return is_object($gradebook) ? $gradebook->getId() : -1;
     }
 
-    public function isMember($obj_id,$usr_id)
+    public function isMember($obj_id, $usr_id)
     {
         $participants = ilParticipants::getInstanceByObjId($obj_id);
         return $participants->isMember($usr_id);
@@ -119,7 +119,7 @@ abstract class ilLPGradebook
 
     public function getLPUrlForObjId($obj_id)
     {
-        $this->ctrl->setParameterByClass('ilrepositorygui', 'ref_id',$this->lookupRefId($obj_id));
+        $this->ctrl->setParameterByClass('ilrepositorygui', 'ref_id', $this->lookupRefId($obj_id));
         $link = $this->ctrl->getLinkTargetByClass(array('ilRepositoryGUI'));
         $link .= '&baseClass=ilRepositoryGUI';
         return $link;
@@ -132,16 +132,14 @@ abstract class ilLPGradebook
         include_once('./Services/Membership/classes/class.ilParticipants.php');
         $participants = ilParticipants::getInstanceByObjId($this->obj_id);
         $user_arr = [];
-        foreach($participants->getMembers() as $participant){
+        foreach ($participants->getMembers() as $participant) {
             $user = new ilObjUser($participant);
             $user_arr[] = [
-                'usr_id'=>$participant,
-                'login'=>$user->getLogin(),
-                'full_name'=>$user->getFullname()
+                'usr_id' => $participant,
+                'login' => $user->getLogin(),
+                'full_name' => $user->getFullname()
             ];
         }
         return $user_arr;
     }
-
-
 }
