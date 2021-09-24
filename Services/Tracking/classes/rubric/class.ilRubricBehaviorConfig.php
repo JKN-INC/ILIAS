@@ -10,14 +10,24 @@ class rubricBehaviorConfig extends ActiveRecord {
         const DATE_FORMAT       = 'Y-m-d H:i:s';
         const EXCEPTIONS        = true;
         const TRACE             = false;
-        
-        /*
+
+        /**
+         * @return string
+         * @description Return the Name of your Database Table
+         */
+        static function returnDbTableName() {
+            return self::TABLE_NAME;
+        }
+
+
+        /**
          * @var int
          *
          * @db_has_field    true
          * @db_fieldtype    integer
          * @db_length       4
          * @db_is_primary   true
+         * @db_is_unique    true
          * @db_sequence     true
          * @db_is_notnull   true
          */
@@ -101,13 +111,7 @@ class rubricBehaviorConfig extends ActiveRecord {
          */
         protected static $cacheLoaded = array();
 
-        /**
-         * @return string
-         * @description Return the Name of your Database Table
-         */
-        static function returnDbTableName() {
-                return self::TABLE_NAME;
-        }
+
 
 
        
