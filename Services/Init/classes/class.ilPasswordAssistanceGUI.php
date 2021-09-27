@@ -624,7 +624,7 @@ class ilPasswordAssistanceGUI
             ));
 
             $this->showMessageForm(sprintf(
-                $this->lng->txt('pwassist_unknown_username_or_email'),
+                $this->lng->txt('pwassist_unknown_email'),
                 $email
             ));
         }
