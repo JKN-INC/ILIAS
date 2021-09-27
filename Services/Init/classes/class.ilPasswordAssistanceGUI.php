@@ -108,7 +108,7 @@ class ilPasswordAssistanceGUI
      * Returns the ILIAS http path without a trailing /
      * @return string
      */
-    protected function getBaseUrl() : string
+    protected function getBaseUrl(): string
     {
         return rtrim(ILIAS_HTTP_PATH, '/');
     }
@@ -118,7 +118,7 @@ class ilPasswordAssistanceGUI
      * @param array  $queryParameters
      * @return string
      */
-    protected function buildUrl(string $script, array $queryParameters) : string
+    protected function buildUrl(string $script, array $queryParameters): string
     {
         $url = implode('/', [
             $this->getBaseUrl(),
@@ -218,7 +218,11 @@ class ilPasswordAssistanceGUI
                 $email
             ));
 
-            $this->showMessageForm(sprintf($this->lng->txt('pwassist_mail_sent'), $email));
+            $this->showMessageForm(sprintf(
+                $this->lng->txt('pwassist_unknown_username_or_email'),
+                $username,
+                $email
+            ));
             return;
         }
 
@@ -245,12 +249,8 @@ class ilPasswordAssistanceGUI
                 ));
             }
         } elseif (
-            (
-                $user->getAuthMode(true) != AUTH_LOCAL ||
-                ($user->getAuthMode(true) == $defaultAuth && $defaultAuth != AUTH_LOCAL)
-            ) && !(
-                $user->getAuthMode(true) == AUTH_SAML
-            )
+            ($user->getAuthMode(true) != AUTH_LOCAL ||
+                ($user->getAuthMode(true) == $defaultAuth && $defaultAuth != AUTH_LOCAL)) && !($user->getAuthMode(true) == AUTH_SAML)
         ) {
             \ilLoggerFactory::getLogger('usr')->info(sprintf(
                 'Could not process password assistance form (reason: not permitted for accounts using external authentication sources): %s / %s',
@@ -620,6 +620,11 @@ class ilPasswordAssistanceGUI
         } else {
             \ilLoggerFactory::getLogger('usr')->info(sprintf(
                 'Could not sent username assistance emails to (reason: no user found): %s',
+                $email
+            ));
+
+            $this->showMessageForm(sprintf(
+                $this->lng->txt('pwassist_unknown_username_or_email'),
                 $email
             ));
         }
