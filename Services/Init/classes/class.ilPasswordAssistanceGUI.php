@@ -241,6 +241,12 @@ class ilPasswordAssistanceGUI
                     $username,
                     $email
                 ));
+
+                $this->showMessageForm(sprintf(
+                    $this->lng->txt('pwassist_mail_non_match_username'),
+                    $username,
+                    $email
+                ));
             } else {
                 \ilLoggerFactory::getLogger('usr')->info(sprintf(
                     'Could not process password assistance form (reason: account email addresses differ from input): %s / %s',
