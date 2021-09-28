@@ -3372,7 +3372,7 @@ common#:#obj_rolf_local_desc#:#Contains local roles of object no.
 common#:#obj_rolf_local#:#Local Roles
 common#:#obj_rolf#:#Roles
 common#:#obj_rolt#:#Role Template
-common#:#obj_root#:#Repository - Home
+common#:#obj_root#:#Course Library - Home
 common#:#obj_sahs#:#Learning Module SCORM
 common#:#obj_sco#:#SCO
 common#:#obj_seas_desc#:#Manage the search settings here.
@@ -3622,7 +3622,7 @@ common#:#replace_file#:#Replace File
 common#:#reply#:#Reply
 common#:#repository_admin_desc#:#Set permissions for repository items, restore or remove objects from system trash
 common#:#repository_admin#:#Repository Trash and Permissions
-common#:#repository#:#Repository
+common#:#repository#:#Course Library
 common#:#require_email#:#Require e-mail
 common#:#require_gender#:#Require salutation
 common#:#require_hobby#:#Require hobby
@@ -5874,7 +5874,7 @@ ldap#:#ldap_ilias_role#:#ILIAS Role Name
 ldap#:#ldap_info_text_info#:#If entered, this text will be shown on the info screen for the object this role is assigned to. Optionally this text is available in the Repository.
 ldap#:#ldap_info_text#:#Information Text
 ldap#:#ldap_local_role#:#Local Role
-ldap#:#ldap_mapping_info_type#:#Show Information also in the Repository
+ldap#:#ldap_mapping_info_type#:#Show Information also in the Course Library
 ldap#:#ldap_mapping_table#:#Assignment of LDAP Attributes to ILIAS User Profile
 ldap#:#ldap_mapping_template#:#Template for objectClass:
 ldap#:#ldap_member_info#:#The attribute of the group object where the user dn may be found.
@@ -7110,7 +7110,7 @@ registration#:#registration_generated_all#:#All Dates
 registration#:#registration_export_codes_no_data#:#No codes to export were selected.
 registration#:#registration_code_not_valid#:#The given registration code is either invalid or already has been used.
 registration#:#registration_disabled_no_access#:#The self-registration is not enabled. Please contact the system administration for further assistance: %s
-rep#:#rep_intro#:#Welcome to the Repository!
+rep#:#rep_intro#:#Welcome to the Course Library!
 rep#:#rep_intro1#:#In this area you can create learning and working resources for all users. All resources are organised in categories. Categories can reflect the structure of your organisation (e.g. departments), a hierarchy of disciplines, or classes of a school.
 rep#:#rep_intro2#:#Three steps are needed to build an initial structure:
 rep#:#rep_intro3#:#Click on the <i>%s</i> button besides the selection list on the top right.
