@@ -949,6 +949,7 @@ ilias.questions.showFeedback =function(a_id) {
 		}
 	}
 	
+	jQuery('#feedback'+a_id).css("white-space", "pre-wrap");
 	jQuery('#feedback'+a_id).html(fbtext);
 	jQuery('#feedback'+a_id).slideToggle(400, 'swing', function(){
 		if (typeof MathJax != "undefined") {
