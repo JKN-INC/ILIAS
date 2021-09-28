@@ -275,7 +275,7 @@ class ilMediaAliasItem
             $this->item_node,
             "Caption",
             array("TextRepresentation", "Parameter", "MapArea"),
-            $a_caption,
+            nl2br($a_caption),
             array("Align" => "bottom")
         );
     }
@@ -293,7 +293,7 @@ class ilMediaAliasItem
             "/Caption"
         );
         if (is_object($caption_node)) {
-            return $caption_node->get_content();
+            return $text = str_ireplace('<br />', "\r\n", $caption_node->get_content());
         }
     }
 
