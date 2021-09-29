@@ -366,7 +366,8 @@ class ilGlossaryTerm
         $a_tax_node = 0,
         $a_add_amet_fields = false,
         array $a_amet_filter = null,
-        $a_include_references = false
+        $a_include_references = false,
+        $language = ""
     ) {
         global $DIC;
 
@@ -416,6 +417,10 @@ class ilGlossaryTerm
         $searchterm = (!empty($searchterm))
             ? " AND " . $ilDB->like("term", "text", "%" . $searchterm . "%") . " "
             : "";
+
+        if ($language != "") {
+            $searchterm .= " AND " . $ilDB->like("language", "text", "%" . $language . "%") . " ";
+        }    
             
         if ($a_first_letter != "") {
             $searchterm .= " AND " . $ilDB->upper($ilDB->substr("term", 1, 1)) . " = " . $ilDB->upper($ilDB->quote($a_first_letter, "text")) . " ";

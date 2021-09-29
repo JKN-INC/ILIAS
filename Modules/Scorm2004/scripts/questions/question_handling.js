@@ -831,6 +831,10 @@ ilias.questions.showFeedback =function(a_id) {
 	else if(questions[a_id].type == "assTextQuestion")
 	{
 		var txt_wrong_answers = questions[a_id].feedback['incorrect'];
+		if(!questions[a_id].feedback['tries'] &&
+			questions[a_id].nr_of_tries - answers[a_id].tries > 0) {
+			txt_wrong_answers = '';
+		}
 		ilias.questions.txt.all_answers_correct = questions[a_id].feedback['correct'];
 	}
 	else

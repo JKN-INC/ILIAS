@@ -1870,7 +1870,8 @@ class ilPCParagraph extends ilPageContent
         foreach ($parnodes as $parnode) {
             $textnodes = $xpath->query('//IntLink', $parnode);
             foreach ($textnodes as $node) {
-                if(in_array($node->nodeValue, array_column($a_terms, 'term'))) {
+                if(in_array(strtolower($node->nodeValue), array_map('strtolower',
+                    array_column($a_terms, 'term')))) {
                     $node->parentNode->insertBefore($node->lastChild, $node->nextSibling);
                     $node->parentNode->removeChild($node);
                 }

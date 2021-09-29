@@ -516,7 +516,8 @@ class ilObjGlossary extends ilObject implements ilAdvancedMetaDataSubItems
         $a_add_amet_fields = false,
         array $a_amet_filter = null,
         $a_omit_virtual = false,
-        $a_include_references = false
+        $a_include_references = false,
+        $language = ""
     ) {
         if ($a_omit_virtual) {
             $glo_ref_ids[] = $this->getRefId();
@@ -531,7 +532,8 @@ class ilObjGlossary extends ilObject implements ilAdvancedMetaDataSubItems
             $a_tax_node,
             $a_add_amet_fields,
             $a_amet_filter,
-            $a_include_references
+            $a_include_references,
+            $language
         );
         return $list;
     }

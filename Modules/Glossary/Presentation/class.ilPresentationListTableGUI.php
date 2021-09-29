@@ -57,7 +57,7 @@ class ilPresentationListTableGUI extends ilTable2GUI
 
         $this->lng = $DIC->language();
         $this->ctrl = $DIC->ctrl();
-
+        $this->user = $DIC->user();
         $this->glossary = $a_glossary;
         $this->offline = $a_offline;
         $this->tax_node = $a_tax_node;
@@ -125,7 +125,8 @@ class ilPresentationListTableGUI extends ilTable2GUI
             true,
             $this->record_gui->getFilterElements(),
             false,
-            true
+            true,
+            $this->filter["language"]
         ));
         if ($this->offline) {
             $this->setLimit(count($this->getData()));
@@ -168,6 +169,19 @@ class ilPresentationListTableGUI extends ilTable2GUI
             $ti->readFromSession();
             $this->filter["definition"] = $ti->getValue();
         }
+
+        $options = [];
+        foreach ($this->lng->getInstalledLanguages() as $lang_code) {
+            $options[$lang_code] = $this->lng->txt("meta_l_{$lang_code}");
+        }
+
+        $s_lang = $this->user->getLanguage();
+        $si = new ilSelectInputGUI($this->lng->txt("language"), "term_language");
+        $si->setOptions($options);
+        $si->setValue($s_lang);
+        $this->addFilterItem($si);
+        $si->readFromSession();
+        $this->filter["language"] = $si->getValue();
     }
     
     /**

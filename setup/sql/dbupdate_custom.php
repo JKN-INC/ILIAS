@@ -166,4 +166,11 @@ require_once('./Services/Tracking/classes/gradebook/config/class.ilGradebookRevi
 $ilGradebookRevisionConfig = new ilGradebookRevisionConfig();
 $ilGradebookRevisionConfig->installDB();
 
+
+?>
+
+<#17>
+<?php
+$ilDB->modifyTableColumn('rubric', 'complete',array("type" => "integer", "length" => 1));
+
 ?>
