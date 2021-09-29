@@ -1697,7 +1697,7 @@ class ilPCParagraph extends ilPageContent
             }
             // did we find anything? -> modify content
             if (count($found_terms) > 0) {
-                self::linkTermsInDom($this->dom, $found_terms, $this->par_node);
+                //self::linkTermsInDom($this->dom, $found_terms, $this->par_node);
             }
         }
     }
@@ -1735,6 +1735,8 @@ class ilPCParagraph extends ilPageContent
 
         include_once("./Services/Utilities/classes/class.ilStr.php");
 
+        $linked_terms = [];
+
         foreach ($parnodes as $parnode) {
             $textnodes = $xpath->query('.//text()', $parnode);
             foreach ($textnodes as $node) {
@@ -1749,37 +1751,42 @@ class ilPCParagraph extends ilPageContent
                     foreach ($a_terms as $t) {
                         $pos = ilStr::strIPos($node_val, $t["term"]);
 
-                        // if term found
-                        while (is_int($pos)) {
-                            // check if we are in a tex tag, see #22261
-                            $tex_bpos = ilStr::strrPos(ilStr::subStr($node_val, 0, $pos), "[tex]");
-                            $tex_epos = ilStr::strPos($node_val, "[/tex]", $tex_bpos);
-                            if ($tex_bpos > 0 && $tex_epos > 0 && $tex_bpos < $pos && $tex_epos > $pos) {
-                                $pos += ilStr::strLen($t["term"]);
-                            } else {
-
-                                // check if the string is not included in another word
-                                // note that []
-                                $valid_limiters = array("", " ", "&nbsp;", ".", ",", ":", ";", "!", "?", "\"", "'", "(", ")");
-                                $b = ($pos > 0)
-                                    ? ilStr::subStr($node_val, $pos - 1, 1)
-                                    : "";
-                                $a = ilStr::subStr($node_val, $pos + ilStr::strLen($t["term"]), 1);
-                                if ((in_array($b, $valid_limiters) || htmlentities($b, null, 'utf-8') == "&nbsp;") && in_array($a, $valid_limiters)) {
-                                    $mid = '[iln term="' . $t["id"] . '"]' .
-                                        ilStr::subStr($node_val, $pos, ilStr::strLen($t["term"])) .
-                                        "[/iln]";
-
-                                    $node_val = ilStr::subStr($node_val, 0, $pos) .
-                                        $mid .
-                                        ilStr::subStr($node_val, $pos + ilStr::strLen($t["term"]));
-
-                                    $pos += ilStr::strLen($mid);
-                                } else {
+                        //if term not linked already
+                        if(!in_array($t["term"],$linked_terms)){
+                            // if term found
+                            while (is_int($pos)) {
+                                // check if we are in a tex tag, see #22261
+                                $tex_bpos = ilStr::strrPos(ilStr::subStr($node_val, 0, $pos), "[tex]");
+                                $tex_epos = ilStr::strPos($node_val, "[/tex]", $tex_bpos);
+                                if ($tex_bpos > 0 && $tex_epos > 0 && $tex_bpos < $pos && $tex_epos > $pos) {
                                     $pos += ilStr::strLen($t["term"]);
+                                } else {
+
+                                    // check if the string is not included in another word
+                                    // note that []
+                                    $valid_limiters = array("", " ", "&nbsp;", ".", ",", ":", ";", "!", "?", "\"", "'", "(", ")");
+                                    $b = ($pos > 0)
+                                        ? ilStr::subStr($node_val, $pos - 1, 1)
+                                        : "";
+                                    $a = ilStr::subStr($node_val, $pos + ilStr::strLen($t["term"]), 1);
+                                    if ((in_array($b, $valid_limiters) || htmlentities($b, null, 'utf-8') == "&nbsp;") && in_array($a, $valid_limiters)) {
+                                        $mid = '[iln term="' . $t["id"] . '"]' .
+                                            ilStr::subStr($node_val, $pos, ilStr::strLen($t["term"])) .
+                                            "[/iln]";
+
+                                        $node_val = ilStr::subStr($node_val, 0, $pos) .
+                                            $mid .
+                                            ilStr::subStr($node_val, $pos + ilStr::strLen($t["term"]));
+
+                                        $pos += ilStr::strLen($mid);
+                                    } else {
+                                        $pos += ilStr::strLen($t["term"]);
+                                    }
                                 }
+                                array_push($linked_terms,$t["term"]);
+                                $pos = false;
                             }
-                            $pos = ilStr::strIPos($node_val, $t["term"], $pos);
+                            // insert [iln] tags
                         }
 
                         // insert [iln] tags
@@ -1834,6 +1841,42 @@ class ilPCParagraph extends ilPageContent
         //		exit;
     }
 
+    /**
+     * UnLink terms in a dom page object in bb style
+     *
+     * @param
+     * @return
+     */
+    protected static function unlinkTermsInDom($a_dom, $a_terms, $a_par_node = null)
+    {
+        foreach ($a_terms as $k => $t) {
+            $a_terms[$k]["termlength"] = strlen($t["term"]);
+        }
+        if ($a_dom instanceof php4DOMDocument) {
+            $a_dom = $a_dom->myDOMDocument;
+        }
+        if ($a_par_node instanceof php4DOMElement) {
+            $a_par_node = $a_par_node->myDOMNode;
+        }
+        $a_terms = ilUtil::sortArray($a_terms, "termlength", "asc", true);
+        $xpath = new DOMXPath($a_dom);
+
+        if ($a_par_node == null) {
+            $parnodes = $xpath->query("//Paragraph[@Characteristic != 'Code']");
+        } else {
+            $parnodes = $xpath->query(".//Paragraph[@Characteristic != 'Code']", $a_par_node->parentNode);
+        }
+        include_once("./Services/Utilities/classes/class.ilStr.php");
+        foreach ($parnodes as $parnode) {
+            $textnodes = $xpath->query('//IntLink', $parnode);
+            foreach ($textnodes as $node) {
+                if(in_array($node->nodeValue, array_column($a_terms, 'term'))) {
+                    $node->parentNode->insertBefore($node->lastChild, $node->nextSibling);
+                    $node->parentNode->removeChild($node);
+                }
+            }
+        }
+    }
 
     /**
      * Auto link glossary of whole page
@@ -1847,6 +1890,21 @@ class ilPCParagraph extends ilPageContent
         $a_dom = $a_page->getDom();
 
         self::linkTermsInDom($a_dom, $a_terms);
+
+        $a_page->update();
+    }
+
+    /**
+     * Remove Auto Link Glossary Terms,.
+     *
+     * @param
+     * @return
+     */
+    public static function removeLinkGlossariesPage($a_page, $a_terms)
+    {
+        $a_page->buildDom();
+        $a_dom = $a_page->getDom();
+        self::unlinkTermsInDom($a_dom, $a_terms);
 
         $a_page->update();
     }
