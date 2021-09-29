@@ -2710,6 +2710,32 @@ class ilObjContentObject extends ilObject
     }
 
     /**
+     * Unlink a single term
+     * @param $term
+     */
+    public function unLinkGlossaryTerm($term)
+    {
+        include_once("./Modules/LearningModule/classes/class.ilLMPage.php");
+        $pages = ilLMPage::getAllPages($this->getType(), $this->getId());
+        // determine terms that occur in the page
+        $found_pages = array();
+        foreach ($pages as $p) {
+            $pg = new ilLMPage($p["id"]);
+            $c = $pg->getXMLContent();
+            if (is_int(stripos($c, $term["term"]))) {
+                $found_pages[$p["id"]]["terms"][] = $term;
+                if (!is_object($found_pages[$p["id"]]["page"])) {
+                    $found_pages[$p["id"]]["page"] = $pg;
+                }
+            }
+        }
+        include_once("./Services/COPage/classes/class.ilPCParagraph.php");
+        foreach ($found_pages as $id => $fp) {
+            ilPCParagraph::removeLinkGlossariesPage($fp["page"], $fp["terms"]);
+        }
+    }
+
+    /**
      * Unlink all terms in a Learning module page when a glossary is removed.
      * @param $a_glo_ref_id
      */
