@@ -921,6 +921,11 @@ class assKprimChoice extends assQuestion implements ilObjQuestionScoringAdjustab
             'allcorrect' => $this->formatSAQuestion($this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(), true))
         );
 
+        //if multiple tries, get the hint feedback too.
+        if((int) $this->getNrOfTries() > 0 ){
+            $result['feedback']['tries'] = $this->formatSAQuestion($this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(),'hint'));
+        }
+
         $result['trueOptionLabel'] = $this->getTrueOptionLabelTranslation($this->lng, $this->getOptionLabel());
         $result['falseOptionLabel'] = $this->getFalseOptionLabelTranslation($this->lng, $this->getOptionLabel());
         

@@ -897,13 +897,18 @@ ilias.questions.showFeedback =function(a_id) {
 			
 			if (ilias.questions.default_feedback)
 			{
-				fbtext = '<b>' + ilias.questions.txt.nr_of_tries_exceeded + '</b><br />'
-							+ ilias.questions.txt.correct_answers_shown + '<br />';
+				if(questions[a_id].feedback['tries']){
+					txt_wrong_answers = questions[a_id].feedback['tries'];
+				}
+				fbtext = '<b>' + txt_wrong_answers + '</b><br />'
+							+ ilias.questions.txt.nr_of_tries_exceeded + '<br />';
 			}
 			
 			if (questions[a_id].feedback['onenotcorrect'])
 			{
-				fbtext += questions[a_id].feedback['onenotcorrect'];
+				if(!questions[a_id].feedback['tries']) {
+					fbtext += questions[a_id].feedback['onenotcorrect'];
+				}
 			}
 
 			ilias.questions.showCorrectAnswers(a_id);
@@ -937,7 +942,7 @@ ilias.questions.showFeedback =function(a_id) {
 			
 			if (ilias.questions.default_feedback)
 			{
-				fbtext = txt_wrong_answers + '<br /> ' + ilias.questions.txt.please_try_again + '<br />';
+				fbtext = txt_wrong_answers + '<br /> ';
 			}
 			
 			if (questions[a_id].feedback['onenotcorrect'])

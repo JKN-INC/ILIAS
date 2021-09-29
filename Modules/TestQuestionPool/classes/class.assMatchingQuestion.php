@@ -1373,6 +1373,11 @@ class assMatchingQuestion extends assQuestion implements ilObjQuestionScoringAdj
             'onenotcorrect' => $this->formatSAQuestion($this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(), false)),
             'allcorrect' => $this->formatSAQuestion($this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(), true))
         );
+
+        //if multiple tries, get the hint feedback too.
+        if((int) $this->getNrOfTries() > 0 ){
+            $result['feedback']['tries'] = $this->formatSAQuestion($this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(),'hint'));
+        }
         
         require_once 'Services/Randomization/classes/class.ilArrayElementShuffler.php';
         $this->setShuffler(new ilArrayElementShuffler());

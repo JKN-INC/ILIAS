@@ -892,6 +892,11 @@ class assLongMenu extends assQuestion implements ilObjQuestionScoringAdjustable
             'onenotcorrect' => $this->formatSAQuestion($this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(), false)),
             'allcorrect' => $this->formatSAQuestion($this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(), true))
         );
+
+        //if multiple tries, get the hint feedback too.
+        if((int) $this->getNrOfTries() > 0 ){
+            $result['feedback']['tries'] = $this->formatSAQuestion($this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(),'hint'));
+        }
         
         $mobs = ilObjMediaObject::_getMobsOfObject("qpl:html", $this->getId());
         $result['answers'] = $this->getAnswers();

@@ -845,6 +845,12 @@ class assTextQuestion extends assQuestion implements ilObjQuestionScoringAdjusta
             'incorrect' => $this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(),false),
             'correct'   => $this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(),true)
         ];
+
+        //if multiple tries, get the hint feedback too.
+        if((int) $this->getNrOfTries() > 0 ){
+            $result['feedback']['tries'] = $this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(),'hint');
+        }
+        
         $result['maxlength'] = (int) $this->getMaxNumOfChars();
         $result['max_points'] = $this->getMaximumPoints();
         $result['relation'] = (string) $this->getKeywordRelation();

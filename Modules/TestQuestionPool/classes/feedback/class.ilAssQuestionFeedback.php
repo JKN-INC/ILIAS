@@ -151,7 +151,16 @@ abstract class ilAssQuestionFeedback
             'feedback_complete',
             $this->questionOBJ->isAdditionalContentEditingModePageObject()
         ));
-        
+
+        //if there is more than one number of tries, give a specific hint feedback.
+        if((int)$this->questionOBJ->getNrOfTries() > 0 ){
+            $form->addItem($this->buildFeedbackContentFormProperty(
+                $this->lng->txt('feedback_incomplete_solution_hint'),
+                'feedback_tries',
+                $this->questionOBJ->isAdditionalContentEditingModePageObject()
+            ));
+        }
+
         $form->addItem($this->buildFeedbackContentFormProperty(
             $this->lng->txt('feedback_incomplete_solution'),
             'feedback_incomplete',
@@ -191,6 +200,13 @@ abstract class ilAssQuestionFeedback
                 $pageObjectType,
                 $this->getGenericFeedbackPageObjectId($this->questionOBJ->getId(), false)
             );
+
+            if((int)$this->questionOBJ->getNrOfTries() > 0 ){
+                $valueFeedbackSolutionTries = $this->getPageObjectNonEditableValueHTML(
+                    $pageObjectType,
+                    $this->getGenericFeedbackPageObjectId($this->questionOBJ->getId(), 'hint')
+                );
+            }
         } else {
             $valueFeedbackSolutionComplete = $this->getGenericFeedbackContent(
                 $this->questionOBJ->getId(),
@@ -201,10 +217,20 @@ abstract class ilAssQuestionFeedback
                 $this->questionOBJ->getId(),
                 false
             );
+
+            if((int)$this->questionOBJ->getNrOfTries() > 0 ){
+                $valueFeedbackSolutionTries =$this->getGenericFeedbackContent(
+                    $this->questionOBJ->getId(),
+                    'hint'
+                );
+            }
         }
         
         $form->getItemByPostVar('feedback_complete')->setValue($valueFeedbackSolutionComplete);
         $form->getItemByPostVar('feedback_incomplete')->setValue($valueFeedbackSolutionIncomplete);
+        if($form->getItemByPostVar('feedback_tries')){
+            $form->getItemByPostVar('feedback_tries')->setValue($valueFeedbackSolutionTries);
+        }
     }
     
     /**
@@ -230,6 +256,11 @@ abstract class ilAssQuestionFeedback
         if (!$this->questionOBJ->isAdditionalContentEditingModePageObject()) {
             $this->saveGenericFeedbackContent($this->questionOBJ->getId(), false, $form->getInput('feedback_incomplete'));
             $this->saveGenericFeedbackContent($this->questionOBJ->getId(), true, $form->getInput('feedback_complete'));
+
+            //adding the hint text if the number of tries is greater than 0.
+            if((int)$this->questionOBJ->getNrOfTries() > 0 ){
+                $this->saveGenericFeedbackContent($this->questionOBJ->getId(), 'hint', $form->getInput('feedback_tries'));
+            }
         }
     }
     
@@ -322,6 +353,11 @@ abstract class ilAssQuestionFeedback
         require_once 'Services/RTE/classes/class.ilRTE.php';
 
         $correctness = $solutionCompleted ? 1 : 0;
+
+        //JKN patch for hints if no tries > 0
+        if( $solutionCompleted === 'hint' ){
+            $correctness = 2;
+        }
         
         $res = $this->db->queryF(
             "SELECT * FROM {$this->getGenericFeedbackTableName()} WHERE question_fi = %s AND correctness = %s",
@@ -390,8 +426,12 @@ abstract class ilAssQuestionFeedback
     
         $correctness = $solutionCompleted ? 1 : 0;
         
-        $feedbackId = $this->getGenericFeedbackId($questionId, $solutionCompleted);
-        
+        if( $solutionCompleted === 'hint' ){
+            $correctness = 2;
+        }
+
+        $feedbackId = $this->getGenericFeedbackId($questionId, $correctness);     
+
         if (strlen($feedbackContent)) {
             $feedbackContent = ilRTE::_replaceMediaObjectImageSrc($feedbackContent, 0);
         }
@@ -1059,5 +1099,11 @@ abstract class ilAssQuestionFeedback
         $this->saveGenericFeedbackContent($questionId, false, $migrator->migrateToLmContent(
             $this->getGenericFeedbackContent($questionId, false)
         ));
+
+        if((int)$this->questionOBJ->getNrOfTries() > 0 ){
+            $this->saveGenericFeedbackContent($questionId, 'hint', $migrator->migrateToLmContent(
+                $this->getGenericFeedbackContent($questionId, 'hint')
+            ));
+        }
     }
 }
