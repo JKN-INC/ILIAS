@@ -481,6 +481,30 @@ class ilObjGlossary extends ilObject implements ilAdvancedMetaDataSubItems
     }
 
     /**
+     * Lookup linked content pages in ilias LM's
+     *
+     * @param
+     * @return
+     */
+    public static function lookUpLinkedContentPages($a_id)
+    {
+        global $DIC;
+
+        $db = $DIC->database();
+
+        // read auto glossaries
+        $set = $db->query(
+            "SELECT * FROM lm_glossaries " .
+            " WHERE glo_id = " . $db->quote($a_id, "integer")
+        );
+        $lm = array();
+        while ($rec = $db->fetchAssoc($set)) {
+            $lm[] = $rec["lm_id"];
+        }
+        return $lm;
+    }
+
+    /**
     * Get term list
     */
     public function getTermList(
@@ -492,7 +516,8 @@ class ilObjGlossary extends ilObject implements ilAdvancedMetaDataSubItems
         $a_add_amet_fields = false,
         array $a_amet_filter = null,
         $a_omit_virtual = false,
-        $a_include_references = false
+        $a_include_references = false,
+        $language = ""
     ) {
         if ($a_omit_virtual) {
             $glo_ref_ids[] = $this->getRefId();
@@ -507,7 +532,8 @@ class ilObjGlossary extends ilObject implements ilAdvancedMetaDataSubItems
             $a_tax_node,
             $a_add_amet_fields,
             $a_amet_filter,
-            $a_include_references
+            $a_include_references,
+            $language
         );
         return $list;
     }

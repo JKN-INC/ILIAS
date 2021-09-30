@@ -41,19 +41,22 @@ class ilSCORMTrackingItemsPerUserFilterGUI extends ilPropertyFormGUI
         $allowExportPrivacy = $privacy->enabledExportSCORM();
 
         if ($users && count($users) > 0) {
-			foreach ($users as $user) {
-				if (ilObject::_exists($user) && ilObject::_lookUpType($user) == 'usr') {
-					if ($allowExportPrivacy == true) {
-						$e_user = new ilObjUser($user);
-						$options[$user] = $e_user->getLastname() . ", " . $e_user->getFirstname();
-					} else {
-						$options[$user] = 'User Id: ' . $user;
-					}
-				}
-			}
+            foreach ($users as $user) {
+                if (ilObject::_exists($user) && ilObject::_lookUpType($user) == 'usr') {
+                    if ($allowExportPrivacy == true) {
+                        $e_user = new ilObjUser($user);
+                        $options[$user] = $e_user->getLastname() . ", " . $e_user->getFirstname();
+                    } else {
+                        $options[$user] = 'User Id: ' . $user;
+                    }
+                }
+            }
         } else {
             $options = array("-1" => $lng->txt("no_items"));
         }
+
+        sort($options);
+        array_unshift($options, "All");
 
         $si = new ilSelectInputGUI($lng->txt("user"), "userSelected");
         $si->setOptions($options);
@@ -61,7 +64,7 @@ class ilSCORMTrackingItemsPerUserFilterGUI extends ilPropertyFormGUI
         $this->form->addItem($si);
 
         $options = array("choose" => $lng->txt("please_choose"));
-        for ($i = 0;$i < count($reports);$i++) {
+        for ($i = 0; $i < count($reports); $i++) {
             $options[$reports[$i]] = $lng->txt(strtolower($reports[$i]));
         }
         $si = new ilSelectInputGUI($lng->txt("report"), "report");

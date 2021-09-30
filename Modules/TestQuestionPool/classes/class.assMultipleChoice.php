@@ -1051,6 +1051,11 @@ class assMultipleChoice extends assQuestion implements ilObjQuestionScoringAdjus
             'allcorrect' => $this->formatSAQuestion($this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(), true))
         );
 
+        //if multiple tries, get the hint feedback too.
+        if((int) $this->getNrOfTries() > 0 ){
+            $result['feedback']['tries'] = $this->formatSAQuestion($this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(),'hint'));
+        }
+
         $answers = array();
         $has_image = false;
         foreach ($this->getAnswers() as $key => $answer_obj) {

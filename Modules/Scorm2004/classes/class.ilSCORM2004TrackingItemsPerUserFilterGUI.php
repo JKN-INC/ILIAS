@@ -55,13 +55,15 @@ class ilSCORM2004TrackingItemsPerUserFilterGUI extends ilPropertyFormGUI
             $options = array("-1" => $lng->txt("no_items"));
         }
 
+        asort($options);
+
         $si = new ilSelectInputGUI($lng->txt("user"), "userSelected");
         $si->setOptions($options);
         $si->setValue($userSelected);
         $this->form->addItem($si);
 
         $options = array("choose" => $lng->txt("please_choose"));
-        for ($i = 0;$i < count($reports);$i++) {
+        for ($i = 0; $i < count($reports); $i++) {
             $options[$reports[$i]] = $lng->txt(strtolower($reports[$i]));
         }
         $si = new ilSelectInputGUI($lng->txt("report"), "report");

@@ -90,3 +90,6 @@ trac#:#gradebook_average#:#Average Grade
 trac#:#gradebook_overall_status#:#Student Overall Status
 trac#:#gradebook_average_progress#:#Average Progress
 trac#:#itgr#:#Item Group
+pwassist#:#pwassist_unknown_username_or_email#:#Could not process password assistance form (reason: no user found) %s / %s
+pwassist#:#pwassist_unknown_username_or_email#:#Could not process password assistance form (reason: no user found) %s / %s
+pwassist#:#pwassist_unknown_email#:#Could not process password assistance form (reason: no user found) %s

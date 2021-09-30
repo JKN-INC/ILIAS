@@ -77,8 +77,10 @@ class ilLMPresentationLinker implements \ILIAS\COPage\PageLinker
         // handling of free pages
         $cur_page_id = $this->current_page;
         $back_pg = $this->back_pg;
-        if ($a_obj_id != "" && !$this->lm_tree->isInTree($a_obj_id) && $cur_page_id != "" &&
-            $a_back_link == "append") {
+        if (
+            $a_obj_id != "" && !$this->lm_tree->isInTree($a_obj_id) && $cur_page_id != "" &&
+            $a_back_link == "append"
+        ) {
             if ($back_pg != "") {
                 $back_pg = $cur_page_id . ":" . $back_pg;
             } else {
@@ -159,14 +161,14 @@ class ilLMPresentationLinker implements \ILIAS\COPage\PageLinker
                         false,
                         true
                     );
-//					$link = str_replace("&", "&amp;", $link);
+                    //					$link = str_replace("&", "&amp;", $link);
 
                     $this->ctrl->setParameterByClass(self::TARGET_GUI, "frame", "");
                     $this->ctrl->setParameterByClass(self::TARGET_GUI, "obj_id", "");
                     $this->ctrl->setParameterByClass(self::TARGET_GUI, "mob_id", "");
                     break;
             }
-        } else {	// handle offline links
+        } else {    // handle offline links
             $lang_suffix = "";
             if ($this->export_all_languages) {
                 if ($this->lang != "" && $this->lang != "-") {
@@ -179,7 +181,7 @@ class ilLMPresentationLinker implements \ILIAS\COPage\PageLinker
                     break;
 
                 case "fullscreen":
-                    $link = "fullscreen.html";		// id is handled by xslt
+                    $link = "fullscreen.html";        // id is handled by xslt
                     break;
 
                 case "layout":
@@ -196,7 +198,7 @@ class ilLMPresentationLinker implements \ILIAS\COPage\PageLinker
                     if ($a_frame != "" && $a_frame != "_blank") {
                         if ($a_frame != "toc") {
                             $link = "frame_" . $a_obj_id . "_" . $a_frame . $lang_suffix . ".html";
-                        } else {	// don't save multiple toc frames (all the same)
+                        } else {    // don't save multiple toc frames (all the same)
                             $link = "frame_" . $a_frame . $lang_suffix . ".html";
                         }
                     } else {
@@ -227,22 +229,26 @@ class ilLMPresentationLinker implements \ILIAS\COPage\PageLinker
         return $link;
     }
 
-    public function getLayoutLinkTargets() : array
+    public function getLayoutLinkTargets(): array
     {
         $targets = [
             "New" => [
                 "Type" => "New",
                 "Frame" => "_blank",
-                "OnClick" => ""],
+                "OnClick" => ""
+            ],
             "FAQ" => [
                 "Type" => "FAQ",
-                "OnClick" => "return il.LearningModule.showContentFrame(event, 'faq');"],
+                "OnClick" => "return il.LearningModule.showContentFrame(event, 'faq');"
+            ],
             "Glossary" => [
                 "Type" => "Glossary",
-                "OnClick" => "return il.LearningModule.showContentFrame(event, 'glossary');"],
+                "OnClick" => "return il.LearningModule.showContentFrame(event, 'glossary');"
+            ],
             "Media" => [
                 "Type" => "Media",
-                "OnClick" => "return il.LearningModule.showContentFrame(event, 'media');"]
+                "OnClick" => "return il.LearningModule.showContentFrame(event, 'media');"
+            ]
         ];
 
         return $targets;
@@ -264,7 +270,7 @@ class ilLMPresentationLinker implements \ILIAS\COPage\PageLinker
     /**
      * get xml for links
      */
-    public function getLinkXML($a_int_links) : string
+    public function getLinkXML($a_int_links): string
     {
         $ilCtrl = $this->ctrl;
 
@@ -299,8 +305,10 @@ class ilLMPresentationLinker implements \ILIAS\COPage\PageLinker
                     case "PageObject":
                     case "StructureObject":
                         $lm_id = ilLMObject::_lookupContObjID($target_id);
-                        if ($lm_id == $this->lm->getId() ||
-                            ($targetframe != "None" && $targetframe != "New")) {
+                        if (
+                            $lm_id == $this->lm->getId() ||
+                            ($targetframe != "None" && $targetframe != "New")
+                        ) {
                             $ltarget = $a_layoutframes[$targetframe]["Frame"];
                             $nframe = ($ltarget == "")
                                 ? ""
@@ -309,13 +317,15 @@ class ilLMPresentationLinker implements \ILIAS\COPage\PageLinker
                                 if ($showViewInFrameset) {
                                     $ltarget = "_parent";
                                 } else {
-                                    $ltarget = "_top";
+                                    $ltarget = "_blank";
                                 }
                             }
                             // scorm always in 1window view and link target
                             // is always same frame
-                            if ($this->export_format == "scorm" &&
-                                $this->offline) {
+                            if (
+                                $this->export_format == "scorm" &&
+                                $this->offline
+                            ) {
                                 $ltarget = "";
                             }
                             $cmd = "layout";
@@ -391,13 +401,12 @@ class ilLMPresentationLinker implements \ILIAS\COPage\PageLinker
 
                     case "RepositoryItem":
                         $obj_type = ilObject::_lookupType($target_id, true);
-                        $obj_id = ilObject::_lookupObjId($target_id);
+                        $ltarget = $nframe = "_blank";
                         if (!$this->offline) {
                             $href = "./goto.php?target=" . $obj_type . "_" . $target_id;
                         } else {
                             $href = ILIAS_HTTP_PATH . "/goto.php?target=" . $obj_type . "_" . $target_id . "&amp;client_id=" . CLIENT_ID;
                         }
-                        $ltarget = ilFrameTargetInfo::_getFrame("MainContent");
                         break;
 
                     case "WikiPage":
@@ -452,7 +461,6 @@ class ilLMPresentationLinker implements \ILIAS\COPage\PageLinker
                             $lcontent = ilUserUtil::getNamePresentation($target_id, false, false);
                         }
                         break;
-
                 }
 
                 $anc_par = 'Anchor="' . $anc . '"';
@@ -473,7 +481,7 @@ class ilLMPresentationLinker implements \ILIAS\COPage\PageLinker
     /**
      * @inheritDoc
      */
-    public function getFullscreenLink() : string
+    public function getFullscreenLink(): string
     {
         return $this->getLink("fullscreen");
     }

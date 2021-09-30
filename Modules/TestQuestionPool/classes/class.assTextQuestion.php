@@ -825,6 +825,13 @@ class assTextQuestion extends assQuestion implements ilObjQuestionScoringAdjusta
     public function toJSON()
     {
         include_once("./Services/RTE/classes/class.ilRTE.php");
+        $questions = [];
+        foreach(  $answers = $this->getAnswers() as $index => $answer){
+            array_push($questions,[
+                'text'   => $answer->getAnswertext(),
+                'points' => $answer->getPoints()
+            ]);
+        }
         $result = array();
         $result['id'] = (int) $this->getId();
         $result['type'] = (string) $this->getQuestionType();
@@ -832,7 +839,21 @@ class assTextQuestion extends assQuestion implements ilObjQuestionScoringAdjusta
         $result['question'] = $this->formatSAQuestion($this->getQuestion());
         $result['nr_of_tries'] = (int) $this->getNrOfTries();
         $result['shuffle'] = (bool) $this->getShuffle();
+        $result['answers'] = $questions;
+        $result['text_rating'] =  $this->getTextRating();
+        $result['feedback'] = [
+            'incorrect' => $this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(),false),
+            'correct'   => $this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(),true)
+        ];
+
+        //if multiple tries, get the hint feedback too.
+        if((int) $this->getNrOfTries() > 0 ){
+            $result['feedback']['tries'] = $this->feedbackOBJ->getGenericFeedbackTestPresentation($this->getId(),'hint');
+        }
+        
         $result['maxlength'] = (int) $this->getMaxNumOfChars();
+        $result['max_points'] = $this->getMaximumPoints();
+        $result['relation'] = (string) $this->getKeywordRelation();
         return json_encode($result);
     }
 
