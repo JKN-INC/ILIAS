@@ -174,3 +174,11 @@ $ilGradebookRevisionConfig->installDB();
 $ilDB->modifyTableColumn('rubric', 'complete',array("type" => "integer", "length" => 1));
 
 ?>
+
+<#18>
+<?php
+#adds an 'alternate spellings' field to the glossary term table, this allows you to do
+#multiple spellings for one term linked back in a SAHS: EG inspection, inspections.
+$ilDB->addTableColumn('glossary_term', 'alternates', array("type" => "text", "length" => 1000));
+
+?>

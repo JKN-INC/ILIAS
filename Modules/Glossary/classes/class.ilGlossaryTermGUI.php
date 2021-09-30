@@ -220,6 +220,11 @@ class ilGlossaryTermGUI
         $term->setRequired(true);
         $term->setValue($this->term->getTerm());
         $form->addItem($term);
+
+        $alternates = new ilTextInputGUI($this->lng->txt("cont_alternates"), "alternates");
+        $alternates->setRequired(false);
+        $alternates->setValue($this->term->getAlternates());
+        $form->addItem($alternates);
         
         $lang = new ilSelectInputGUI($this->lng->txt("language"), "term_language");
         $lang->setRequired(true);
@@ -271,6 +276,7 @@ class ilGlossaryTermGUI
             // update term
             $this->term->setTerm(ilUtil::stripSlashes($_POST["term"]));
             $this->term->setLanguage($_POST["term_language"]);
+            $this->term->setAlternates($_POST["alternates"]);
             $this->term->update();
 
             // update taxonomy assignment

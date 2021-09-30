@@ -4694,6 +4694,7 @@ content#:#cont_tabs_confirm_deletion#:#Are you sure that all panels and their co
 content#:#cont_tabs#:#Panels
 content#:#cont_target_missing#:#Target Missing
 content#:#cont_target_within_source#:#Target must not be within source object.
+content#:#cont_alternates#:#Alternate Spellings (comma separated)
 content#:#cont_term#:#Term
 content#:#cont_terms#:#Terms
 content#:#cont_text_acc#:#Accent:

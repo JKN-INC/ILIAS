@@ -21,6 +21,7 @@ class ilGlossaryTerm
     public $glossary;
     public $term;
     public $language;
+    public $alternates;
     public $glo_id;
     public $import_id;
 
@@ -61,6 +62,7 @@ class ilGlossaryTerm
         $this->setTerm($term_rec["term"]);
         $this->setImportId($term_rec["import_id"]);
         $this->setLanguage($term_rec["language"]);
+        $this->setAlternates($term_rec["alternates"]);
         $this->setGlossaryId($term_rec["glo_id"]);
     }
 
@@ -123,6 +125,22 @@ class ilGlossaryTerm
         } else {
             return false;
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAlternates()
+    {
+        return $this->alternates;
+    }
+
+    /**
+     * @param mixed $alternates
+     */
+    public function setAlternates($alternates)
+    {
+        $this->alternates = $alternates;
     }
 
 
@@ -293,6 +311,7 @@ class ilGlossaryTerm
         $ilDB->manipulate("UPDATE glossary_term SET " .
             " glo_id = " . $ilDB->quote($this->getGlossaryId(), "integer") . ", " .
             " term = " . $ilDB->quote($this->getTerm(), "text") . ", " .
+            " alternates = " . $ilDB->quote($this->getAlternates(), "text") . ", " .
             " import_id = " . $ilDB->quote($this->getImportId(), "text") . ", " .
             " language = " . $ilDB->quote($this->getLanguage(), "text") . ", " .
             " last_update = " . $ilDB->now() . " " .
@@ -447,15 +466,21 @@ class ilGlossaryTerm
         $where .= $in;
 
 
-        $q = "SELECT DISTINCT(gt.term), gt.id, gt.glo_id, gt.language FROM glossary_term gt " . $join . " WHERE " . $where . $searchterm . " ORDER BY term";
+        $q = "SELECT DISTINCT(gt.term), gt.id, gt.glo_id, gt.language, gt.alternates FROM glossary_term gt " . $join . " WHERE " . $where . $searchterm . " ORDER BY term";
 
         //echo $q; exit;
 
         $term_set = $ilDB->query($q);
         $glo_ids = array();
         while ($term_rec = $ilDB->fetchAssoc($term_set)) {
+            $alternates = array_filter(explode(",", $term_rec['alternates']));
+
             $terms[] = array("term" => $term_rec["term"],
-                "language" => $term_rec["language"], "id" => $term_rec["id"], "glo_id" => $term_rec["glo_id"]);
+                "language" => $term_rec["language"], 
+                "id" => $term_rec["id"], 
+                "glo_id" => $term_rec["glo_id"],
+                "alternates" => $alternates
+            );
             $glo_ids[] = $term_rec["glo_id"];
         }
 
