@@ -59,6 +59,7 @@ var ilCOPage =
 	// display error
 	displayError: function(str)
 	{
+		console.log('error',str);
 		// build error string
 		var estr, show_content = true;
 		/* estr = "Sorry, an error occured. Please copy the content of this window and report the error at:<br /> " +
@@ -555,6 +556,7 @@ var ilCOPage =
 		var c = ed.getContent();
 
 		c = this.p2br(c);
+
 
 		// add wrapping div with style class
 		c = "<div id='" + this.pc_id_str + "' class='" + cl + "'>" + c + "</div>";
@@ -1381,6 +1383,7 @@ var ilCOPage =
 	// extract pc ids
 	extractPCIdsFromResponse: function(str)
 	{
+		str = str.trim();
 		//ilCOPage.pc_id_str = "";
 		ilCOPage.error_str = "";
 		if (str.substr(0,3) == "###")
@@ -1401,6 +1404,7 @@ var ilCOPage =
 	// extract class
 	extractClassFromResponse: function(str)
 	{
+		str = str.trim();
 		var end = str.indexOf("###", 0);
 		ilCOPage.response_class = str.substr(0,
 			end);
