@@ -397,7 +397,7 @@ class ilTestExpressPageObjectGUI extends ilAssQuestionPageGUI
                 assQuestion::ADDITIONAL_CONTENT_EDITING_MODE_DEFAULT
             ));
 
-            $ri->setValue(assQuestion::ADDITIONAL_CONTENT_EDITING_MODE_PAGE_OBJECT);
+            $ri->setValue(assQuestion::ADDITIONAL_CONTENT_EDITING_MODE_DEFAULT);
 
             $form->addItem($ri, true);
         } else {
