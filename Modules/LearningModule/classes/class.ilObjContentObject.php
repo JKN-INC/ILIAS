@@ -2783,28 +2783,35 @@ class ilObjContentObject extends ilObject
         $terms = ilGlossaryTerm::getTermList($a_glo_ref_id);
 
         // each get page: get content
-        $pages = ilLMPage::getAllPages($this->getType(), $this->getId());
-        
+        $pages = ilLMPage::getAllPages($this->getType(), $this->getId(),"");
+
+
+
         // determine terms that occur in the page
         $found_pages = array();
         foreach ($pages as $p) {
-            $pg = new ilLMPage($p["id"]);
+            $pg = new ilLMPage($p["id"],0,$p['lang']);
             $c = $pg->getXMLContent();
             foreach ($terms as $t) {
+
                 if (is_int(stripos($c, $t["term"]))) {
-                    $found_pages[$p["id"]]["terms"][] = $t;
-                    if (!is_object($found_pages[$p["id"]]["page"])) {
-                        $found_pages[$p["id"]]["page"] = $pg;
+                    $found_pages[$p["id"]]['terms'][] = $t;
+                    if(!$found_pages[$p["id"]]['pages'][$p['lang']]){
+                        $found_pages[$p["id"]]["pages"][$p['lang']] = $pg;
                     }
                 }
             }
-            reset($terms);
         }
-        
+
+
         // ilPCParagraph autoLinkGlossariesPage with page and terms
         foreach ($found_pages as $id => $fp) {
-            ilPCParagraph::autoLinkGlossariesPage($fp["page"], $fp["terms"]);
+            foreach($fp['pages'] as $lang => $page) {
+                ilPCParagraph::autoLinkGlossariesPage($page, $fp["terms"]);
+
+            }
         }
+
     }
     
 
