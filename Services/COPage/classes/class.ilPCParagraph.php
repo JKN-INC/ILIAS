@@ -1868,13 +1868,16 @@ class ilPCParagraph extends ilPageContent
     protected static function unlinkTermsInDom($a_dom, $a_terms, $a_par_node = null)
     {
         foreach ($a_terms as $k => $t) {
-            foreach ($t['alternates'] as $alt) {
-                array_push($a_terms, array("term" => $alt,
-                    "language" => $t["language"],
-                    "id" => $t["id"],
-                    "glo_id" => $t["glo_id"],
-                ));
+            if(array_key_exists('alternates', $t)){
+                foreach ($t['alternates'] as $alt) {
+                    array_push($a_terms, array("term" => $alt,
+                        "language" => $t["language"],
+                        "id" => $t["id"],
+                        "glo_id" => $t["glo_id"],
+                    ));
+                }
             }
+
         }
 
         foreach ($a_terms as $k => $t) {

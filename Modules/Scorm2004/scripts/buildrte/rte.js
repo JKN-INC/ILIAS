@@ -1,4 +1,4 @@
-// Build: 2021417225550 
+// Build: 20211130134904 
 /*
 	+-----------------------------------------------------------------------------+
 	| ILIAS open source                                                           |
@@ -12141,6 +12141,8 @@ function sendJSONRequest (url, data, callback, user, password, headers)
 {
 	function unloadChrome() {
 		if (navigator.userAgent.indexOf("Chrom") > -1) {
+
+
 			if (
                    (
                     typeof(document.getElementById("res")) != "undefined" 
@@ -12189,6 +12191,16 @@ function sendJSONRequest (url, data, callback, user, password, headers)
                         || document.getElementById("res").contentWindow.document.getElementsByTagName("frame")[0].contentWindow.document.getElementsByTagName("iframe")[1].contentWindow.event.type=="beforeunload"
                        )
                    )
+				|| (//other use case for SCORM 1.2 in a 2004 player. (Stentec)
+					typeof(document.getElementById("res").contentDocument.getElementsByTagName("frame")[0]) != "undefined"
+					&& typeof(document.getElementById("res").contentDocument.getElementsByTagName("frame")[0].contentWindow.document.getElementsByTagName("frame")[0]) != "undefined"
+					&& typeof(document.getElementById("res").contentDocument.getElementsByTagName("frame")[0].contentWindow.document.getElementsByTagName("frame")[0].contentWindow) != "undefined"
+					&& typeof(document.getElementById("res").contentDocument.getElementsByTagName("frame")[0].contentWindow.document.getElementsByTagName("frame")[0].contentWindow.event) != "undefined"
+					&& (
+						document.getElementById("res").contentDocument.getElementsByTagName("frame")[0].contentWindow.document.getElementsByTagName("frame")[0].contentWindow.event.type=="unload"
+						|| document.getElementById("res").contentDocument.getElementsByTagName("frame")[0].contentWindow.document.getElementsByTagName("frame")[0].contentWindow.event.type=="beforeunload"
+					)
+					)
                 ) {
 				return true;
 			}

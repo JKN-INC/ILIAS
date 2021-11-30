@@ -77,6 +77,7 @@ function sendRequest (url, data, callback, user, password, headers) {
 	}
 	
 	function useSendBeacon() {
+		console.log('in here');
 		if (navigator.userAgent.indexOf("Chrom") > -1) {
             var winev = null;
             if (window.sahs_content && typeof(window.sahs_content.event) != "undefined") winev = window.sahs_content.event.type;
@@ -92,6 +93,7 @@ function sendRequest (url, data, callback, user, password, headers) {
                 return true;
             }
 		}
+
 		return false;
 	}
 
