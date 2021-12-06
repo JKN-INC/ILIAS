@@ -399,7 +399,7 @@ class ilSearchGUI extends ilSearchBaseGUI
         $this->showSearch();
 
         if (!count($result->getResults())) {
-            ilUtil::sendInfo($this->lng->txt('search_no_match'));
+            ilUtil::sendInfo("<div style='font-size:26px;'>".$this->lng->txt('search_no_match')."</div>");
         }
 
         if ($result->isLimitReached()) {
