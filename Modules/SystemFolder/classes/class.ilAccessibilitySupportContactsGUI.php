@@ -60,7 +60,7 @@ class ilAccessibilitySupportContactsGUI
     }
 
 
-    public function sendIssueMail() : void
+    public function sendIssueMail(): void
     {
         $back_url = $this->http->request()->getServerParams()['HTTP_REFERER'];
         $this->ctrl->redirectToURL(
@@ -80,7 +80,7 @@ class ilAccessibilitySupportContactsGUI
     /**
      * @return string
      */
-    private function getAccessibilityIssueMailMessage(string $back_url) : string
+    private function getAccessibilityIssueMailMessage(string $back_url): string
     {
         $sig = chr(13) . chr(10) . chr(13) . chr(10) . chr(13) . chr(10);
         $sig .= $this->lng->txt('report_accessibility_link');
@@ -96,7 +96,7 @@ class ilAccessibilitySupportContactsGUI
      *
      * @return string
      */
-    private function getContactLogins() : string
+    private function getContactLogins(): string
     {
         $logins = [];
 
@@ -116,29 +116,15 @@ class ilAccessibilitySupportContactsGUI
     {
         global $DIC;
 
-        $ctrl = $DIC->ctrl();
-        $user = $DIC->user();
         $http = $DIC->http();
-        $lng = $DIC->language();
-
-
-        $users = ilAccessibilitySupportContacts::getValidSupportContactIds();
-        if (count($users) > 0) {
-            if (!$user->getId() || $user->getId() == ANONYMOUS_USER_ID) {
-                $mails = ilUtil::prepareFormOutput(ilAccessibilitySupportContacts::getMailsToAddress());
-                $request_scheme =
-                    isset($http->request()->getServerParams()['HTTPS'])
-                    && $http->request()->getServerParams()['HTTPS'] !== 'off'
-                        ? 'https' : 'http';
-                $url = $request_scheme . '://'
-                    . $http->request()->getServerParams()['HTTP_HOST']
-                    . $http->request()->getServerParams()['REQUEST_URI'];
-                return "mailto:" . $mails . "?body=%0D%0A%0D%0A" . $lng->txt("report_accessibility_link") . "%0D%0A" . rawurlencode($url);
-            } else {
-                return $ctrl->getLinkTargetByClass("ilaccessibilitysupportcontactsgui", "");
-            }
-        }
-        return "";
+        $request_scheme =
+            isset($http->request()->getServerParams()['HTTPS'])
+            && $http->request()->getServerParams()['HTTPS'] !== 'off'
+            ? 'https' : 'http';
+        $url = $request_scheme . '://'
+            . $http->request()->getServerParams()['HTTP_HOST']
+            . $http->request()->getServerParams()['REQUEST_URI'];
+        return "mailto:support@cpkn.ca?subject=Support%20Request&body=*%20*%20*%0D%0A" . CLIENT_ID . "%20%3D%0D%0A" . rawurlencode($url) . "%20%3D";
     }
 
     /**
