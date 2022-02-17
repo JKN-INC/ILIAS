@@ -461,6 +461,7 @@ class ilUserProfile
         $lng = $DIC['lng'];
         $rbacreview = $DIC['rbacreview'];
         $ilias = $DIC['ilias'];
+        $ilUser = $DIC['ilUser'];
 
         // custom registration settings
         if (self::$mode == self::MODE_REGISTRATION) {
@@ -573,7 +574,7 @@ class ilUserProfile
                         include_once "./Services/Calendar/classes/class.ilDateTime.php";
                         $date = null;
                         if ($a_user && strlen($a_user->$m())) {
-                            $date = new ilDateTime($a_user->$m(), IL_CAL_DATE);
+                            $date = new  ilDate($a_user->$m(), IL_CAL_DATE);
                             $bi->setDate($date);
                         }
                         $bi->setRequired($ilSetting->get("require_" . $f));

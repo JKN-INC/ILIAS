@@ -55,9 +55,6 @@ class ilSCORMTrackingItemsPerUserFilterGUI extends ilPropertyFormGUI
             $options = array("-1" => $lng->txt("no_items"));
         }
 
-        sort($options);
-        array_unshift($options, "All");
-
         $si = new ilSelectInputGUI($lng->txt("user"), "userSelected");
         $si->setOptions($options);
         $si->setValue($userSelected);

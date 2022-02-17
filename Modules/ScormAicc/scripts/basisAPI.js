@@ -77,7 +77,6 @@ function sendRequest (url, data, callback, user, password, headers) {
 	}
 	
 	function useSendBeacon() {
-		console.log('in here');
 		if (navigator.userAgent.indexOf("Chrom") > -1) {
             var winev = null;
             if (window.sahs_content && typeof(window.sahs_content.event) != "undefined") winev = window.sahs_content.event.type;
@@ -88,6 +87,7 @@ function sendRequest (url, data, callback, user, password, headers) {
             try{winev = document.getElementsByTagName("frame")[0].contentWindow.document.getElementsByTagName("frame")[1].contentWindow.event.type;} catch(e){}
             //Articulate Rise
             try{winev = document.getElementsByTagName("frame")[0].contentWindow.document.getElementsByTagName("iframe")[1].contentWindow.event.type;} catch(e){}
+            try{winev = document.getElementsByTagName("frame")[0].contentDocument.getElementsByTagName("frame")[0].contentWindow.event.type;} catch(e){}
             
             if (winev == "unload" || winev == "beforeunload" || winev == "click") {
                 return true;
