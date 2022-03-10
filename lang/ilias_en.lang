@@ -4968,7 +4968,7 @@ crs#:#crs_print_list#:#Generate List
 crs#:#crs_reg_max_info#:#Define the maximum number of users that can be assigned to this course.
 crs#:#crs_reg_subject#:#Message
 crs#:#crs_reg_until#:#Registration Period
-crs#:#crs_reg_user_already_subscribed#:#You have already requested membership for this course
+crs#:#crs_reg_user_already_subscribed#:#Waiting for approval of registration request
 crs#:#crs_reg#:#Registration Settings
 crs#:#crs_registration_deactivated#:#Only course administrators can add users to the course.
 crs#:#crs_registration_limited#:#Limited Registration Period
@@ -5657,7 +5657,7 @@ grp#:#crs_grp_no_courses_assigned#:#No Groups Assigned
 grp#:#grouping_change_assignment#:#Change Assignment
 grp#:#grp_added_to_list#:#You have been assigned to the waiting list of group "%s". You are assigned to position %s on the waiting list.
 grp#:#grp_admins#:#Administrators
-grp#:#grp_already_assigned#:#You have already requested membership for this group.
+grp#:#grp_already_assigned#:#Waiting for approval of registration request.
 grp#:#grp_cancel_subscr_request#:#Delete Membership Request
 grp#:#grp_change_type#:#Change Group Type
 didactic#:#grp_closed_info#:#Group is not visible for non-members.
