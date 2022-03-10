@@ -6865,7 +6865,7 @@ crs#:#crs_reg_no_selfreg#:#Pas d'auto-inscription
 crs#:#crs_reg_password_info#:#Les utilisateurs doivent entrer ce mot de passe pour s'inscrire à ce cours.
 crs#:#crs_reg_subject#:#Message
 crs#:#crs_reg_until#:#Période d'Inscription
-crs#:#crs_reg_user_already_subscribed#:#Vous vous êtes déjà fait une demande d'inscription à ce cours
+crs#:#crs_reg_user_already_subscribed#:#En attente d'approbation de la demande d'inscription
 crs#:#crs_registration#:#Inscription au Cours
 crs#:#crs_registration_confirmation_info#:#Les utilisateurs concernés peuvent envoyer une requête/un message aux administrateurs de cours.
 crs#:#crs_registration_deactivated#:#Sélectionner cette option pour désactiver l'inscription. Aucun utilisateur ne pourra s'inscrire.
@@ -8819,7 +8819,7 @@ grp#:#grp_admission_link_success_registration#:#Groupe "%s" enregistré avec suc
 grp#:#grp_agree#:#Acceptation
 grp#:#grp_agreement_header#:#Agrément de l'utilisateur
 grp#:#grp_agreement_required#:#Vous devez accepter l'agrément de l'utilisateur, si vous désirez accéder au contenu du groupe.
-grp#:#grp_already_assigned#:#Vous avez déjà  demandé une adhésion pour ce groupe.
+grp#:#grp_already_assigned#:#En attente d'approbation de la demande d'inscription.
 grp#:#grp_at_least_one_admin#:#Il doit y avoir au moins un administrateur de groupe.
 grp#:#grp_cancel_subscr_request#:#Supprimer requête d'adhésion
 grp#:#grp_cancellation_end#:#Limite d'Annulation
