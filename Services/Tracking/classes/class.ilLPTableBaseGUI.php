@@ -258,9 +258,7 @@ class ilLPTableBaseGUI extends ilTable2GUI
 
         $lng = $DIC['lng'];
         $ilObjDataCache = $DIC['ilObjDataCache'];
-        
-        $this->setDisableFilterHiding(true);
-        
+                
         // object type selection
         include_once("./Services/Form/classes/class.ilSelectInputGUI.php");
         $si = new ilSelectInputGUI($this->lng->txt("obj_type"), "type");
