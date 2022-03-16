@@ -506,7 +506,9 @@ class ilMembershipGUI
         }
         
         $notifications = $_POST['notification'] ? $_POST['notification'] : array();
-        $passed = $_POST['passed'] ? $_POST['passed'] : array();
+        $statuses = $_POST['status'] ? $_POST['status'] : array();
+        $status = ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM;
+
         $blocked = $_POST['blocked'] ? $_POST['blocked'] : array();
         $contact = $_POST['contact'] ? $_POST['contact'] : array();
         
@@ -594,11 +596,26 @@ class ilMembershipGUI
             }
             
             if ($this instanceof ilCourseMembershipGUI) {
-                $this->getMembersObject()->updatePassed($usr_id, in_array($usr_id, $passed), true);
+                //if a course membership (manual by tutor) update.
+                if($statuses[$usr_id]){
+                    switch($statuses[$usr_id]){
+                        case ilLPStatus::LP_STATUS_FAILED:
+                            $status = ilLPStatus::LP_STATUS_FAILED_NUM;
+                            $this->getMembersObject()->updateFailed($usr_id, true, true);
+                            break;
+                        case ilLPStatus::LP_STATUS_COMPLETED:
+                            $status = ilLPStatus::LP_STATUS_COMPLETED_NUM;
+                            $this->getMembersObject()->updatePassed($usr_id, true, true);
+                            break;
+                    }
+                }
+
                 $this->getMembersObject()->sendNotification(
                     $this->getMembersObject()->NOTIFY_STATUS_CHANGED,
                     $usr_id
                 );
+
+
             }
             
             if (
@@ -611,7 +628,7 @@ class ilMembershipGUI
                 $this->getMembersObject()->updateContact($usr_id, false);
             }
             
-            $this->updateLPFromStatus($usr_id, in_array($usr_id, $passed));
+            $this->updateLPFromStatus($usr_id, $status);
         }
         ilUtil::sendSuccess($this->lng->txt("msg_obj_modified"), true);
         $this->ctrl->redirect($this, "participants");

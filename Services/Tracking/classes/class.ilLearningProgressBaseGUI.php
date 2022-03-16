@@ -893,18 +893,6 @@ class ilLearningProgressBaseGUI
         $comm->setValue($marks->getComment());
         $form->addItem($comm);
 
-        if (
-            $lp_mode == ilLPObjSettings::LP_MODE_MANUAL ||
-            $lp_mode == ilLPObjSettings::LP_MODE_MANUAL_BY_TUTOR
-        ) {
-            include_once("./Services/Tracking/classes/class.ilLPStatus.php");
-            $completed = ilLPStatus::_lookupStatus($a_obj_id, $a_user_id);
-
-            $status = new ilCheckboxInputGUI($lng->txt('trac_completed'), "completed");
-            $status->setChecked(($completed == ilLPStatus::LP_STATUS_COMPLETED_NUM));
-            $form->addItem($status);
-        }
-
         $form->addCommandButton("updateUser", $lng->txt('save'));
 
         if ($a_cancel) {
@@ -938,31 +926,12 @@ class ilLearningProgressBaseGUI
     public function __updateUser($user_id, $obj_id)
     {
         $form = $this->initEditUserForm($user_id, $obj_id);
+
         if ($form->checkInput()) {
             include_once 'Services/Tracking/classes/class.ilLPMarks.php';
-
             $marks = new ilLPMarks($obj_id, $user_id);
             $marks->setMark($form->getInput("mark"));
             $marks->setComment($form->getInput("comment"));
-
-            $do_lp = false;
-
-            // status/completed is optional
-            $status = $form->getItemByPostVar("completed");
-            if (is_object($status)) {
-                if ($marks->getCompleted() != $form->getInput("completed")) {
-                    $marks->setCompleted($form->getInput("completed"));
-                    $do_lp = true;
-                }
-            }
-
-            $marks->update();
-
-            // #11600
-            if ($do_lp) {
-                include_once("./Services/Tracking/classes/class.ilLPStatusWrapper.php");
-                ilLPStatusWrapper::_updateStatus($obj_id, $user_id);
-            }
         }
     }
 

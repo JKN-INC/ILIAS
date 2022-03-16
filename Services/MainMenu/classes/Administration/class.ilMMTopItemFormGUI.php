@@ -70,7 +70,7 @@ class ilMMTopItemFormGUI
         if (!$this->item_facade->isEmpty()) {
             $this->ctrl->saveParameterByClass(ilMMTopItemGUI::class, ilMMTopItemGUI::IDENTIFIER);
         }
-
+        
         $this->initForm();
     }
 
@@ -135,7 +135,10 @@ class ilMMTopItemFormGUI
     public function save()
     {
         $this->form = $this->form->withRequest($this->http->request());
+        
         $data       = $this->form->getData();
+        var_dump($data);
+        die();
         if (is_null($data)) {
             return false;
         }

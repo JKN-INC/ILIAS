@@ -41,6 +41,7 @@ class ilLinkResourceItems
             "WHERE webr_id = " . $ilDB->quote($a_webr_id, 'integer') . " " .
             "AND link_id = " . $ilDB->quote($a_link_id, 'integer');
 
+
         $res = $ilDB->query($query);
         while ($row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT)) {
             $item['title'] = $row->title;
@@ -505,6 +506,7 @@ class ilLinkResourceItems
         
         $query = "SELECT * FROM webr_items " .
             "WHERE webr_id = " . $ilDB->quote($this->getLinkResourceId(), 'integer');
+
 
         $res = $this->db->query($query);
         while ($row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT)) {

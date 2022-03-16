@@ -51,6 +51,7 @@ class ilMMUploadHandlerGUI extends AbstractCtrlAwareUploadHandler
          */
         $array = $this->upload->getResults();
         $result = end($array);
+     
         if ($result instanceof UploadResult && $result->isOK()) {
             $i = $this->storage->upload($result, $this->stakeholder);
             $status = HandlerResultInterface::STATUS_OK;
