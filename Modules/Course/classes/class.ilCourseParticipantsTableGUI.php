@@ -297,7 +297,8 @@ class ilCourseParticipantsTableGUI extends ilParticipantTableGUI
             $options = array(
                 ilLPStatus::LP_STATUS_COMPLETED => $this->lng->txt("trac_completed"),
                 ilLPStatus::LP_STATUS_IN_PROGRESS => $this->lng->txt("trac_in_progress"),
-                ilLPStatus::LP_STATUS_FAILED => $this->lng->txt("trac_failed")
+                ilLPStatus::LP_STATUS_FAILED => $this->lng->txt("trac_failed"),
+                ilLPStatus::LP_STATUS_NOT_ATTEMPTED => $this->lng->txt("trac_not_attempted")
             );
             $si = new ilSelectInputGUI($this->lng->txt("crs_status"), "status[".$a_set['usr_id']."]");
             $si->setValue($a_set['progress']);

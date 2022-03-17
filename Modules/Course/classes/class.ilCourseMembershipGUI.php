@@ -235,6 +235,10 @@ class ilCourseMembershipGUI extends ilMembershipGUI
                             $status = ilLPStatus::LP_STATUS_COMPLETED_NUM;
                             $this->getMembersObject()->updatePassed($member_id, true, true);
                             break;
+                        case ilLPStatus::LP_STATUS_NOT_ATTEMPTED:
+                            include_once './Services/Tracking/classes/class.ilChangeEvent.php';
+                            ilChangeEvent::_deleteReadEventsForUsers($this->getParentObject()->getId(),[$member_id]);
+                            break;
                     }
                     $this->updateLPFromStatus($member_id, $status);
                 }
