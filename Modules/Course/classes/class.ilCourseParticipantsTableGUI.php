@@ -107,7 +107,7 @@ class ilCourseParticipantsTableGUI extends ilParticipantTableGUI
             $this->addColumn($this->lng->txt('last_access'), 'access_ut', '16em');
         }
         
-        $this->addColumn($this->lng->txt('crs_member_passed'), 'passed');
+        $this->addColumn($this->lng->txt('crs_status'), 'status');
         if ($this->show_lp_status_sync) {
             $this->addColumn($this->lng->txt('crs_member_passed_status_changed'), 'passed_info');
         }
@@ -279,7 +279,7 @@ class ilCourseParticipantsTableGUI extends ilParticipantTableGUI
                     break;
 
                 case ilLPStatus::LP_STATUS_NOT_ATTEMPTED:
-                    $this->tpl->setVariable('LP_STATUS_ALT', $this->lng->txt($a_set['progress']));
+                    $this->tpl->setVariable('LP_STATUS_ALT', $this->lng->txt($a_set['trac_modeprogress']));
                     $this->tpl->setVariable('LP_STATUS_PATH', ilUtil::getImagePath('scorm/not_attempted.svg'));
                     break;
 
@@ -294,10 +294,24 @@ class ilCourseParticipantsTableGUI extends ilParticipantTableGUI
         $this->tpl->setVariable('VAL_POSTNAME', 'participants');
 
         if ($ilAccess->checkAccess("grade", "", $this->rep_object->getRefId())) {
+            $options = array(
+                ilLPStatus::LP_STATUS_COMPLETED => $this->lng->txt("trac_completed"),
+                ilLPStatus::LP_STATUS_IN_PROGRESS => $this->lng->txt("trac_in_progress"),
+                ilLPStatus::LP_STATUS_FAILED => $this->lng->txt("trac_failed"),
+                ilLPStatus::LP_STATUS_NOT_ATTEMPTED => $this->lng->txt("trac_not_attempted")
+            );
+            $si = new ilSelectInputGUI($this->lng->txt("crs_status"), "status[".$a_set['usr_id']."]");
+            $si->setValue($a_set['progress']);
+            $si->setOptions($options);
+
             $this->tpl->setCurrentBlock('grade');
-            $this->tpl->setVariable('VAL_PASSED_ID', $a_set['usr_id']);
+
+            $this->tpl->setVariable('GRADE_STATUS', $si->render());
             $this->tpl->setVariable('VAL_PASSED_CHECKED', ($a_set['passed'] ? 'checked="checked"' : ''));
+
             $this->tpl->parseCurrentBlock();
+
+
         } else {
             $this->tpl->setVariable('VAL_PASSED_TXT', ($a_set['passed']
                 ? $this->lng->txt("yes")

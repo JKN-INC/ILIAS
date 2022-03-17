@@ -70,7 +70,7 @@ class ilMMTopItemFormGUI
         if (!$this->item_facade->isEmpty()) {
             $this->ctrl->saveParameterByClass(ilMMTopItemGUI::class, ilMMTopItemGUI::IDENTIFIER);
         }
-
+        
         $this->initForm();
     }
 
