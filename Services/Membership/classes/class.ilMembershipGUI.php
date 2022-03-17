@@ -611,6 +611,14 @@ class ilMembershipGUI
                             include_once './Services/Tracking/classes/class.ilChangeEvent.php';
                             ilChangeEvent::_deleteReadEventsForUsers($this->getParentObject()->getId(),[$usr_id]);
                             break;
+                        case ilLPStatus::LP_STATUS_IN_PROGRESS:
+                            ilChangeEvent::_recordReadEvent(
+                                $this->getParentObject()->getType(),
+                                $this->getParentObject()->getRefId(),
+                                $this->getParentObject()->getId(),
+                                $usr_id
+                            );
+                            break;
                     }
                 }
 

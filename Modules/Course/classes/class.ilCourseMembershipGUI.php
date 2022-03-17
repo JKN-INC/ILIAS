@@ -225,6 +225,7 @@ class ilCourseMembershipGUI extends ilMembershipGUI
         foreach ($visible_members as $member_id) {
             if ($ilAccess->checkAccess("grade", "", $this->getParentObject()->getRefId())) {
                 if($statuses[$member_id]){
+                    include_once './Services/Tracking/classes/class.ilChangeEvent.php';
                     $status = ilLPStatus::LP_STATUS_NOT_ATTEMPTED_NUM;
                     switch($statuses[$member_id]){
                         case ilLPStatus::LP_STATUS_FAILED:
@@ -236,8 +237,15 @@ class ilCourseMembershipGUI extends ilMembershipGUI
                             $this->getMembersObject()->updatePassed($member_id, true, true);
                             break;
                         case ilLPStatus::LP_STATUS_NOT_ATTEMPTED:
-                            include_once './Services/Tracking/classes/class.ilChangeEvent.php';
                             ilChangeEvent::_deleteReadEventsForUsers($this->getParentObject()->getId(),[$member_id]);
+                            break;
+                        case ilLPStatus::LP_STATUS_IN_PROGRESS:
+                            ilChangeEvent::_recordReadEvent(
+                                $this->getParentObject()->getType(),
+                                $this->getParentObject()->getRefId(),
+                                $this->getParentObject()->getId(),
+                                $member_id
+                            );
                             break;
                     }
                     $this->updateLPFromStatus($member_id, $status);
