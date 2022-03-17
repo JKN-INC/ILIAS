@@ -182,3 +182,12 @@ $ilDB->modifyTableColumn('rubric', 'complete',array("type" => "integer", "length
 $ilDB->addTableColumn('glossary_term', 'alternates', array("type" => "text", "length" => 1000));
 
 ?>
+
+<#19>
+<?php
+$ilDB->addTableColumn('obj_members', 'failed', array("type" => "integer", "length" => 1));
+?>
+
+
+
+
