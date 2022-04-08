@@ -1235,6 +1235,9 @@ class ilUserImportParser extends ilSaxParser
                                         break;
                                 }
                             }
+                            if (!is_null($this->userObj->getLogin())) {
+                                $updateUser->setLogin($this->userObj->getLogin());
+                            }
                             if (!is_null($this->userObj->getFirstname())) {
                                 $updateUser->setFirstname($this->userObj->getFirstname());
                             }
