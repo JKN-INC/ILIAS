@@ -928,10 +928,12 @@ class ilLearningProgressBaseGUI
         $form = $this->initEditUserForm($user_id, $obj_id);
 
         if ($form->checkInput()) {
+
             include_once 'Services/Tracking/classes/class.ilLPMarks.php';
             $marks = new ilLPMarks($obj_id, $user_id);
             $marks->setMark($form->getInput("mark"));
             $marks->setComment($form->getInput("comment"));
+            $marks->update();
         }
     }
 

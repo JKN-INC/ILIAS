@@ -803,7 +803,9 @@ class ilLPStatus
             foreach (array_diff($a_obj_ids, $existing) as $obj_id) {
                 $olp = ilObjectLP::getInstance($obj_id);
                 $mode = $olp->getCurrentMode();
+
                 if ($mode == ilLPObjSettings::LP_MODE_DEACTIVATED) {
+
                     // #11141
                     unset($valid[$obj_id]);
                 } elseif ($mode != ilLPObjSettings::LP_MODE_UNDEFINED) {
@@ -871,14 +873,15 @@ class ilLPStatus
         $user_id = $ilUser->getId();
         
         $res = array();
-        
+
         include_once("Services/Tracking/classes/class.ilObjUserTracking.php");
         if ($ilUser->getId() != ANONYMOUS_USER_ID &&
             ilObjUserTracking::_enabledLearningProgress() &&
             ilObjUserTracking::_hasLearningProgressLearner() && // #12042
             ilObjUserTracking::_hasLearningProgressListGUI()) {
             // -- validate
-            
+
+
             // :TODO: we need the parent ref id, but this is awful
             $a_obj_ids = self::validateLPForObjects($user_id, $a_obj_ids, (int) $_GET["ref_id"]);
             

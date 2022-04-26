@@ -117,7 +117,7 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
     {
         $option_txt = '';
         foreach ($this->participants as $participant) {
-            $option_txt .= '<option value="' . $participant['usr_id'] . '">' . $participant['full_name'] . '</option>';
+            $option_txt .= '<option value="' . $participant['usr_id'] . '">' . $participant['full_name'] . ' ('.$participant['login'].')</option>';
         }
         return $option_txt;
     }
@@ -177,6 +177,7 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
 
 
         $my_tpl->setVariable("STUDENT_NAME", $this->lng->txt('gradebook_student'));
+        $my_tpl->setVariable("STUDENT_NAME", $this->lng->txt('login'));
         $my_tpl->setVariable("REVISION", $this->lng->txt('gradebook_revision'));
         $my_tpl->setVariable("OVERALL", $this->lng->txt('gradebook_overall_grade'));
         $my_tpl->setVariable("ADJUSTED", $this->lng->txt('gradebook_adjusted_grade'));
@@ -188,6 +189,7 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
         foreach ($this->participants_data['user_grades'] as $object) {
             $tableHTML .= '<tr>';
             $tableHTML .= '<td>' . $object['student_name'] . '</td>';
+            $tableHTML .= '<td>' . $object['login'] . '</td>';
             $tableHTML .= '<td>' . $object['revision'] . '</td>';
             $tableHTML .= '<td>' . $object['overall_grade'] . '</td>';
             $tableHTML .= '<td>' . $object['adjusted_grade'] . '</td>';

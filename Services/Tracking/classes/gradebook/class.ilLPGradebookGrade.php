@@ -482,6 +482,7 @@ class ilLPGradebookGrade extends ilLPGradebook
             $grades = ilGradebookGradeTotalConfig::firstOrNew($revision->getRevisionId(), $member['usr_id'], $gradebook_id);
             $grades_arr[] = [
                 'student_name' => $member['full_name'],
+                'login' => $member['login'],
                 'revision' => $revision->getRevisionId(),
                 'overall_grade' => $grades->getOverallGrade(),
                 'adjusted_grade' => $grades->getAdjustedGrade(),
@@ -506,6 +507,7 @@ class ilLPGradebookGrade extends ilLPGradebook
         require_once('./Services/Tracking/classes/gradebook/config/class.ilGradebookGradesConfig.php');
 
         $data = [];
+        error_log("Dealing with obj_id ".$revision_object['obj_id']." type is: ".ilObject::_lookupType($revision_object['obj_id'])." lp_type is = ".$revision_object['lp_type']."\n\n");
         //if the learning progress is done in the object itself grab the marks from there.
         if ($revision_object['lp_type'] == 0) {
             $marks = new ilLPMarks($revision_object['obj_id'], $usr_id);
@@ -515,9 +517,13 @@ class ilLPGradebookGrade extends ilLPGradebook
                     $add = ' %';
                     $mark = $marks->getMark() ? $marks->getMark() : ilLPStatus::_lookupPercentage($revision_object['obj_id'], $usr_id);
                     break;
+                case 'fold':
+                    $mark = $marks->getMark();
+                    break;
                 default:
                     $mark = $marks->getMark();
             }
+
             $status_changed = $marks->getStatusChanged();
             $data = [
                 'status' => ilLPStatus::_lookupStatus($revision_object['obj_id'], $usr_id, false),
