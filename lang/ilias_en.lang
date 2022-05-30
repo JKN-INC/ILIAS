@@ -4836,7 +4836,7 @@ crs#:#crs_create_date#:#Create date
 crs#:#crs_dates#:#Dates
 crs#:#crs_delete_objectve_sure#:#Are you sure, you want to delete the selected objectives?
 crs#:#crs_details#:#Course Details
-crs#:#crs_dismiss_member_body#:#your membership has been terminated in course "%s".
+crs#:#crs_dismiss_member_body#:#Your membership has been terminated in course "%s".
 crs#:#crs_dismiss_member#:#Membership terminated in "%s"
 crs#:#crs_edit_timings#:#Edit Timings
 crs#:#crs_enable_map#:#Enable Course Map
