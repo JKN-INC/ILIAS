@@ -291,7 +291,7 @@ class ilAuthProviderLTI extends \ilAuthProvider implements \ilAuthProviderInterf
         }
 
         if(array_key_exists('lang', $_POST)) {
-            $userObj->setLanguage($ $_POST['lang']);
+            $userObj->setLanguage($_POST['lang']);
         }
 
         $user_obj->update();
