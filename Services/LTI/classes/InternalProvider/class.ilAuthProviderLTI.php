@@ -228,7 +228,7 @@ class ilAuthProviderLTI extends \ilAuthProvider implements \ilAuthProviderInterf
         $newUser["firstname"] = $_POST['lis_person_name_given'];
         $newUser["lastname"] = $_POST['lis_person_name_family'];
         $newUser['email'] = $_POST['lis_person_contact_email_primary'];
-
+      
 
         // set "plain md5" password (= no valid password)
         $newUser["passwd"] = "";
@@ -243,8 +243,9 @@ class ilAuthProviderLTI extends \ilAuthProvider implements \ilAuthProviderInterf
         $userObj->setTitle($userObj->getFullname());
         $userObj->setDescription($userObj->getEmail());
 
-        // set user language to system language
-        $userObj->setLanguage($ilSetting->get("language"));
+        // set user language to system language or the users passed language if applicable.
+        $language = array_key_exists('lang',$_POST) ? $_POST['lang'] : $ilSetting->get("language");
+        $userObj->setLanguage($language);
 
         // Time limit
         $userObj->setTimeLimitOwner(7);
@@ -288,6 +289,11 @@ class ilAuthProviderLTI extends \ilAuthProvider implements \ilAuthProviderInterf
             $user_obj->setTimeLimitFrom(time() - 60);
             $user_obj->setTimeLimitUntil(time() + $ilClientIniFile->readVariable("session", "expire"));
         }
+
+        if(array_key_exists('lang', $_POST)) {
+            $userObj->setLanguage($ $_POST['lang']);
+        }
+
         $user_obj->update();
         $user_obj->refreshLogin();
 
