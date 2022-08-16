@@ -989,6 +989,16 @@ class ilBookingProcessGUI
 
     protected function handleBookingSuccess($a_obj_id, array $a_rsv_ids = null)
     {
+        global $DIC;
+        $ilAppEventHandler = $DIC['ilAppEventHandler'];
+        $ilAppEventHandler->raise(
+            "Modules/BookingManager",
+            'participantBooked', [
+                'obj_id' => $a_obj_id,
+                'usr_id' => $this->user_id_to_book
+            ]
+        );
+
         ilUtil::sendSuccess($this->lng->txt('book_reservation_confirmed'), true);
 
         // show post booking information?
