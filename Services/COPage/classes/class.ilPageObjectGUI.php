@@ -157,9 +157,8 @@ class ilPageObjectGUI
         if ($a_lang == "" && $_GET["transl"] != "") {
             $this->setLanguage($_GET["transl"]);
         } else {
-            if ($a_lang == "") {
-                $a_lang = "-";
-            }
+            //if language isn't passed, and the default LMS language is the same as the users language, set it to -, otherwise set it to the users language.
+            $a_lang = $a_lang == "" && $this->lng->getDefaultLanguage() === $this->user->getLanguage() ? "-" : $this->user->getLanguage();
             $this->setLanguage($a_lang);
         }
         
