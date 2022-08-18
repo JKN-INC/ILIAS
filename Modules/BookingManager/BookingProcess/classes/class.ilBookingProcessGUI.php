@@ -991,20 +991,23 @@ class ilBookingProcessGUI
     {
         global $DIC;
         $ilAppEventHandler = $DIC['ilAppEventHandler'];
-        $ilAppEventHandler->raise(
-            "Modules/BookingManager",
-            'participantBooked', [
-                'obj_id' => $a_obj_id,
-                'usr_id' => $this->user_id_to_book
-            ]
-        );
-
+        
         ilUtil::sendSuccess($this->lng->txt('book_reservation_confirmed'), true);
 
         // show post booking information?
         $obj = new ilBookingObject($a_obj_id);
         $pfile = $obj->getPostFile();
         $ptext = $obj->getPostText();
+
+        $ilAppEventHandler->raise(
+            "Modules/BookingManager",
+            'participantBooked', [
+                'obj_id' => $a_obj_id,
+                'usr_id' => $this->user_id_to_book,
+                'ref_id' => $this->pool->getRefId(),
+                'a_rsv_ids' => $a_rsv_ids
+            ]
+        );
 
         if (trim($ptext) || $pfile) {
             if (sizeof($a_rsv_ids)) {
