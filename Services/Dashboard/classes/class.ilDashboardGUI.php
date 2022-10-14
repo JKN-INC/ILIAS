@@ -810,13 +810,14 @@ class ilDashboardGUI
         $tpl = new ilTemplate("tpl.dashboard.html", true, true, "Services/Dashboard");
         $settings = new ilPDSelectedItemsBlockViewSettings($this->user);
 
-        if ($settings->enabledMemberships()) {
-            $html = $this->renderMemberships();
+        if ($settings->enabledSelectedItems()) {
+            $html = $this->renderFavourites();
         }
 
-        if ($settings->enabledSelectedItems()) {
-            $html .= $this->renderFavourites();
+        if ($settings->enabledMemberships()) {
+            $html .= $this->renderMemberships();
         }
+        
         $html .= $this->renderRecommendedContent();
         $html .= $this->renderStudyProgrammes();
         $html .= $this->renderLearningSequences();

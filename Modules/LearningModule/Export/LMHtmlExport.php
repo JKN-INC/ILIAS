@@ -352,7 +352,7 @@ class LMHtmlExport
         $this->co_page_html_export->exportPageElements();
 
         // zip everything
-        if ($zip) {
+        if ($zip) { 
             $this->zipPackage();
         }
     }
@@ -374,6 +374,7 @@ class LMHtmlExport
         $zip_file = $zip_target_dir . "/" . $date . "__" . IL_INST_ID . "__" .
             $this->lm->getType() . "_" . $this->lm->getId() . ".zip";
         \ilUtil::zip($this->target_dir, $zip_file);
+
         \ilUtil::delDir($this->target_dir);
     }
 

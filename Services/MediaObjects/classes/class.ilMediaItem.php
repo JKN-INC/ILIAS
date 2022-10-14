@@ -1028,6 +1028,7 @@ class ilMediaItem
     public function outputMapWorkCopy()
     {
         if ($this->getMapWorkCopyType() != "") {
+            ob_clean();
             header("Pragma: no-cache");
             header("Expires: 0");
             header("Content-type: image/" . strtolower($this->getMapWorkCopyType()));
