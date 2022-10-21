@@ -103,9 +103,9 @@ ilias.questions.checkAnswers = function(a_id) {
 	answers[a_id].tries++;
 
 	var call = "ilias.questions."+questions[a_id].type+"("+a_id+")";
+	console.log(call);
 
 	eval(call);
-
 
 	if (typeof il.LearningModule != "undefined") {
 		il.LearningModule.processAnswer(ilias.questions);
@@ -298,8 +298,22 @@ ilias.questions.assTextQuestion = function(a_id) {
 		case 'one':
 			for (var i = 0; i < words.length; i++) {
 				for(var j = 0; j < questions[a_id].answers.length; j++){
-					if( words[i] === questions[a_id].answers[j].text ){
-						passed = true;
+					var option = questions[a_id].answers[j].text;
+					if(option.indexOf("|")){
+						var alt_words = option.split("|");
+						alt_words.forEach((element) => {
+						    var pattern = "^"+element.trim()+"$";
+						    pattern = pattern.replaceAll("*", ".*");
+							pattern =  new RegExp(pattern);
+						    if( words[i] === element.trim() || pattern.test(words[i])){
+						    	passed = true;
+						    }
+						});
+					}else{
+						var pattern = new RegExp(questions[a_id].answers[j].text);
+						if( words[i] === questions[a_id].answers[j].text || pattern.test(words[i]) ){
+							passed = true;
+						}
 					}
 				}
 			}
@@ -602,7 +616,10 @@ ilias.questions.assClozeTest = function(a_id) {
 			if (type==0) {
 				for(var j=0;j<questions[a_id].gaps[i].item.length;j++)
 				{
-					if (questions[a_id].gaps[i].item[j].value == a_node.value) {
+					var pattern = questions[a_id].gaps[i].item[j].value.replaceAll("*", ".*");
+					pattern = "^"+pattern+"$";
+					pattern =  new RegExp(pattern);
+					if (questions[a_id].gaps[i].item[j].value == a_node.value || pattern.test(a_node.value)) {
 						value_found=true;
 						if (questions[a_id].gaps[i].item[j].points <= 0) {
 							answers[a_id].passed = false;
@@ -1828,3 +1845,4 @@ function getFname(yStr){
 }
 
 answers = ilias.questions.answers;
+console.dir(answers);
