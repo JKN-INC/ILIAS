@@ -103,8 +103,7 @@ ilias.questions.checkAnswers = function(a_id) {
 	answers[a_id].tries++;
 
 	var call = "ilias.questions."+questions[a_id].type+"("+a_id+")";
-	console.log(call);
-
+	
 	eval(call);
 
 	if (typeof il.LearningModule != "undefined") {
@@ -1845,4 +1844,3 @@ function getFname(yStr){
 }
 
 answers = ilias.questions.answers;
-console.dir(answers);
