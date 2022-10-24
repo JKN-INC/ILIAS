@@ -336,7 +336,7 @@ class ilSCORM2004Tracking
             }
             if ($failed == true) {
                 $status = "failed";
-            } elseif ($cntcompleted == count($a_scos)) {
+            } elseif ($cntcompleted >= count($a_scos)) {
                 $status = "completed";
             }
         }
