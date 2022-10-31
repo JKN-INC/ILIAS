@@ -1220,7 +1220,7 @@ ilias.questions.showCorrectAnswers =function(a_id) {
 							cvalue = questions[a_id].gaps[i].item[j].value;
 						}
 					}
-					jQuery('input#'+a_id+"_"+i).val(cvalue);
+					//jQuery('input#'+a_id+"_"+i).val(cvalue);
 					jQuery('input#'+a_id+"_"+i).prop("disabled",true);
 				}
 			}
