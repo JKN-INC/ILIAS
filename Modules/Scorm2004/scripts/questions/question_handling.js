@@ -318,19 +318,47 @@ ilias.questions.assTextQuestion = function(a_id) {
 			}
 			break;
 		case 'all':
-			var tst_arr = [];
-			for(var i = 0; i < questions[a_id].answers.length; i++){
-				if(questions[a_id].text_rating === 'ci'){
-					tst_arr.push(questions[a_id].answers[i].text.toLowerCase());
-				} else {
-					tst_arr.push(questions[a_id].answers[i].text);
-				}
-			}
-			if(tst_arr.filter(function(i) {return words.indexOf(i) < 0;}).length === 0){
-				passed = true;
-			}
-			break;
-
+	    	var tst_arr = [];
+	      	for(var i = 0; i < questions[a_id].answers.length; i++){
+	        	if(questions[a_id].text_rating === 'ci'){
+		          	if(questions[a_id].answers[i].text.indexOf("|")){
+		            	var alt_words = questions[a_id].answers[i].text.split("|").map(x => x.toLowerCase());
+		            	tst_arr.push(alt_words);
+		          	} else {
+		            	tst_arr.push(questions[a_id].answers[i].text.toLowerCase());
+		          	}
+	        	} else {
+	       			if(questions[a_id].answers[i].text.indexOf("|")){
+	            		var alt_words = questions[a_id].answers[i].text.split("|");
+	            		tst_arr.push(alt_words);
+	          		} else {
+	            		tst_arr.push(questions[a_id].answers[i].text);
+	          		}
+	        	}
+	    	}
+	    	let correct_arr = []
+	      	tst_arr.forEach(function(i) { 
+	        //foreach array of words that need to have at least (1) completed in the group.
+		        i.forEach( (element) => {
+		        	var pattern = "^"+element.trim()+"$";
+		          	pattern = pattern.replaceAll("*", ".*");
+		          	pattern =  new RegExp(pattern);
+		          	
+		          	//foreach word
+		          	words.forEach((word) => {
+		            
+		            	//if the word is in the list of words (words array)
+		            	if(pattern.test(word)) {
+		            		tst_arr[i];
+		              		correct_arr.push(i);
+		              		return true;
+		            	}
+		        	});  
+		        });
+		        return true;
+	    	});
+	    passed = JSON.stringify(correct_arr) == JSON.stringify(tst_arr);
+	    break;
 	}
 	answers[a_id].passed = passed;
 	ilias.questions.showFeedback(a_id);
@@ -1220,7 +1248,7 @@ ilias.questions.showCorrectAnswers =function(a_id) {
 							cvalue = questions[a_id].gaps[i].item[j].value;
 						}
 					}
-					jQuery('input#'+a_id+"_"+i).val(cvalue);
+					//jQuery('input#'+a_id+"_"+i).val(cvalue);
 					jQuery('input#'+a_id+"_"+i).prop("disabled",true);
 				}
 			}
