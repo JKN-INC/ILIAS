@@ -565,29 +565,61 @@ ilias.questions.assTextSubset = function(a_id) {
 		var found = false;
 		for (var c=0;c<questions[a_id].correct_answers.length;c++)
 		{
-			var correct_answer = questions[a_id].correct_answers[c]["answertext"];
-			if(questions[a_id].matching_method == "ci")
-			{
-				correct_answer = correct_answer.toLowerCase();
-			}
-			if(correct_answer == answer && questions[a_id].correct_answers[c]["points"] > 0)
-			{
-				found = true;
-
-				// check if answer was given multiple times
-				for (var j=0;j<i;j++) {
-					var old_answer = a_node.get(j).value;
-					if(questions[a_id].matching_method == "ci")
-					{
-						old_answer = old_answer.toLowerCase();
+			if(questions[a_id].correct_answers[c]["answertext"].indexOf("|")){
+				var alt_words = questions[a_id].correct_answers[c]["answertext"].split("|");
+				alt_words.forEach((element) => {
+					element = element.trim();
+					var pattern = element.replaceAll("*", ".*");
+					pattern = "^"+pattern+"$";
+					pattern =  new RegExp(pattern);
+					if(questions[a_id].matching_method == "ci"){
+						element = element.toLowerCase();
 					}
-					if(old_answer == answer)
+					if(element == answer || pattern.test(answer) && questions[a_id].correct_answers[c]["points"] > 0)
 					{
-						found = false;
-						j = i;
+						found = true;
+
+						// check if answer was given multiple times
+						for (var j=0;j<i;j++) {
+							var old_answer = a_node.get(j).value;
+							if(questions[a_id].matching_method == "ci")
+							{
+								old_answer = old_answer.toLowerCase();
+							}
+							if(old_answer == answer)
+							{
+								found = false;
+								j = i;
+							}
+						}
+					}
+				});
+			}else{
+				var correct_answer = questions[a_id].correct_answers[c]["answertext"];
+				if(questions[a_id].matching_method == "ci")
+				{
+					correct_answer = correct_answer.toLowerCase();
+				}
+				if(correct_answer == answer && questions[a_id].correct_answers[c]["points"] > 0)
+				{
+					found = true;
+
+					// check if answer was given multiple times
+					for (var j=0;j<i;j++) {
+						var old_answer = a_node.get(j).value;
+						if(questions[a_id].matching_method == "ci")
+						{
+							old_answer = old_answer.toLowerCase();
+						}
+						if(old_answer == answer)
+						{
+							found = false;
+							j = i;
+						}
 					}
 				}
 			}
+			
 		}
 		if(found === false)
 		{
@@ -881,7 +913,10 @@ ilias.questions.showFeedback =function(a_id) {
 			questions[a_id].nr_of_tries - answers[a_id].tries > 0) {
 			txt_wrong_answers = '';
 		}
-		ilias.questions.txt.all_answers_correct = questions[a_id].feedback['correct'];
+		if(questions[a_id].feedback['correct']){
+			ilias.questions.txt.all_answers_correct = questions[a_id].feedback['correct'];
+		}
+
 	}
 	else
 	{
@@ -1311,7 +1346,7 @@ ilias.questions.showCorrectAnswers =function(a_id) {
 				}
 				if(found === false)
 				{
-					jQuery(a_node[i]).val("");
+					//jQuery(a_node[i]).val("");
 				}
 			}
 			var correct_info = "";
