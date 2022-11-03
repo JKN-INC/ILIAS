@@ -103,9 +103,8 @@ ilias.questions.checkAnswers = function(a_id) {
 	answers[a_id].tries++;
 
 	var call = "ilias.questions."+questions[a_id].type+"("+a_id+")";
-
+	
 	eval(call);
-
 
 	if (typeof il.LearningModule != "undefined") {
 		il.LearningModule.processAnswer(ilias.questions);
@@ -298,26 +297,68 @@ ilias.questions.assTextQuestion = function(a_id) {
 		case 'one':
 			for (var i = 0; i < words.length; i++) {
 				for(var j = 0; j < questions[a_id].answers.length; j++){
-					if( words[i] === questions[a_id].answers[j].text ){
-						passed = true;
+					var option = questions[a_id].answers[j].text;
+					if(option.indexOf("|")){
+						var alt_words = option.split("|");
+						alt_words.forEach((element) => {
+						    var pattern = "^"+element.trim()+"$";
+						    pattern = pattern.replaceAll("*", ".*");
+							pattern =  new RegExp(pattern);
+						    if( words[i] === element.trim() || pattern.test(words[i])){
+						    	passed = true;
+						    }
+						});
+					}else{
+						var pattern = new RegExp(questions[a_id].answers[j].text);
+						if( words[i] === questions[a_id].answers[j].text || pattern.test(words[i]) ){
+							passed = true;
+						}
 					}
 				}
 			}
 			break;
 		case 'all':
-			var tst_arr = [];
-			for(var i = 0; i < questions[a_id].answers.length; i++){
-				if(questions[a_id].text_rating === 'ci'){
-					tst_arr.push(questions[a_id].answers[i].text.toLowerCase());
-				} else {
-					tst_arr.push(questions[a_id].answers[i].text);
-				}
-			}
-			if(tst_arr.filter(function(i) {return words.indexOf(i) < 0;}).length === 0){
-				passed = true;
-			}
-			break;
-
+	    	var tst_arr = [];
+	      	for(var i = 0; i < questions[a_id].answers.length; i++){
+	        	if(questions[a_id].text_rating === 'ci'){
+		          	if(questions[a_id].answers[i].text.indexOf("|")){
+		            	var alt_words = questions[a_id].answers[i].text.split("|").map(x => x.toLowerCase());
+		            	tst_arr.push(alt_words);
+		          	} else {
+		            	tst_arr.push(questions[a_id].answers[i].text.toLowerCase());
+		          	}
+	        	} else {
+	       			if(questions[a_id].answers[i].text.indexOf("|")){
+	            		var alt_words = questions[a_id].answers[i].text.split("|");
+	            		tst_arr.push(alt_words);
+	          		} else {
+	            		tst_arr.push(questions[a_id].answers[i].text);
+	          		}
+	        	}
+	    	}
+	    	let correct_arr = []
+	      	tst_arr.forEach(function(i) { 
+	        //foreach array of words that need to have at least (1) completed in the group.
+		        i.forEach( (element) => {
+		        	var pattern = "^"+element.trim()+"$";
+		          	pattern = pattern.replaceAll("*", ".*");
+		          	pattern =  new RegExp(pattern);
+		          	
+		          	//foreach word
+		          	words.forEach((word) => {
+		            
+		            	//if the word is in the list of words (words array)
+		            	if(pattern.test(word)) {
+		            		tst_arr[i];
+		              		correct_arr.push(i);
+		              		return true;
+		            	}
+		        	});  
+		        });
+		        return true;
+	    	});
+	    passed = JSON.stringify(correct_arr) == JSON.stringify(tst_arr);
+	    break;
 	}
 	answers[a_id].passed = passed;
 	ilias.questions.showFeedback(a_id);
@@ -524,29 +565,61 @@ ilias.questions.assTextSubset = function(a_id) {
 		var found = false;
 		for (var c=0;c<questions[a_id].correct_answers.length;c++)
 		{
-			var correct_answer = questions[a_id].correct_answers[c]["answertext"];
-			if(questions[a_id].matching_method == "ci")
-			{
-				correct_answer = correct_answer.toLowerCase();
-			}
-			if(correct_answer == answer && questions[a_id].correct_answers[c]["points"] > 0)
-			{
-				found = true;
-
-				// check if answer was given multiple times
-				for (var j=0;j<i;j++) {
-					var old_answer = a_node.get(j).value;
-					if(questions[a_id].matching_method == "ci")
-					{
-						old_answer = old_answer.toLowerCase();
+			if(questions[a_id].correct_answers[c]["answertext"].indexOf("|")){
+				var alt_words = questions[a_id].correct_answers[c]["answertext"].split("|");
+				alt_words.forEach((element) => {
+					element = element.trim();
+					var pattern = element.replaceAll("*", ".*");
+					pattern = "^"+pattern+"$";
+					pattern =  new RegExp(pattern);
+					if(questions[a_id].matching_method == "ci"){
+						element = element.toLowerCase();
 					}
-					if(old_answer == answer)
+					if(element == answer || pattern.test(answer) && questions[a_id].correct_answers[c]["points"] > 0)
 					{
-						found = false;
-						j = i;
+						found = true;
+
+						// check if answer was given multiple times
+						for (var j=0;j<i;j++) {
+							var old_answer = a_node.get(j).value;
+							if(questions[a_id].matching_method == "ci")
+							{
+								old_answer = old_answer.toLowerCase();
+							}
+							if(old_answer == answer)
+							{
+								found = false;
+								j = i;
+							}
+						}
+					}
+				});
+			}else{
+				var correct_answer = questions[a_id].correct_answers[c]["answertext"];
+				if(questions[a_id].matching_method == "ci")
+				{
+					correct_answer = correct_answer.toLowerCase();
+				}
+				if(correct_answer == answer && questions[a_id].correct_answers[c]["points"] > 0)
+				{
+					found = true;
+
+					// check if answer was given multiple times
+					for (var j=0;j<i;j++) {
+						var old_answer = a_node.get(j).value;
+						if(questions[a_id].matching_method == "ci")
+						{
+							old_answer = old_answer.toLowerCase();
+						}
+						if(old_answer == answer)
+						{
+							found = false;
+							j = i;
+						}
 					}
 				}
 			}
+			
 		}
 		if(found === false)
 		{
@@ -602,7 +675,10 @@ ilias.questions.assClozeTest = function(a_id) {
 			if (type==0) {
 				for(var j=0;j<questions[a_id].gaps[i].item.length;j++)
 				{
-					if (questions[a_id].gaps[i].item[j].value == a_node.value) {
+					var pattern = questions[a_id].gaps[i].item[j].value.replaceAll("*", ".*");
+					pattern = "^"+pattern+"$";
+					pattern =  new RegExp(pattern);
+					if (questions[a_id].gaps[i].item[j].value == a_node.value || pattern.test(a_node.value)) {
 						value_found=true;
 						if (questions[a_id].gaps[i].item[j].points <= 0) {
 							answers[a_id].passed = false;
@@ -837,7 +913,10 @@ ilias.questions.showFeedback =function(a_id) {
 			questions[a_id].nr_of_tries - answers[a_id].tries > 0) {
 			txt_wrong_answers = '';
 		}
-		ilias.questions.txt.all_answers_correct = questions[a_id].feedback['correct'];
+		if(questions[a_id].feedback['correct']){
+			ilias.questions.txt.all_answers_correct = questions[a_id].feedback['correct'];
+		}
+
 	}
 	else
 	{
@@ -1204,7 +1283,7 @@ ilias.questions.showCorrectAnswers =function(a_id) {
 							cvalue = questions[a_id].gaps[i].item[j].value;
 						}
 					}
-					jQuery('input#'+a_id+"_"+i).val(cvalue);
+					//jQuery('input#'+a_id+"_"+i).val(cvalue);
 					jQuery('input#'+a_id+"_"+i).prop("disabled",true);
 				}
 			}
@@ -1267,7 +1346,7 @@ ilias.questions.showCorrectAnswers =function(a_id) {
 				}
 				if(found === false)
 				{
-					jQuery(a_node[i]).val("");
+					//jQuery(a_node[i]).val("");
 				}
 			}
 			var correct_info = "";

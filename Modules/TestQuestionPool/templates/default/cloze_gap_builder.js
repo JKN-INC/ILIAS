@@ -1099,6 +1099,7 @@ var ClozeGapBuilder = (function () {
 
 		if (ClozeSettings.gaps_php[0][pos]) {
 			$('.modal-body').html('');
+			$('.modal-body').html('<span>'+ClozeSettings.wildcard+'</span>');
 			if (ClozeGlobals.jour_fixe_incompatible === false) {
 				ClozeSettings.gap_backup = JSON.parse(JSON.stringify({
 					'id':   pos,
