@@ -619,6 +619,7 @@ assessment#:#essay_scoring_mode_keyword_relation_all#:#Automatic Scoring with Ke
 assessment#:#essay_scoring_mode_keyword_relation_all_desc#:#The points are granted automatically, if all keywords are found.
 assessment#:#essay_scoring_mode_keyword_relation_one#:#Automatic Scoring with Keywords on Finding ONE
 assessment#:#essay_scoring_mode_keyword_relation_one_desc#:#The points are granted automatically, if at least one keyword is found.
+assessment#:#essay_wildcard_alternate#:#Wildcards (*) May also be used to denote multiple spelling options. A wildcard prefix allows multiple characters to be added before a word only, a suffix allows additional characters at the end of a word and a wildcard internally allows additional characters inside a word. They can be combined if desired. To enter multiple alternate answer texts, please seperate them with the | character. 
 assessment#:#mark_schema_invalid#:#The mark schema does not validate. Please create a correct schema.
 assessment#:#assessment_scoring_adjust#:#Enable corrections
 assessment#:#assessment_scoring_adjust_desc#:#Enables the corrections feature to allow modifications to questions in a test.
@@ -760,6 +761,7 @@ assessment#:#qpl_numeric_lower_needs_valid_lower_alert#:#The lower bound needs t
 assessment#:#qpl_numeric_upper_needs_valid_upper_alert#:#The upper bound needs to be valid numerical value greater than the lower bound.
 assessment#:#cloze_fixed_textlength#:#Text Field Length
 assessment#:#cloze_text#:#Cloze Text
+assessment#:#cloze_wildcard#:#Wildcards (*) May also be used to denote multiple spelling options. A wildcard prefix allows multiple characters to be added before a word only, a suffix allows additional characters at the end of a word and a wildcard internally allows additional characters inside a word. They can be combined if desired. 
 assessment#:#cloze_textgap_case_insensitive#:#Case Insensitive
 assessment#:#cloze_textgap_case_sensitive#:#Case Sensitive
 assessment#:#cloze_textgap_levenshtein_of#:#Levenshtein Distance of %s
