@@ -361,8 +361,13 @@ abstract class ilPageObject
         if ($this->old_nr == 0) {
             $query = "SELECT * FROM page_object" .
                 " WHERE page_id = " . $this->db->quote($this->id, "integer") .
-                " AND parent_type=" . $this->db->quote($this->getParentType(), "text") .
-                " AND lang = " . $this->db->quote($this->getLanguage(), "text");
+                " AND parent_type=" . $this->db->quote($this->getParentType(), "text");
+
+            $languages = self::lookupTranslations($this->getParentType(), $this->getId());
+            if ($this->getLanguage() != "-" && isset($languages[$this->getLanguage()])) {
+               $query .=   " AND lang = " . $this->db->quote($this->getLanguage(), "text");
+            }
+            
             $pg_set = $this->db->query($query);
             $this->page_record = $this->db->fetchAssoc($pg_set);
             $this->setActive($this->page_record["active"]);
@@ -4806,7 +4811,7 @@ abstract class ilPageObject
             );
         $langs = array();
         while ($rec = $db->fetchAssoc($set)) {
-            $langs[] = $rec["lang"];
+            $langs[$rec["lang"]] = $rec["lang"];
         }
         return $langs;
     }
