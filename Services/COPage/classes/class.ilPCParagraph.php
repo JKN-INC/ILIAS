@@ -1762,7 +1762,7 @@ class ilPCParagraph extends ilPageContent
                             $alt_pos = ilStr::strIPos($node_val, $alt);
                             if((($alt_pos < $pos) || ($alt_pos === $pos && strlen($alt) > $t['termlength'])) && $alt_pos){
                                 array_push($t["alternates"],$t['term']);
-                                $t["term"] = $alt;
+                                $t["term"] = trim($alt);
                             }
                         }
                         // if term found

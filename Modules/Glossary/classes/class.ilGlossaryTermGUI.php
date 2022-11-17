@@ -276,7 +276,12 @@ class ilGlossaryTermGUI
             // update term
             $this->term->setTerm(ilUtil::stripSlashes($_POST["term"]));
             $this->term->setLanguage($_POST["term_language"]);
-            $this->term->setAlternates($_POST["alternates"]);
+
+            $alternates = [];
+            foreach (explode(",", $_POST["alternates"]) as $alt) {
+                $alternates[] = trim(ilUtil::stripSlashes($alt));
+            }
+            $this->term->setAlternates(implode(",", $alternates));
             $this->term->update();
 
             // update taxonomy assignment
