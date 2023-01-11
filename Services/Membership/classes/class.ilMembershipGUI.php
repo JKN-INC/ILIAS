@@ -1475,7 +1475,7 @@ class ilMembershipGUI
             if ($this instanceof ilGroupMembershipGUI) {
                 include_once './Modules/Group/classes/class.ilGroupMembershipMailNotification.php';
 
-                $ilAppEventHandler->raise("Modules/Group", "userAssignedFromWaitingList ", [
+                $ilAppEventHandler->raise("Modules/Group", "userAssignedFromWaitingList", [
                     "usr_id" => $user_id,
                     "obj_id" => $this->getParentObject()->getId()
                 ]);
