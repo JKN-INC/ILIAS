@@ -4806,7 +4806,7 @@ crs#:#crs_add_objective#:#Add Objective
 crs#:#crs_add_remove_from_desktop_info#:#Objects within the course can be added to favourites.
 crs#:#crs_add_remove_from_desktop#:#Add to Favourites
 crs#:#crs_add_starter#:#Add Start Object
-crs#:#crs_added_member_body#:#we are pleased to announce your registration for the course "%s".
+crs#:#crs_added_member_body#:#We are pleased to announce your registration for the course "%s".
 crs#:#crs_added_member#:#Your registration for course "%s"
 crs#:#crs_added_new_archive#:#A new archive has been added
 crs#:#crs_added_objective#:#A new learning objective has been created.
