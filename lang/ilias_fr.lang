@@ -539,7 +539,7 @@ assessment#:#create_date#:#Créé
 assessment#:#create_gaps#:#Créer trou
 assessment#:#create_new#:#Créer nouveau
 assessment#:#customstyle#:#Style personnalisé
-assessment#:#dashboard_tab#:#Dashboard
+assessment#:#dashboard_tab#:#Tableau de bord
 assessment#:#definition#:#Définition
 assessment#:#definition_image#:#Texte de la définition
 assessment#:#definition_text#:#Texte de la définition
@@ -4724,8 +4724,8 @@ common#:#refresh_languages#:#Actualiser Toutes les Langues
 common#:#refuse#:#Refuser
 common#:#reg_account_confirmation_successful#:#Votre compte utilisateur a été activé.
 common#:#reg_goto_parent_membership_info#:#Seuls les membres peuvent accéder à cet objet.
-common#:#reg_mail_body_2_confirmation#:#Le lien sera bon uniquement pour %s. Après, vous devrez recommencer depuis le début.
-common#:#reg_mail_body_3_confirmation#:#Si ce mail n'a aucune signification, il est possible que votre adresse mail a été saisie délibérament ou par accident. Veuillez donc ignorer ce mail.
+common#:#reg_mail_body_2_confirmation#:#Ce lien n’est valide que pendant %s, après quoi vous devrez recommencer depuis le début. 
+common#:#reg_mail_body_3_confirmation#:#Si ce courriel ne signifie rien pour vous, il est possible que quelqu'un ait entré votre adresse courriel intentionnellement ou accidentellement. Dans ce cas, merci d'ignorer ce message.
 common#:#reg_mail_body_forgot_password_info#:#Pour obtenir votre mot de passe, veuillez utiliser la fonction "Mot de passe oublié ?" sur l'écran de connexion afin de demander un nouveau mot de passe pour ce compte.
 common#:#reg_mail_body_salutation#:#Bonjour
 common#:#reg_mail_body_text1#:#Bienvenue sur MediaEcole, votre compte a été créé sur la plateforme de formation du CIN de Saint-Mandrier. Ce compte est ouvert pour une durée variable selon les profils définis dans l'OP 4 - DDE.
@@ -4734,11 +4734,11 @@ common#:#reg_mail_body_text3#:#Informations personnelles supplémentaires :
 common#:#reg_mail_subject#:#MediaEcole - Vos données d'accès
 common#:#reg_mail_subject_confirmation#:#ILIAS eLearning - Votre lien de confirmation
 common#:#reg_passwd_via_mail#:#Votre mot de passe sera envoyé à  l'adresse email précisée ci-dessous.
-common#:#register#:#Créer un Compte
+common#:#register#:#S’inscrire
 common#:#registered_since#:#Inscrit depuis
 common#:#registered_user#:#Utilisateur inscrit
 common#:#registered_users#:#Utilisateurs inscrits
-common#:#registration#:#Créer un Compte
+common#:#registration#:#S’inscrire
 common#:#related_to#:#Relatif à
 common#:#remove#:#Retirer
 common#:#remove_entries#:#Supprimer les Entrées
@@ -4817,7 +4817,7 @@ common#:#sahs_insert_sco_from_clip#:#Coller SCOs depuis le presse-papier
 common#:#salutation#:#Salutation
 common#:#salutation_f#:#Mme/Mlle
 common#:#salutation_m#:#M.
-common#:#salutation_n#:#No salutation desired
+common#:#salutation_n#:#Aucun titre de civilité souhaité
 common#:#saml_log_in#:#Connexion directe
 common#:#saml_login_form_info_txt#:#Vous pouvez vous connecter en utilisant le bouton «Connexion directe» sans avoir à entrer votre nom d’utilisateur ou mot de passe.
 common#:#saml_login_form_txt#:#Connexion à ILIAS via SAML
@@ -4859,7 +4859,7 @@ common#:#seas_max_hits#:#Nombre maximum de résultats
 common#:#seas_max_hits_info#:#Définir un nombre maximum de résultats de recherche.
 common#:#seas_settings#:#Paramètres de recherche
 common#:#second#:#Seconde
-common#:#second_email#:#Deuxième e-mail
+common#:#second_email#:#Deuxième adresse courriel
 common#:#seconds#:#Seconde(s)
 common#:#sel_country#:#Pays
 common#:#select#:#Sélectionner
@@ -8580,7 +8580,7 @@ form#:#form_open_answer#:#Ouvrir réponse
 form#:#form_password_not_allowed_for_auth#:#Il n'est pas possible de changer de mot de passe avec cette méthode d'authentification.
 form#:#form_password_required_for_auth#:#Un mot de passe est nécessaire pour cette méthode d'authentification.
 form#:#form_please_select#:#Veuillez sélectionner
-form#:#form_retype_email#:#Re-saisir Email
+form#:#form_retype_email#:#Entrez de nouveau votre adresse courriel
 form#:#form_retype_password#:#Ressaisir Mot de Passe
 form#:#form_seconds#:#Secondes
 forum#:#activate_new_posts#:#Modérer les nouveaux articles
@@ -12205,7 +12205,7 @@ registration#:#reg_email_domains_code#:#Avec un code d'enregistrement, toutes le
 registration#:#reg_email_role_assignment#:#Attribution de Rôle par Domaine
 registration#:#reg_fixed#:#Choix dans une Liste de Rôles
 registration#:#reg_info_pwd#:#Si actif, les mots de passe seront automatiquement transmis aux nouveaux utilisateurs par mail.
-registration#:#reg_mail_body_activation#:#to activate your account and confirm ownership of this email address, click the link below:
+registration#:#reg_mail_body_activation#:#Pour activer votre compte et confirmer que vous êtes bien le propriétaire de cette adresse courriel, cliquez sur le lien ci-dessous:
 registration#:#reg_mail_body_approve#:#Vous êtes déjà  inscrit sur la plate-forme ILIAS et avez reçu un mail contenant les informations sur votre compte. Maintenant, votre compte utilisateur a été activé par un administrateur.
 registration#:#reg_mail_body_confirmation#:#Pour confirmer l'enregistrement, veuillez vous rendre dans l'administration des utilisateurs et activer le compte.
 registration#:#reg_mail_body_profile#:#Données du profil :
@@ -15040,7 +15040,7 @@ dash#:#dash_activation#:#activation###18 05 2020 new variable
 dash#:#dash_sort_by_location#:#Sort by Location###18 05 2020 new variable
 dash#:#dash_sort_by_type#:#Sort by Type###18 05 2020 new variable
 dash#:#dash_sort_by_start_date#:#Sort by Start Date###18 05 2020 new variable
-dash#:#dash_dashboard#:#Dashboard###18 05 2020 new variable
+dash#:#dash_dashboard#:#Tableau de bord###18 05 2020 new variable
 help#:#help_no_content#:#There is no help content available for the current screen. You may use the search tool.###18 05 2020 new variable
 user#:#user_privacy_checklist#:#Privacy Checklist###18 05 2020 new variable
 user#:#user_profile_data#:#Profile Data###18 05 2020 new variable
@@ -15427,7 +15427,7 @@ common#:#mm_repository#:#Repository###18 05 2020 new variable
 common#:#mm_dashboard#:#Dashboard###18 05 2020 new variable
 common#:#mm_repo_tree_view#:#Tree View###18 05 2020 new variable
 common#:#mm_task_derived_tasks#:#Tasks###18 05 2020 new variable
-common#:#mm_favorites#:#Favourites###18 05 2020 new variable
+common#:#mm_favorites#:#Favoris###18 05 2020 new variable
 common#:#mm_calendar#:#Calendar###18 05 2020 new variable
 common#:#mm_tags#:#Tags###18 05 2020 new variable
 common#:#mm_portfolio#:#Portfolio###18 05 2020 new variable
@@ -15505,7 +15505,7 @@ file#:#personal_resources_quota_exceeded_warning#:#You have exceeded the disk qu
 file#:#personal_resources_quota_status_legend#:#You are using %1$s of your available disk quota of %2$s (%3$d%%).###18 05 2020 new variable
 wsp#:#wsp_personal_resources_description#:#Here you can manage your private files, blogs and artifacts.###18 05 2020 new variable
 administration#:#adm_personal_workspace#:#Personal Workspace###18 05 2020 new variable
-dash#:#dash_favourites#:#Favourites###18 05 2020 new variable
+dash#:#dash_favourites#:#Favoris###18 05 2020 new variable
 dash#:#dash_memberships#:#My Courses and Groups###18 05 2020 new variable
 dash#:#dash_learningsequences#:#My Learning Sequences###18 05 2020 new variable
 dash#:#dash_studyprogramme#:#My Study Programmes###18 05 2020 new variable
@@ -16094,9 +16094,9 @@ content#:#cont_grid_t_two_by_two_info#:#Creates two rows with two columns of equ
 content#:#cont_grid_t_manual#:#Manually created page layout###18 05 2020 new variable
 content#:#cont_grid_t_manual_info#:#Enables the free design of the number and width of columns.###18 05 2020 new variable
 dateplaner#:#cal_no_events_block#:#There are no dates available for you.###18 05 2020 new variable
-rep#:#rep_fav_intro1#:#You have not yet selected any favourites. To do this, you must take two steps:###18 05 2020 new variable
-rep#:#rep_fav_intro2#:#Click on '%s' and select a learning object from the available offer, e.g. a learning module or a forum.###18 05 2020 new variable
-rep#:#rep_fav_intro3#:#When you have found something that interests you, you can easily add it to your favourites. Select the desired item in the <i>Actions</i> menu and choose "<i>Add to favourites</i>".###18 05 2020 new variable
+rep#:#rep_fav_intro1#:#Vous n’avez pas encore sélectionné de favoris. Pour ce faire, vous devez suivre deux étapes :###18 05 2020 new variable
+rep#:#rep_fav_intro2#:#cliquez sur '%s' et sélectionnez un objet d’apprentissage disponible pour votre rôle, p. ex. un module d’apprentissage ou un forum.###18 05 2020 new variable
+rep#:#rep_fav_intro3#:#Lorsque vous avez trouvé quelque chose qui vous intéresse, vous pouvez facilement l’ajouter à vos favoris. Sélectionnez-le et choisissez « Ajouter aux favoris ».###18 05 2020 new variable
 rep#:#rep_mo_mem_dash#:#You are currently not yet a member of a course or group.###18 05 2020 new variable
 task#:#task_no_task_items#:#There are no tasks for you.###18 05 2020 new variable
 prg#:#prg_quali_still_valid#:#Qualification still valid###18 05 2020 new variable
@@ -16213,7 +16213,7 @@ survey#:#survey_notification_target_group_invited#:#All users manually invited t
 survey#:#survey_reminder_cron#:#Remind users to participate / Send results to tutors###19 03 2021 new variable
 auth#:#auth_saml_err_sqlite_driver#:#The SAML authentication requires the SQLite driver for PHP. Please install the SQLite package and try again.###19 03 2021 new variable
 tagging#:#no_tag_text_1#:#You have not yet used any tags. To do this, you must take two steps:###19 03 2021 new variable
-tagging#:#no_tag_text_2#:#Click on '%s' and select a learning object from the available offer, e.g. a learning module or a forum.###19 03 2021 new variable
+tagging#:#no_tag_text_2#:#cliquez sur '%s' et sélectionnez un objet d’apprentissage disponible pour votre rôle, p. ex. un module d’apprentissage ou un forum.###19 03 2021 new variable
 tagging#:#no_tag_text_3#:#To attach any tags to the object select 'Set Tags' from the actions menu.###19 03 2021 new variable
 form#:#form_invalid_uri#:#Invalid URI format.###19 03 2021 new variable
 crs#:#crs_objective_result_summary_initial#:#Placement Test: %1$s (%2$s required)###30 04 2021 new variable
