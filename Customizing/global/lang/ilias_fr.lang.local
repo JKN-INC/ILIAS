@@ -4782,8 +4782,9 @@ common#:#refresh_list#:#Actualiser liste
 common#:#refuse#:#Refuser
 common#:#reg_account_confirmation_successful#:#Votre compte utilisateur a été activé.
 common#:#reg_goto_parent_membership_info#:#Seuls les membres peuvent accéder à cet objet.
-common#:#reg_mail_body_2_confirmation#:#Ce lien est valide pour une durée de %s. Au delà, vous devrez recommencer depuis le début.
-common#:#reg_mail_body_3_confirmation#:#Si cet email ne signifie rien pour vous, il est possible que quelqu'un ait entré votre adresse email intentionnellement ou accidentellement. Dans ce cas, merci d'ignorer ce message.
+common#:#reg_mail_body_2_confirmation#:#Ce lien n’est valide que pendant %s, après quoi vous devrez recommencer depuis le début. 
+common#:#reg_mail_body_3_confirmation#:#Si ce courriel ne signifie rien pour vous, il est possible que quelqu'un ait entré votre adresse courriel intentionnellement ou accidentellement. Dans ce cas, merci d'ignorer ce message.
+common#:#reg_mail_body_forgot_password_info#:#Pour obtenir votre mot de passe, veuillez utiliser la fonction "Mot de passe oublié ?" sur l'écran de connexion afin de demander un nouveau mot de passe pour ce compte.
 common#:#reg_mail_body_confirmation#:#Pour activer votre compte et confirmer cette adresse email, cliquez sur le lien suivant :
 common#:#reg_mail_body_forgot_password_info#:#Pour obtenir un nouveau mot de passe, veuillez utiliser le lien « Mot de passe oublié » de la page de connexion.
 common#:#reg_mail_body_salutation#:#Bonjour
@@ -4793,12 +4794,12 @@ common#:#reg_mail_body_text3#:#Informations personnelles supplémentaires :
 common#:#reg_mail_subject#:#ILIAS eLearning - Vos données d'accès
 common#:#reg_mail_subject_confirmation#:#ILIAS eLearning - Votre lien de confirmation
 common#:#reg_passwd_via_mail#:#Votre mot de passe sera envoyé à l'adresse mail précisée ci-dessous.
-common#:#register#:#Créer un compte
+common#:#register#:#S’inscrire
 common#:#register_info#:#Veuillez remplir le formulaire pour vous enregistrer (les champs marqués par un astérisque sont obligatoires)
 common#:#registered_since#:#Inscrit depuis
 common#:#registered_user#:#Utilisateur inscrit
 common#:#registered_users#:#Utilisateurs inscrits
-common#:#registration#:#Créer un compte
+common#:#registration#:#S’inscrire
 common#:#registration_disabled#:#Disponible uniquement si l'authentification locale est utilisée
 common#:#registration_expired#:#Période d'enregistrement expirée...
 common#:#related_to#:#Relatif à
@@ -8532,7 +8533,7 @@ form#:#form_msg_wrong_date_format#:#Mauvais format de donnée. Veuillez entrer u
 form#:#form_password_not_allowed_for_auth#:#Il n'est pas possible de changer de mot de passe avec cette méthode d'authentification.
 form#:#form_password_required_for_auth#:#Un mot de passe est nécessaire pour cette méthode d'authentification.
 form#:#form_please_select#:#Veuillez sélectionner
-form#:#form_retype_email#:#Re-saisir email
+form#:#form_retype_email#:#Entrez de nouveau votre adresse courriel
 form#:#form_retype_password#:#Ressaisir mot de passe
 form#:#form_seconds#:#Secondes
 forum#:#activate_current_and_childs#:#Accepter tous les messages

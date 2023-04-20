@@ -15009,7 +15009,7 @@ note#:#note_comments_notification_info#:#Comma separated list of accounts that a
 common#:#obj_lhts_desc#:#Learning history settings###18 05 2020 new variable
 common#:#obj_lhts#:#Learning History###18 05 2020 new variable
 common#:#obj_dshs_desc#:#Dashboard settings###18 05 2020 new variable
-common#:#obj_dshs#:#Dashboard###18 05 2020 new variable
+common#:#obj_dshs#:#Tableau de bord###18 05 2020 new variable
 lhist#:#lhist_enable_learning_history#:#Learning History###18 05 2020 new variable
 lhist#:#lhist_enable_learning_history_info#:#Enables an overview of all achievements of a user.###18 05 2020 new variable
 common#:#obj_prss_desc#:#Personal resources settings###18 05 2020 new variable
@@ -15254,7 +15254,7 @@ rep#:#rep_removed_from_favourites#:#The item has been removed from your favourit
 skmg#:#skmg_description_info#:#The description comes from the template.###18 05 2020 new variable
 administration#:#adm_layout_and_navigation#:#Layout and Navigation###18 05 2020 new variable
 blog#:#blog_task_publishing_draft_title#:#Publishing of Draft "%s"###18 05 2020 new variable
-acc#:#acc_dashboard#:#Dashboard###18 05 2020 new variable
+acc#:#acc_dashboard#:#Tableau de bord###18 05 2020 new variable
 dcl#:#dcl_no_entry#:#No entry###18 05 2020 new variable
 objref#:#objref_failure_target_type#:#Das Ziel des Links muss vom folgendem Typ sein:###18 05 2020 new variable
 crs#:#crs_ref_member_update#:#Neue Mitglieder hinzufügen###18 05 2020 new variable
@@ -15424,7 +15424,7 @@ common#:#mm_learning_progress#:#Learning Progress###18 05 2020 new variable
 common#:#mm_badges#:#Badges###18 05 2020 new variable
 common#:#mm_administration#:#Administration###18 05 2020 new variable
 common#:#mm_repository#:#Repository###18 05 2020 new variable
-common#:#mm_dashboard#:#Dashboard###18 05 2020 new variable
+common#:#mm_dashboard#:#Tableau de bord###18 05 2020 new variable
 common#:#mm_repo_tree_view#:#Tree View###18 05 2020 new variable
 common#:#mm_task_derived_tasks#:#Tasks###18 05 2020 new variable
 common#:#mm_favorites#:#Favoris###18 05 2020 new variable
