@@ -258,11 +258,12 @@ class ilLPRubricGrade
 
     private function getRubricGrader()
     {
+        global $DIC;
         $data = array();
         $res = $this->ilDB->query(
             'select owner from rubric_data where rubric_id='
                 . $this->ilDB->quote($this->rubric_id, "integer") .
-                ' and usr_id =' . $this->ilDB->quote($_SESSION['AccountId'], "integer") .
+                ' and usr_id =' . $this->ilDB->quote($DIC['ilUser']->getId(), "integer") .
                 ' and deleted is null'
         );
         while ($row = $res->fetchRow(ilDBConstants::FETCHMODE_OBJECT)) {
@@ -290,6 +291,7 @@ class ilLPRubricGrade
 
     public function grade($rubric_data)
     {
+        global $DIC;
         $grades = $this->getGradePostData($rubric_data);
         $user_id = $this->getGradeUserId();
 
@@ -322,7 +324,7 @@ class ilLPRubricGrade
                             criteria_comment=" . $this->ilDB->quote($grade['comment'], "text") . ",
                             deleted=NULL,
                             last_update=NOW(),
-                            owner=" . $this->ilDB->quote($_SESSION['AccountId'], "integer") . "
+                            owner=" . $this->ilDB->quote($DIC['ilUser']->getId(),  "integer") . "
                         where rubric_data_id=" . $this->ilDB->quote($row['rubric_data_id'], "integer")
                     );
                 } else {
@@ -333,7 +335,7 @@ class ilLPRubricGrade
                             criteria_comment=" . $this->ilDB->quote($grade['comment'], "text") . ",
                             deleted=NULL,
                             last_update=NOW(),
-                            owner=" . $this->ilDB->quote($_SESSION['AccountId'], "integer") . "
+                            owner=" . $this->ilDB->quote($DIC['ilUser']->getId(), "integer") . "
                         where rubric_data_id=" . $this->ilDB->quote($row['rubric_data_id'], "integer")
                     );
                 }
@@ -350,7 +352,7 @@ class ilLPRubricGrade
                             " . $this->ilDB->quote($criteria_id, "integer") . ",
                             " . $this->ilDB->quote($grade['point'], "float") . ",
                             " . $this->ilDB->quote($grade['comment'], "text") . ",
-                            " . $this->ilDB->quote($_SESSION['AccountId'], "integer") . ",
+                            " . $this->ilDB->quote($DIC['ilUser']->getId(), "integer") . ",
                             NOW(),
                             NOW()
 
@@ -364,7 +366,7 @@ class ilLPRubricGrade
                             " . $this->ilDB->quote($user_id, "integer") . ",
                             " . $this->ilDB->quote($criteria_id, "integer") . ",
                             " . $this->ilDB->quote($grade['comment'], "text") . ",
-                            " . $this->ilDB->quote($_SESSION['AccountId'], "integer") . ",
+                            " . $this->ilDB->quote($DIC['ilUser']->getId(), "integer") . ",
                             NOW(),
                             NOW()
 

@@ -257,12 +257,13 @@ class ilLPRubricCard
 
     public function lockUnlock()
     {
-
+        global $DIC;
+        $userID = $DIC['ilUser']->getId();
         $lock_var = ($this->isLocked()) ? NULL : date("Y-m-d H:i:s");
         $this->ilDB->manipulate(
             "update rubric set
               locked = " . $this->ilDB->quote($lock_var, "timestamp") .
-                ",owner = " . $this->ilDB->quote($_SESSION['AccountId'], "integer") .
+                ",owner = " . $this->ilDB->quote($userID, "integer") .
                 " where obj_id=" . $this->ilDB->quote($this->obj_id, "integer")
         );
     }
@@ -393,6 +394,7 @@ class ilLPRubricCard
 
     private function saveRubricBehaviorTbl($data, $labels)
     {
+        global $DIC;
         //null out behaviors
         $this->ilDB->manipulate(
             "update rubric_behavior as b 
@@ -462,7 +464,7 @@ class ilLPRubricCard
                                 " . $this->ilDB->quote($row_criteria['rubric_criteria_id'], "integer") . ",                                
                                 " . $this->ilDB->quote($behavior_name['behavior_name'], "text") . ",
                                 " . $this->ilDB->quote($__new_sort_order, "integer") . ",
-                                " . $this->ilDB->quote($_SESSION['AccountId'], "integer") . ",
+                                " . $this->ilDB->quote($DIC['ilUser']->getId(), "integer") . ",
                                 NOW(),
                                 NOW()                                
                             )"
@@ -475,6 +477,7 @@ class ilLPRubricCard
 
     private function saveRubricCriteriaTbl($data)
     {
+        global $DIC;
         // null out criteria
         $this->ilDB->manipulate("update rubric_criteria as c inner join rubric_group as g on c.rubric_group_id=g.rubric_group_id set c.deleted = NOW() where g.rubric_id=" . $this->ilDB->quote($this->rubric_id, "integer"));
 
@@ -527,7 +530,7 @@ class ilLPRubricCard
                             " . $this->ilDB->quote($row_group['rubric_group_id'], "integer") . ",
                             " . $this->ilDB->quote($new_criteria_name['criteria_name'], "text") . ",
                             " . $this->ilDB->quote($_new_sort_order, "integer") . ",
-                            " . $this->ilDB->quote($_SESSION['AccountId'], "integer") . ",
+                            " . $this->ilDB->quote($DIC['ilUser']->getId(), "integer") . ",
                             NOW(),
                             NOW()
                         )"
@@ -540,6 +543,7 @@ class ilLPRubricCard
 
     private function saveRubricGroupTbl($data, $labels)
     {
+        global $DIC;
         /**
          *      Add/Update Groups and Weights
          */
@@ -581,7 +585,7 @@ class ilLPRubricCard
                         " . $this->ilDB->quote($this->rubric_id, "integer") . ",
                         " . $this->ilDB->quote($new_group_name['group_name'], "text") . ",
                         " . $this->ilDB->quote($new_sort_order, "integer") . ",
-                        " . $this->ilDB->quote($_SESSION['AccountId'], "integer") . ",
+                        " . $this->ilDB->quote($DIC['ilUser']->getId(), "integer") . ",
                         NOW(),
                         NOW()
                     )"
@@ -594,6 +598,7 @@ class ilLPRubricCard
 
     private function saveRubricWeightTbl($labels, $rubric_group_id, $weights)
     {
+        global $DIC;
         // null out weight for group id
         $this->ilDB->manipulate("update rubric_weight set deleted=NOW() where deleted is null and rubric_group_id=" . $this->ilDB->quote($rubric_group_id, "integer"));
         //update the weight min/max for this rubric_group_id
@@ -622,7 +627,7 @@ class ilLPRubricCard
                     "update rubric_weight set 
                         deleted=null,
                         last_update=NOW(),
-                        owner=" . $this->ilDB->quote($_SESSION['AccountId'], "integer") . ",
+                        owner=" . $this->ilDB->quote($DIC['ilUser']->getId(), "integer") . ",
                         weight_min=" . $this->ilDB->quote($broken_weight[0], "float") . ",
                         weight_max=" . $this->ilDB->quote($broken_weight[1], "float") . "
                     where rubric_weight_id=" . $this->ilDB->quote($row['rubric_weight_id'], "integer")
@@ -638,7 +643,7 @@ class ilLPRubricCard
                         " . $this->ilDB->quote($label['rubric_label_id'], "text") . ",
                         " . $this->ilDB->quote($broken_weight[0], "float") . ",
                         " . $this->ilDB->quote($broken_weight[1], "float") . ",
-                        " . $this->ilDB->quote($_SESSION['AccountId'], "integer") . ",
+                        " . $this->ilDB->quote($DIC['ilUser']->getId(), "integer") . ",
                         NOW(),
                         NOW()
                     )"
@@ -652,6 +657,7 @@ class ilLPRubricCard
         /**
          *      Add/Update Rubric Labels
          */
+        global $DIC;
         $new_labels = array();
         //get the current active labels
         $current_labels = array();
@@ -692,7 +698,7 @@ class ilLPRubricCard
                         " . $this->ilDB->quote($this->rubric_id, "integer") . ",
                         " . $this->ilDB->quote($new_label['label'], "text") . ",                        
                         " . $this->ilDB->quote($sort_order, "integer") . ",
-                        " . $this->ilDB->quote($_SESSION['AccountId'], "integer") . ",
+                        " . $this->ilDB->quote($DIC['ilUser']->getId(), "integer") . ",
                         NOW(),
                         NOW()
                     )"
@@ -712,6 +718,7 @@ class ilLPRubricCard
         /**
          *      Add/Update Rubric Card
          */
+        global $DIC;
         //is there a rubric already for this?
         $set = $this->ilDB->query("select rubric_id from rubric where obj_id=" . $this->ilDB->quote($this->obj_id, "integer") . " and deleted is null");
         $row = $this->ilDB->fetchAssoc($set);
@@ -726,13 +733,13 @@ class ilLPRubricCard
                 " . $this->ilDB->quote($this->rubric_id, "integer") . ",                
                 " . $this->ilDB->quote($this->obj_id, "integer") . ",
                 " . $this->ilDB->quote($this->passing_grade, "integer") . ",
-                " . $this->ilDB->quote($_SESSION['AccountId'], "integer") . ",                
+                " . $this->ilDB->quote($DIC['ilUser']->getId(), "integer") . ",                
                 NOW(),
                 NOW()," . $complete . "
             ) on duplicate key update 
                 last_update=NOW(),
                 passing_grade=" . $this->ilDB->quote($this->passing_grade, "integer") . ",
-                owner=" . $this->ilDB->quote($_SESSION['AccountId'], "integer") . ",
+                owner=" . $this->ilDB->quote($DIC['ilUser']->getId(), "integer") . ",
                 complete=" . $complete
         );
     }

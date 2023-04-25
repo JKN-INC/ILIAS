@@ -104,10 +104,10 @@ class ilLPRubricGradeGUI extends ilLPTableBaseGUI
 
 
         if ($this->student_view) {
-            $tmp_user = ilObjectFactory::getInstanceByObjId($this->rubric_data['grader'][0]['grader'], false);
+            $tmp_user = $tmp_user = new ilObjUser($this->rubric_data['grader'][0]['grader']);
 
             if (!empty($tmp_user)) {
-                $rubric_heading_tpl->setVariable('RUBRIC_GRADER', ' (' . $this->lng->txt('rubric_graded_by') . ': ' . $tmp_user->getFullName() . ')');
+                $rubric_heading_tpl->setVariable('RUBRIC_GRADER', ' (' . $this->lng->txt('rubric_graded_by') . ': ' . $tmp_user->getFullname() . ')');
             }
         }
         return ($rubric_heading_tpl);
@@ -134,7 +134,7 @@ class ilLPRubricGradeGUI extends ilLPTableBaseGUI
             if ($this->grade_lock_owner !== $this->user->getId()) {
                 $rubric_commandrow_tpl->setVariable('USER_LOCK', 'disabled');
             }
-            ilUtil::sendInfo($this->lng->txt('rubric_locked_grade_info') . ' ' . $tmp_user->getFullName() . ' ' . $this->rubric_grade_locked);
+            ilUtil::sendInfo($this->lng->txt('rubric_locked_grade_info') . ' ' . $tmp_user->getFullname() . ' ' . $this->rubric_grade_locked);
         } else {
             $rubric_commandrow_tpl->setVariable('RUBRIC_LOCK', $this->lng->txt('rubric_card_lock'));
         }
