@@ -64,6 +64,7 @@ class ilRubricPDF
 
     public static function generatePDF($pdf_output, $output_mode, $filename = null)
     {
+        ob_clean();
         $pdf_output = preg_replace("/src=\"\\.\\//ims", "src=\"" . ILIAS_HTTP_PATH . "/", $pdf_output);
         $pdf_output = preg_replace("/href=\"\\.\\//ims", "href=\"" . ILIAS_HTTP_PATH . "/", $pdf_output);
 
