@@ -644,13 +644,11 @@ class ilLMPageObject extends ilLMObject
         $query = "SELECT pq.page_id, pq.question_id ";
         $from = " FROM page_question pq JOIN lm_tree t ON (t.lm_id = " . $ilDB->quote($a_lm_id, "integer") .
         " AND pq.page_id = t.child and pq.page_parent_type = " . $ilDB->quote("lm", "text") . ") " .
-        "WHERE t.lm_id = " . $ilDB->quote($a_lm_id, "integer");
+        "WHERE t.lm_id = " . $ilDB->quote($a_lm_id, "integer") . " AND pq.page_lang = " . $ilDB->quote($a_lang, "text");
 
-        $ot = ilObjectTranslation::getInstance($a_lm_id);
-        $languages = $ot->getLanguages();
-        if ($a_lang != "-" && $ot->getContentActivated() && isset($languages[$a_lang])) {
-            " AND pq.page_lang = " . $ilDB->quote($a_lang, "text");
-        }
+
+
+ 
 
       
         $count_query .= $from;
