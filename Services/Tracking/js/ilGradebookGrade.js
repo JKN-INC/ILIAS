@@ -122,30 +122,10 @@ $(function() {
                         }
 
 
-                        var courseStatusTop = '<img title="'+imgAlt+'" alt="'+imgAlt+'" src="'+overall_data['img']+'"/><select id="overallStatusTop" class="obj-status form-control">';
-                        if(overall_data['status']==0){
-                            courseStatusTop += "<option value='0' "+(overall_data['status'] == 0 ? "selected='selected'" : '')+">Not Attempted</option>";
-                        }
-                        courseStatusTop += "<option value='1' "+(overall_data['status'] == 1 ? "selected='selected'" : '')+">In Progress</option>";
-                        courseStatusTop += "<option value='2' "+(overall_data['status'] == 2 ? "selected='selected'" : '')+">Passed</option>";
-                        courseStatusTop += "<option value='3' "+(overall_data['status'] == 3 ? "selected='selected'" : '')+">Failed</option>";
-                        courseStatusTop += '</select>';
-
-
-                        var courseStatusBottom = '<img title="'+imgAlt+'" alt="'+imgAlt+'" src="'+overall_data['img']+'"/><select id="overallStatus" class="obj-status form-control">';
-                        if(overall_data['status']==0){
-                            courseStatusBottom += "<option value='0' "+(overall_data['status'] == 0 ? "selected='selected'" : '')+">Not Attempted</option>";
-                        }
-                        courseStatusBottom += "<option value='1' "+(overall_data['status'] == 1 ? "selected='selected'" : '')+">In Progress</option>";
-                        courseStatusBottom += "<option value='2' "+(overall_data['status'] == 2 ? "selected='selected'" : '')+">Passed</option>";
-                        courseStatusBottom += "<option value='3' "+(overall_data['status'] == 3 ? "selected='selected'" : '')+">Failed</option>";
-                        courseStatusBottom += '</select>';
-
-
+                        var courseStatusTop = '<img title="'+imgAlt+'" alt="'+imgAlt+'" src="'+overall_data['img']+'"/>';
+            
                         $('#courseStatusTop span').html(courseStatusTop);
                         $('#saveButtonTop').html('<input class="btn btn-default btn-sm" type="button" id="saveGradeTop" value="Update Status">');
-
-                        $('#courseStatusBottom').html('<div>Student Overall Status</div>'+courseStatusBottom);
                         $('#saveButtonBottom').html('<input class="btn btn-default btn-sm" type="button" id="saveGradeBottom" value="Save">');
                     }
                     else
