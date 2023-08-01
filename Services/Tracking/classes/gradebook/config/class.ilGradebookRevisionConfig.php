@@ -57,6 +57,15 @@ class ilGradebookRevisionConfig extends ActiveRecord {
      * @db_fieldtype    integer
      * @db_length       4
      */
+    protected $passing_grade = null;
+
+    /**
+     * @var int
+     *
+     * @db_has_field    true
+     * @db_fieldtype    integer
+     * @db_length       4
+     */
     protected $owner = null;
 
 
@@ -152,6 +161,23 @@ class ilGradebookRevisionConfig extends ActiveRecord {
     {
         $this->owner = $owner;
     }
+
+    /**
+     * @return int
+     */
+    public function getPassingGrade()
+    {
+        return $this->passing_grade;
+    }
+
+    /**
+     * @param int $passing_grade
+     */
+    public function setPassingGrade($passing_grade)
+    {
+        $this->passing_grade = $passing_grade;
+    }
+
 
     /**
      * @return int
