@@ -81,13 +81,23 @@ class ilLPGradebookWeightGUI extends ilLPGradebookGUI
         $this->tpl->addJavascript('./Services/Tracking/js/ilGradebookWeight.js');
         $sortableIndex = 1;
 
-        $_POST["item_id"];
-
         $gradeBookHTML = $this->makeList($this->gradebook_data, $sortableIndex);
+        if(!is_null($this->revision_id)) {
+           foreach ($this->versions as $version) {
+                if ($version->getRevisionId() == $this->revision_id) {
+                        $passing_grade = $version->getPassingGrade();
+                }
+            }
+        } else {
+            $version = reset($this->versions);
+            $passing_grade = $version->getPassingGrade();
+        }
+
         $versions = $this->buildGradebookVersionsOptions();
 
         $my_tpl->setVariable("LOADED_GRADEBOOKS", $versions);
         $my_tpl->setVariable("GRADEBOOK", $gradeBookHTML);
+        $my_tpl->setVariable("PASSING_GRADE_VALUE", $passing_grade ? $passing_grade : 0);
 
         $this->tpl->setContent($my_tpl->get());
     }

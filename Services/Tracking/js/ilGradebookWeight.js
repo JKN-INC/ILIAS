@@ -352,13 +352,14 @@ $(function() {
                     out.push(processOneLi($(this)));
                 });
 
+                var passing_grade = $( "#passing_grade" ).val();
+
                 var formData = {
                     'action'  : 'saveGradebookWeight',
                     'nodes'  : out,
-                    'ref_id': params['ref_id']
+                    'ref_id': params['ref_id'],
+                    'passing_grade': passing_grade
                 };
-
-                console.log(formData);
 
                 $.ajax({
                     type: "POST",

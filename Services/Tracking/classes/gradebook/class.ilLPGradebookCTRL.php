@@ -12,7 +12,7 @@ switch ($_POST['action'])
         try{
             $obj_id = ilObject::_lookupObjectId($_POST['ref_id']);
             $gradebookObj=new ilLPGradebookWeight($obj_id);
-            $result = $gradebookObj->saveGradebookWeight($_POST['nodes']);
+            $result = $gradebookObj->saveGradebookWeight($_POST['nodes'], $_POST['passing_grade']);
             echo json_encode(['status'=>'success','data'=>$result]);
         }catch(Exception $e){
             echo json_encode(['status'=>'failure','message'=>$e->getMessage()]);

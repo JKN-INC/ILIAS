@@ -174,9 +174,10 @@ class ilLPGradebookWeight extends ilLPGradebook
     /**
      * @param ilGradebookConfig $gradebook
      * @param array $nodes
+     * @param integer $passing_grade
      * @return ActiveRecord|ilGradebookRevisionConfig
      */
-    private function determineLatestRevision(ilGradebookConfig $gradebook, array $nodes)
+    private function determineLatestRevision(ilGradebookConfig $gradebook, array $nodes, int $passing_grade)
     {
         //if the latest revision doesn't exist. grab it.
         $latest_revision = $this->getLatestGradebookRevision();
@@ -195,6 +196,14 @@ class ilLPGradebookWeight extends ilLPGradebook
         //first check if there is an asset deleted from the course.
         //if there is we can return a new revision.
         if (!empty(array_diff($revision_object_ids, $node_object_ids))) {
+
+            return $this->createGradebookRevision($gradebook->getId());
+        }
+
+        //if the passing grade has changed, we know we need a new revision as well.
+        if((int) $latest_revision->getPassingGrade() !== (int)$passing_grade) {
+
+            error_log('new passing grade added, new revision. old is: '.  $latest_revision->getPassingGrade() . 'new is' . $passing_grade);
             return $this->createGradebookRevision($gradebook->getId());
         }
 
@@ -213,7 +222,7 @@ class ilLPGradebookWeight extends ilLPGradebook
         }
 
         //If we made it past that hurdle we're into the final check, whether the objects
-        //have a different weight or colour than they previously did.
+        //have a different weight than they previously did.
 
         foreach ($revision_object_ids as $revision_object_id) {
             $key = $this->searchForObjId($revision_object_id, $revision_objects);
@@ -225,7 +234,6 @@ class ilLPGradebookWeight extends ilLPGradebook
                 error_log('Object has a Different Weight! New Revision.');
                 return $this->createGradebookRevision($gradebook->getId());
             }
-            error_log($node_object_ids_and_weights[$revision_object_id]['color']);
             if (
                 (int)$revision_objects[$key]['object_colour'] !==
                 (int)$node_object_ids_and_weights[$revision_object_id]['color']
@@ -234,7 +242,7 @@ class ilLPGradebookWeight extends ilLPGradebook
                 return $this->createGradebookRevision($gradebook->getId());
             }
         }
-        error_log('We are all good!');
+
         return $latest_revision;
     }
 
@@ -293,22 +301,28 @@ class ilLPGradebookWeight extends ilLPGradebook
     }
 
     /**
-     * Takes the array of Gradebook Nodes ( from the ajax controller ) and saves
+     * Takes the array of Gradebook Nodes ( from the ajax controller ) / passing grade and saves
      * a gradebook based on those nodes.
      *
      * @param array $nodes
+     * @param integer $passing_grades
      * @return array
      */
-    function saveGradebookWeight(array $nodes)
+    function saveGradebookWeight(array $nodes, int $passing_grade)
     {
         $gradebook = $this->getGradebook();
 
         //otherwise update the last update time.
         $gradebook->setLastUpdate(date("Y-m-d H:i:s"));
         $gradebook->update();
-        $latest_revision = $this->determineLatestRevision($gradebook, $nodes);
+        $latest_revision = $this->determineLatestRevision($gradebook, $nodes, $passing_grade);
+        $latest_revision->setPassingGrade($passing_grade);
+        $latest_revision->update();
         // Now that we have our revisions taken care of we can update the tree.
         $this->saveTree($nodes, $latest_revision->getRevisionId(), 0);
+
+
+
         $revision_creator = ilObjUser::_lookupName($latest_revision->getOwner());
 
         return (array(
