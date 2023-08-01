@@ -172,8 +172,6 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
 
         $my_tpl->setVariable("ALL_GRADES", $this->lng->txt('gradebook_all_grades'));
 
-        $my_tpl->setVariable("AVERAGE_PROGRESS", $this->lng->txt('gradebook_average_progress') . ': ' .
-            $this->participants_data['average_progress'] . '%');
 
 
         $my_tpl->setVariable("STUDENT_NAME", $this->lng->txt('gradebook_student'));
