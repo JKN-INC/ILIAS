@@ -80,7 +80,7 @@ class ilLPGradebookWeightGUI extends ilLPGradebookGUI
         $this->tpl->addCss('./Services/Tracking/css/ilGradebook.css');
         $this->tpl->addJavascript('./Services/Tracking/js/ilGradebookWeight.js');
         $sortableIndex = 1;
-
+        
         $gradeBookHTML = $this->makeList($this->gradebook_data, $sortableIndex);
         if(!is_null($this->revision_id)) {
            foreach ($this->versions as $version) {
@@ -89,8 +89,10 @@ class ilLPGradebookWeightGUI extends ilLPGradebookGUI
                 }
             }
         } else {
-            $version = reset($this->versions);
-            $passing_grade = $version->getPassingGrade();
+            if($version = reset($this->versions) ) {
+                //if there is a previous version.
+                $passing_grade = $version->getPassingGrade();
+            } 
         }
 
         $versions = $this->buildGradebookVersionsOptions();
