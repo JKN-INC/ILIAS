@@ -41,6 +41,7 @@ class ilLPGradebookWeight extends ilLPGradebook
         $ref_id = self::lookupRefId($obj_id);
         $children = $this->tree->getChilds($ref_id);
 
+
         $tree = $this->buildTree($children, $revision_objects);
         return $tree;
     }
@@ -53,6 +54,9 @@ class ilLPGradebookWeight extends ilLPGradebook
     private function buildTree($nodes, $revision_objects)
     {
         $structure = [];
+        //ignore items of these types, things that shouldn't be allowed to have learning progress attached to them.
+        $ignored_types = ['itgr']; //itemgroup for now, as it doesn't make sense to grade an item group as it is purely aesthetic.
+
         usort($nodes, function ($a, $b) use ($revision_objects) {
             $a_key = $this->searchForObjId($a['obj_id'], $revision_objects);
             $b_key = $this->searchForObjId($b['obj_id'], $revision_objects);
@@ -60,10 +64,14 @@ class ilLPGradebookWeight extends ilLPGradebook
         });
 
         foreach ($nodes as $k => $node) {
-            $structure[$k] = $this->mapNodeData($node, $revision_objects);
-            if (count($children = $this->tree->getChilds($node['ref_id'])) !== 0) {
-                $structure[$k]['children'] = $this->buildTree($children, $revision_objects);
+            //if not in the ignored types array, add it to the UI tree.
+            if(!in_array($node['type'], $ignored_types)){
+                $structure[$k] = $this->mapNodeData($node, $revision_objects);
+                if (count($children = $this->tree->getChilds($node['ref_id'])) !== 0) {
+                    $structure[$k]['children'] = $this->buildTree($children, $revision_objects);
+                }
             }
+       
         }
         return $structure;
     }
@@ -199,7 +207,6 @@ class ilLPGradebookWeight extends ilLPGradebook
 
             return $this->createGradebookRevision($gradebook->getId());
         }
-
         //if the passing grade has changed, we know we need a new revision as well.
         if((int) $latest_revision->getPassingGrade() !== (int)$passing_grade) {
 
