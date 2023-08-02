@@ -303,7 +303,7 @@ class ilLPGradebookGrade extends ilLPGradebook
         //if the learning progress is done in the object itself grab the marks from there.
         if ($revision_object['lp_type'] == 0) {
             $mark = ilLPMarks::_lookupMark($usr_id, $revision_object['obj_id']);
-            $mark = ($mark == 0 || is_null($mark) || empty($mark)) ? 0 : $mark;
+            $mark = ($mark == 0 || is_null($mark) || empty($mark)) ? 100 : $mark;
             $adjusted = $mark * ($revision_object['object_weight'] * 0.01);
         } else {
             $gradebook_grade = array_shift(ilGradebookGradesConfig::where([
@@ -316,7 +316,7 @@ class ilLPGradebookGrade extends ilLPGradebook
             $adjusted = ($gradebook_grade['actual_grade'] == 0 ||
                 is_null($gradebook_grade['actual_grade']) ||
                 empty($gradebook_grade['actual_grade']))
-                ? 0 * ($revision_object['object_weight'] * 0.01) : $gradebook_grade['adjusted_grade'];
+                ? 100 * ($revision_object['object_weight'] * 0.01) : $gradebook_grade['adjusted_grade'];
         }
         return $adjusted;
     }
