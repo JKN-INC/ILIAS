@@ -339,16 +339,17 @@ class ilGradebookRevisionConfig extends ActiveRecord {
                 'gradebook_id'=>$this->gradebook_id])->where(['type'=>$this->containerTypes],'IN')
             ->where(['object_activated'=>1],'=');
 
+     
         //foreach of the ogroups make sure it has weighted objects under it and
         //the the user is actually a member.
         foreach($objects_arr = $objects->getArray() as $key=>&$object) {
             $children = self::getAllChildObjects($object['id']);
-            if($object['type'] == 'grp'){
+            if($object['object_data_type'] == 'grp'){
                 $participants = ilParticipants::getInstanceByObjId($object['obj_id']);
                 if(count($children)==0 || !$participants->isMember($usr_id)){
                     unset($objects_arr[$key]);
                 }
-            }elseif(in_array($object['type'],['cat','fold'])){
+            }elseif(in_array($object['object_data_type'],['cat','fold'])){
                 if(count($children)==0){
                     unset($objects_arr[$key]);
                 }
