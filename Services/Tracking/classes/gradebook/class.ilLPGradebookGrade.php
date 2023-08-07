@@ -48,15 +48,25 @@ class ilLPGradebookGrade extends ilLPGradebook
     public function changeUsersRevision($usr_id, $old_revision_id, $new_revision_id)
     {
         require_once('./Services/Tracking/classes/gradebook/config/class.ilGradebookRevisionConfig.php');
+        require_once('./Services/Tracking/classes/gradebook/config/class.ilGradebookGradeTotalConfig.php');
         require_once('./Services/Tracking/classes/gradebook/config/class.ilGradebookConfig.php');
 
         $gradebook = ilGradebookConfig::firstOrCreate($this->obj_id);
+        
         $old_revision = ilGradebookRevisionConfig::where(['revision_id' => $old_revision_id, 'gradebook_id' => $gradebook->getId()])->first();
-        $old_overall = $this->getOverallUserGrades($usr_id);
-
         $new_revision = ilGradebookRevisionConfig::where(['revision_id' => $new_revision_id, 'gradebook_id' => $gradebook->getId()])->first();
 
 
+        //first set their old revision grade total to deleted.
+        if($old_total_object = ilGradebookGradeTotalConfig::where([
+            'revision_id'=>$old_revision_id,
+            'usr_id'=>$usr_id,
+            'gradebook_id'=>$gradebook->getId()
+        ])->first()) {
+            //if it was found, delete it.
+            $old_total_object->setDeleted(date("Y-m-d H:i:s"));
+            $old_total_object->update();
+        }
 
         foreach ($this->getUsersCourseLayout($usr_id, $old_revision) as $obj) {
             //foreach object in the old gradebook if it was gradeable assume
@@ -233,6 +243,8 @@ class ilLPGradebookGrade extends ilLPGradebook
         $adjusted_grade = array_sum($this->getOverallAdjustedGrade($usr_id, $structured_gradebook));
 
         $total_object = ilGradebookGradeTotalConfig::firstOrNew($latest_revision->getRevisionId(), $usr_id, $gradebook_id);
+        //have to undelete if it decided to reuse an old deleted one.
+        $total_object->setDeleted(NULL);
         $total_object->setAdjustedGrade($adjusted_grade);
         $total_object->setOverallGrade($overall_grade);
         $total_object->setProgress($progress);
