@@ -175,7 +175,7 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
 
 
         $my_tpl->setVariable("STUDENT_NAME", $this->lng->txt('gradebook_student'));
-        $my_tpl->setVariable("STUDENT_NAME", $this->lng->txt('login'));
+        $my_tpl->setVariable("LOGIN", $this->lng->txt('login'));
         $my_tpl->setVariable("REVISION", $this->lng->txt('gradebook_revision'));
         $my_tpl->setVariable("OVERALL", $this->lng->txt('gradebook_overall_grade'));
         $my_tpl->setVariable("ADJUSTED", $this->lng->txt('gradebook_adjusted_grade'));

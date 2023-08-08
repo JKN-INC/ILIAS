@@ -311,16 +311,29 @@ $(function() {
             $('.alert').hide();
             var flag = true;
 
-            //console.log('grade sections:');
-            //console.log(gradeSections);
-            //console.log('~~~~~~~~');
-
             $.each( gradeSections, function() {
                 var result = gradeCheck(this);
                 if(result == false){
                     flag = false;
                 }
             });
+
+            var passing_grade = $('#passing_grade').val();
+
+            //if passing grade was not sent in as a number.
+            if(isNaN(passing_grade)){
+                $('.alert-danger').html('Passing Grade is not a number');
+                $('.alert-danger').show().focus();
+                return;
+             }
+
+             //if passing grade is greater than 100 or less than 0.
+             if(passing_grade > 100 || passing_grade < 0 ) {
+                $('.alert-danger').html('Passing Grade must be between 0 - 100 %');
+                $('.alert-danger').show().focus();
+                return;
+             }
+
 
             if(flag == false) {
                 $('.alert-danger').html('Issue with weight');
