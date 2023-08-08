@@ -79,8 +79,6 @@ class ilLPGradebookGrade extends ilLPGradebook
             }
         }
 
-        //then we'll update all the group objects that aren't directly gradeable
-        $this->updateUsersNestedGradeObjects($usr_id, $new_revision);
         //then we'll update their total mark.
         $this->refreshGrades($usr_id, $new_revision);
     }
@@ -194,9 +192,6 @@ class ilLPGradebookGrade extends ilLPGradebook
             $gradebook_object = $latest_revision->getGradebookObject($grade_array['obj_id']);
             $this->saveGrade($gradebook_object, $usr_id, $grade_array['actual'], $grade_array['status']);
         }
-        //then we'll update all the group objects that aren't directly gradeable
-        $this->updateUsersNestedGradeObjects($usr_id, $latest_revision);
-
         //then we'll update their total mark.
         $this->refreshGrades($usr_id, $latest_revision);
         return true;
@@ -212,9 +207,6 @@ class ilLPGradebookGrade extends ilLPGradebook
     public function updateStatus($usr_id)
     {
         $latest_revision = $this->getUsersLatestRevision($usr_id);
-
-        //then we'll update all the group objects that aren't directly gradeable
-        $this->updateUsersNestedGradeObjects($usr_id, $latest_revision);
 
         //then we'll update their total mark.
         $this->refreshGrades($usr_id, $latest_revision);
@@ -238,6 +230,9 @@ class ilLPGradebookGrade extends ilLPGradebook
         $grades_array = $this->getGradesForObjects($objects, $usr_id);
         $overall_grade = array_sum($grades_array);
         $progress = $this->getOverallProgress($usr_id, $latest_revision);
+        
+        //refresh the users nested grade objects.
+        $this->updateUsersNestedGradeObjects($usr_id, $latest_revision);
 
         $structured_gradebook = $latest_revision->getUsersStructuredGradebook($usr_id);
         $adjusted_grade = array_sum($this->getOverallAdjustedGrade($usr_id, $structured_gradebook));
@@ -315,7 +310,9 @@ class ilLPGradebookGrade extends ilLPGradebook
         //if the learning progress is done in the object itself grab the marks from there.
         if ($revision_object['lp_type'] == 0) {
             $mark = ilLPMarks::_lookupMark($usr_id, $revision_object['obj_id']);
-            $mark = ($mark == 0 || is_null($mark) || empty($mark)) ? 100 : $mark;
+            $status = ilLPStatus::_lookupStatus($revision_object['obj_id'], $usr_id, false);
+            //if mark is 0 and status isn't completed, or mark is null or empty assume 100 (for adjusted);
+            $mark = (($mark == 0 && !in_array((int)$status,[2,3]) ) || is_null($mark)) ? 100 : $mark;
             $adjusted = $mark * ($revision_object['object_weight'] * 0.01);
         } else {
             $gradebook_grade = array_shift(ilGradebookGradesConfig::where([
@@ -323,13 +320,14 @@ class ilLPGradebookGrade extends ilLPGradebook
                 'revision_id' => $revision_object['revision_id'],
                 'gradebook_object_id' => $revision_object['id'],
                 'deleted' => null
-            ])
-                ->getArray());
-            $adjusted = ($gradebook_grade['actual_grade'] == 0 ||
-                is_null($gradebook_grade['actual_grade']) ||
-                empty($gradebook_grade['actual_grade']))
+            ])->getArray());
+
+            //if 0 and not completed, or null. Assume 100% for now.    
+            $adjusted = (($gradebook_grade['actual_grade'] == 0 && !in_array((int)$gradebook_grade['status'],[2,3])) ||
+                is_null($gradebook_grade['actual_grade']))
                 ? 100 * ($revision_object['object_weight'] * 0.01) : $gradebook_grade['adjusted_grade'];
         }
+        
         return $adjusted;
     }
 
@@ -361,7 +359,7 @@ class ilLPGradebookGrade extends ilLPGradebook
     {
         //grab all the users groups that have objects determining their grade.
         $users_groups = $latest_revision->getUsersGroupsWithCalculatedGrading($usr_id);
-
+        
 
         foreach ($users_groups as $group) {
             //get all the child object under this group.
