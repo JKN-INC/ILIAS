@@ -419,7 +419,6 @@ class ilLPGradebookGrade extends ilLPGradebook
             $usr_id
         );
 
-
         $adjusted_grade = (int)$actual_grade * ($gradebook_object['object_weight'] * 0.01);
 
         //determine whether we should update or not.
@@ -435,7 +434,8 @@ class ilLPGradebookGrade extends ilLPGradebook
                 $update = true;
             }
         }
-
+  
+    
 
         $gradebook_grade->setGradebookId($gradebook_id);
         if (!empty($actual_grade) || (int)$actual_grade === 0) {
@@ -448,8 +448,10 @@ class ilLPGradebookGrade extends ilLPGradebook
         }
        
         if ($gradebook_grade->getRecentlyCreated()) {
-            $gradebook_grade->setLastUpdate(date("Y-m-d H:i:s"));
-            $gradebook_grade->save();
+            if($actual_grade !== '') {
+                $gradebook_grade->setLastUpdate(date("Y-m-d H:i:s"));
+                $gradebook_grade->save();
+            }
         } else {
             if ($update) {
                 if ($revision_object['lp_type'] !== 0) {

@@ -145,7 +145,7 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
         $my_tpl->setVariable("TITLE", $this->lng->txt('gradebook_title'));
         $my_tpl->setVariable("GRADED_ON", $this->lng->txt('gradebook_graded_on'));
         $my_tpl->setVariable("GRADED_BY", $this->lng->txt('gradebook_graded_by'));
-        $my_tpl->setVariable('LEGEND', ilLearningProgressBaseGUI::__getLegendHTML());
+        $my_tpl->setVariable('LEGEND', $this->__getLegendHTML());
 
         $options = $this->buildParticipantsOptions();
         $revisions = $this->buildGradebookVersionsOptions();
@@ -158,6 +158,31 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
 
 
         $this->tpl->setContent($my_tpl->get());
+    }
+
+    public function __getLegendHTML()
+    {
+
+        $tpl = new ilTemplate("tpl.lp_gradebook_legend.html", true, true, "Services/Tracking");
+        $tpl->setVariable(
+            "TXT_MARK_GRADEBOOK",
+            $this->lng->txt("gradebook_mark_gradebook")
+        );
+        $tpl->setVariable(
+            "TXT_MARK_CHILDREN",
+            $this->lng->txt("gradebook_mark_children")
+        );
+        $tpl->setVariable(
+            "TXT_MARK_AUTOMATED",
+            $this->lng->txt("gradebook_mark_automated")
+        );
+
+        include_once "Services/UIComponent/Panel/classes/class.ilPanelGUI.php";
+        $panel = ilPanelGUI::getInstance();
+        $panel->setPanelStyle(ilPanelGUI::PANEL_STYLE_SECONDARY);
+        $panel->setBody($tpl->get());
+
+        return $panel->getHTML();
     }
 
     /**
