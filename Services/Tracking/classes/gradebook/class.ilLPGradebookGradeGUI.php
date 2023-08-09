@@ -137,14 +137,15 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
 
         $my_tpl->setVariable("LPTYPE", $this->lng->txt('gradebook_lptype'));
         $my_tpl->setVariable("DEPTH", $this->lng->txt('gradebook_depth'));
-        $my_tpl->setVariable("WEIGHT", $this->lng->txt('gradebook_weight'));
-        $my_tpl->setVariable("ACTUAL", $this->lng->txt('gradebook_actual'));
-        $my_tpl->setVariable("ADJUSTED", $this->lng->txt('gradebook_adjusted'));
+        $my_tpl->setVariable("WEIGHT", $this->lng->txt('gradebook_weight') . ' %');
+        $my_tpl->setVariable("ACTUAL", $this->lng->txt('gradebook_actual') . ' %');
+        $my_tpl->setVariable("ADJUSTED", $this->lng->txt('gradebook_adjusted') . ' %');
         $my_tpl->setVariable("STATUS", $this->lng->txt('gradebook_status'));
         $my_tpl->setVariable("OBJECT", $this->lng->txt('gradebook_object'));
         $my_tpl->setVariable("TITLE", $this->lng->txt('gradebook_title'));
         $my_tpl->setVariable("GRADED_ON", $this->lng->txt('gradebook_graded_on'));
         $my_tpl->setVariable("GRADED_BY", $this->lng->txt('gradebook_graded_by'));
+        $my_tpl->setVariable('LEGEND', ilLearningProgressBaseGUI::__getLegendHTML());
 
         $options = $this->buildParticipantsOptions();
         $revisions = $this->buildGradebookVersionsOptions();
@@ -154,6 +155,7 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
         $my_tpl->setVariable("USER_OPTIONS", $options);
 
         $my_tpl->setVariable("GRADEBOOK_REVISIONS", $revisions);
+
 
         $this->tpl->setContent($my_tpl->get());
     }
@@ -189,8 +191,8 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
             $tableHTML .= '<td>' . $object['student_name'] . '</td>';
             $tableHTML .= '<td>' . $object['login'] . '</td>';
             $tableHTML .= '<td>' . $object['revision'] . '</td>';
-            $tableHTML .= '<td>' . $object['overall_grade'] . '</td>';
-            $tableHTML .= '<td>' . $object['adjusted_grade'] . '</td>';
+            $tableHTML .= '<td>' . $object['overall_grade'] . '%</td>';
+            $tableHTML .= '<td>' . $object['adjusted_grade'] . '%</td>';
             $tableHTML .= '<td>' . $object['progress'] . '%</td>';
             $tableHTML .= '<td><img title="' . ilLearningProgressBaseGUI::_getStatusText($object['status']) . '" alt="' . ilLearningProgressBaseGUI::_getStatusText($object['status']) . '" src="' . ilLearningProgressBaseGUI::_getImagePathForStatus($object['status']) . '"></td>';
             $tableHTML .= '</tr>';
@@ -241,9 +243,9 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
             $tableHTML .= '<tr>';
             $tableHTML .= '<td>' . $span . '</td>';
             $tableHTML .= '<td>' . $data['placement_depth'] . '</td>';
-            $tableHTML .= '<td>' . $data['weight'] . '</td>';
-            $tableHTML .= '<td>' . $data['actual'] . '</td>';
-            $tableHTML .= '<td>' . $data['adjusted'] . '</td>';
+            $tableHTML .= '<td>' . $data['weight'] . '%</td>';
+            $tableHTML .= '<td>' . $data['actual'] . '%</td>'; 
+            $tableHTML .= '<td>' . $data['adjusted'] . '%</td>';
             $tableHTML .= '<td><img title="' . ilLearningProgressBaseGUI::_getStatusText($data['status']) . '" alt="' . ilLearningProgressBaseGUI::_getStatusText($data['status']) . '" src="' . ilLearningProgressBaseGUI::_getImagePathForStatus($data['status']) . '"></td>';
             $tableHTML .= '<td> <img alt="' . $data['type_Alt'] . '" title="' . $data['type_Alt'] . '" src="./templates/default/images/icon_' . $data['type'] . '.svg" class="ilListItemIcon"></td>';
             $tableHTML .= '<td>' . $data['title'] . '</td>';

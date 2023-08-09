@@ -33,6 +33,7 @@ $(function() {
         });
 
         $(classList).sortable({
+            cursor: "grabbing",
             opacity: 0.5,
             placeholder: "ui-state-highlight",
             update: function (event, ui) {

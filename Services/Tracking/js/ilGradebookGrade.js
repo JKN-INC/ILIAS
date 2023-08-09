@@ -81,7 +81,7 @@ $(function() {
                                 }
                                 tbody+='</td>';
                             }
-
+                            console.table(this);
                             tbody += '<td>'+((this.placement_depth) ? this.placement_depth: '')+'</td>';
                             tbody += '<td>'+((this.weight) ? this.weight : '')+'</td>';
                             tbody += '<td>'+ ( this.lp_type == 0 || this.is_gradeable == 0 ? ((this.actual) ? this.actual : '') : '<input class="actual" type="text" value="'+((this.actual) ? this.actual : '')+'">')+  '</td>';
@@ -99,7 +99,7 @@ $(function() {
                             tbody += '<td><img alt="'+this.type_Alt+'" title="'+this.type_Alt+'" src="./templates/default/images/icon_'+this.type+'.svg" class="ilListItemIcon"></td>';
                             tbody += '<td><a target="_blank" href="'+this.url+'">'+this.title+'</a></td>';
                             tbody += '<td>'+((this.graded_on) ? this.graded_on : '')+'</td>';
-                            tbody += '<td>'+((this.graded_by) ? this.graded_by : '')+'</td>';
+                            tbody += '<td>'+((this.graded_by && this.is_gradeable) ? this.graded_by : '')+'</td>';
                             tbody += '</tr>';
                         });
                         $('#grade-table tbody').html(tbody);
