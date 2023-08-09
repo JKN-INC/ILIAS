@@ -151,10 +151,10 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
         $revisions = $this->buildGradebookVersionsOptions();
 
         $my_tpl->setVariable("OVERALL_STATUS", $this->lng->txt('gradebook_overall_status') . ' : ');
-
         $my_tpl->setVariable("USER_OPTIONS", $options);
-
         $my_tpl->setVariable("GRADEBOOK_REVISIONS", $revisions);
+
+        
 
 
         $this->tpl->setContent($my_tpl->get());
@@ -215,6 +215,10 @@ class ilLPGradebookGradeGUI extends ilLPGradebookGUI
 
         $my_tpl->setVariable("ADJUSTED_GRADE", $this->lng->txt('gradebook_adjusted_grade') . ' ' .
             $this->user_grade_data['overall'][0]['adjusted_grade'] . '%');
+
+         $my_tpl->setVariable("PASSING_GRADE", $this->lng->txt('gradebook_passing_grade') . ' ' .
+            $this->user_grade_data['passing_grade'] . '%'); 
+
         $my_tpl->setVariable("OVERALL_PROGRESS", $this->lng->txt('gradebook_overall_progress') . ' ' .
             $this->user_grade_data['overall'][0]['progress'] . '%');
         $my_tpl->setVariable("LPTYPE", $this->lng->txt('gradebook_lptype'));

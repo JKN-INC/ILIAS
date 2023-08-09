@@ -495,7 +495,9 @@ class ilLPGradebookGrade extends ilLPGradebook
     {
         $gradebook_objects = $this->getUsersGrades($usr_id);
         $overall = $this->getOverallUserGrades($usr_id);
+        $revision = $this->getUsersLatestRevision($usr_id);
         $data = [
+            'passing_grade' => $revision->getPassingGrade(),
             'overall' => $overall,
             'grade_objects' => $gradebook_objects
         ];
