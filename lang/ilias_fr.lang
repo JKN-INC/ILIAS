@@ -2437,10 +2437,10 @@ cat#:#cat_import#:#Importer Catégorie
 cat#:#cat_more_translations#:#Plus de Traductions
 cert#:#cert_currently_no_certs#:#Currently you did not achieve any certificate, yet.
 cert#:#cert_description_label#:#Description
-cert#:#cert_download_label#:#Download
+cert#:#cert_download_label#:#Télécharger
 cert#:#cert_error_no_access#:#You have no access to this certificate.
-cert#:#cert_issued_on_label#:#Issued On
-cert#:#cert_object_label#:#Object
+cert#:#cert_issued_on_label#:#Délivré le
+cert#:#cert_object_label#:#Objet
 cert#:#cert_sortable_by_issue_date_asc#:#Nach Ausstellungsdatum aufsteigend
 cert#:#cert_sortable_by_issue_date_desc#:#Nach Ausstellungsdatum absteigend
 cert#:#cert_sortable_by_title_asc#:#Nach Titel aufsteigend
@@ -15027,7 +15027,7 @@ dash#:#dash_view_favourites#:#Section ‘Favourites’###18 05 2020 new variable
 dash#:#dash_enable_cal#:#Calendar###18 05 2020 new variable
 dash#:#dash_enable_news#:#News###18 05 2020 new variable
 dash#:#dash_enable_mail#:#Mail###18 05 2020 new variable
-dash#:#dash_enable_task#:#Tasks###18 05 2020 new variable
+dash#:#dash_enable_task#:#Tâches###18 05 2020 new variable
 dash#:#dash_avail_sortation#:#Available Sortations###18 05 2020 new variable
 dash#:#dash_default_sortation#:#Default Sortation###18 05 2020 new variable
 dash#:#dash_sortation#:#Sortation###18 05 2020 new variable
@@ -15371,13 +15371,13 @@ assessment#:#finalized_by#:#Completed by###18 05 2020 new variable
 assessment#:#finalized_on#:#Completed at###18 05 2020 new variable
 assessment#:#answer_of#:#Answer of###18 05 2020 new variable
 common#:#obj_task#:#Task###18 05 2020 new variable
-task#:#task_derived_tasks#:#Tasks###18 05 2020 new variable
+task#:#task_derived_tasks#:#Tâches###18 05 2020 new variable
 task#:#task_tasks_with_deadline#:#With Deadline###18 05 2020 new variable
 task#:#task_tasks_without_deadline#:#Without Deadline###18 05 2020 new variable
 task#:#task_deadline#:#End###18 05 2020 new variable
 task#:#task_no_tasks#:#You do not have any open tasks.###18 05 2020 new variable
 task#:#task_start#:#Start###18 05 2020 new variable
-task#:#task_task#:#Task###18 05 2020 new variable
+task#:#task_task#:#Tâches###18 05 2020 new variable
 task#:#task_details#:#Details###18 05 2020 new variable
 pd#:#block_show_pdtasks#:#Show Tasks###18 05 2020 new variable
 exc#:#exc_task_submission#:#Submission of Assignment "%1"###18 05 2020 new variable
@@ -16098,7 +16098,7 @@ rep#:#rep_fav_intro1#:#Vous n’avez pas encore sélectionné de favoris. Pour c
 rep#:#rep_fav_intro2#:#cliquez sur '%s' et sélectionnez un objet d’apprentissage disponible pour votre rôle, p. ex. un module d’apprentissage ou un forum.###18 05 2020 new variable
 rep#:#rep_fav_intro3#:#Lorsque vous avez trouvé quelque chose qui vous intéresse, vous pouvez facilement l’ajouter à vos favoris. Sélectionnez-le et choisissez « Ajouter aux favoris ».###18 05 2020 new variable
 rep#:#rep_mo_mem_dash#:#You are currently not yet a member of a course or group.###18 05 2020 new variable
-task#:#task_no_task_items#:#There are no tasks for you.###18 05 2020 new variable
+task#:#task_no_task_items#:#Vous n’avez pas de tâche.###18 05 2020 new variable
 prg#:#prg_quali_still_valid#:#Qualification still valid###18 05 2020 new variable
 prg#:#prg_quali_not_valid#:#Qualification not valid###18 05 2020 new variable
 rep#:#rep_configure#:#Configure###18 05 2020 new variable
@@ -16201,7 +16201,7 @@ mme#:#msg_subitem_flushed#:#Lost Items removed.###29 01 2021 new variable
 file#:#personal_workspace_disk_quota#:#Hard Disk Quota for Personal Workspace###29 01 2021 new variable
 file#:#personal_workspace_quota_exceeded_warning#:#You have exceeded the disk quota for your personal workspace.###29 01 2021 new variable
 file#:#personal_workspace_quota_status_legend#:#You are using %1$s of your available disk quota of %2$s (%3$d%%).###29 01 2021 new variable
-common#:#tools#:#Tools###05 02 2021 new variable
+common#:#tools#:#Outils###05 02 2021 new variable
 common#:#more#:#More###05 02 2021 new variable
 rbac#:#edit_in_online_editor#:#Open in online editor###05 02 2021 new variable
 rbac#:#cld_edit_in_online_editor#:#User can open and edit files in online editor###05 02 2021 new variable
