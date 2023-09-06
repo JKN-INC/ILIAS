@@ -189,5 +189,13 @@ $ilDB->addTableColumn('obj_members', 'failed', array("type" => "integer", "lengt
 ?>
 
 
+<#20>
+<?php
+//
+if(!$ilDB->tableColumnExists('gradebook_revisions','passing_grade')){
+    $ilDB->addTableColumn("gradebook_revisions", "passing_grade", array("type" => "integer", "length" => 3));
+}
+?>
+
 
 
