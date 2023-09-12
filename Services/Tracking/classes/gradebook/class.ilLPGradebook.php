@@ -92,9 +92,9 @@ abstract class ilLPGradebook
                 'gradebook_id' => $gradebookId
             ]
         )->orderBy('last_update', 'desc')->first();
+        
 
-
-        return is_object($revision) ? ilGradebookRevisionConfig::where(['revision_id' => $revision->getRevisionId(), 'gradebook_id' => $gradebookId])->first()
+        return is_object($revision) && !is_null($revision->getRevisionId()) ? ilGradebookRevisionConfig::where(['revision_id' => $revision->getRevisionId(), 'gradebook_id' => $gradebookId])->first()
             : $this->getLatestGradebookRevision();
     }
 

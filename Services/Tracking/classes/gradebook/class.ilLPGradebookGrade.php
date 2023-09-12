@@ -208,6 +208,7 @@ class ilLPGradebookGrade extends ilLPGradebook
     {
         $latest_revision = $this->getUsersLatestRevision($usr_id);
 
+
         //then we'll update their total mark.
         $this->refreshGrades($usr_id, $latest_revision);
         return true;
@@ -346,8 +347,8 @@ class ilLPGradebookGrade extends ilLPGradebook
             if (!in_array($this->getStatus($users_object, $usr_id), [0, 1])) {
                 $passed_count++;
             }
-        }
-        return number_format(($passed_count / $total_count) * 100, 2);
+	    }
+        return $total_count ? number_format(($passed_count / $total_count) * 100, 2) : 0;
     }
 
     /**
